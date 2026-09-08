@@ -163,23 +163,29 @@
   .fw .strands{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;}
   @media (max-width:640px){ .fw .strands{grid-template-columns:1fr;} }
 
-  /* ---------- Print (A3 portrait sheet) ---------- */
+  .printframe, .printwatermark{display:none;}
+
+  /* ---------- Print (A3 portrait sheet, styled like the original form) ---------- */
   @media print{
     @page{size:A3 portrait; margin:12mm;}
     body{background:#fff; font-size:11pt;}
     header, nav, .weekbar .navbtn, .weekbar .btn, .weekbar input, .banner, .addbtn, .iconbtn,
     .item select, .item .linkrow, .planchip, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
-    main{max-width:none; padding:0;}
+    main{max-width:none; padding:4mm 5mm;}
+    /* Page frame and logo watermark, repeated on every page */
+    .printframe{display:block; position:fixed; inset:0; border:4px double #8FBF9F; border-radius:6pt; pointer-events:none;}
+    .printwatermark{display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:52%; opacity:.09; z-index:-1;}
+    .sheet, .section, .card{background:transparent;}
     .weekbar h2{font-size:16pt;}
     .topicrow{margin:2mm 0 4mm;}
     .topiclabel{font-size:13pt;}
     #weekTopic{border:none; background:none; font-size:13pt; padding:0; max-width:none;}
-    .sheet{border:none; padding:0; gap:6mm;}
-    .col{gap:6mm;}
-    .section{border:1.5pt solid var(--line); border-radius:14pt; padding:4mm 5mm; break-inside:avoid; background:#fff;}
-    .section h3{background:var(--pale); border-left:none; border-radius:10pt; text-align:center; padding:4px 10px;}
-    .reflection{border-top:none; padding-top:4mm;}
-    .reflection h3{background:var(--cream);}
+    .sheet{border:none; padding:0; gap:5mm 8mm;}
+    .col{gap:5mm;}
+    /* Sections like the original: underlined green headings, no boxes */
+    .section{border:none; border-radius:0; padding:0 0 2mm; break-inside:avoid;}
+    .section h3{background:none !important; border-left:none; border-radius:0; text-align:left; padding:0 0 2px;
+      text-decoration:underline; text-underline-offset:3px; font-size:13pt;}
     .item{border:none; border-bottom:1px solid var(--line); border-radius:0; padding:2px 0; margin-bottom:2px;}
     .item .txt{border-bottom:none;}
     .assignee-print{display:inline;}
@@ -191,15 +197,16 @@
     .weeklybox .item{border-bottom:none;}
     .bookrow .rowlabel{margin-top:2px;}
     .bookrow .bookitems .item{padding:0; margin-bottom:1px;}
-    /* Reflection: always its own page (page two) with room to write */
+    /* Reflection: its own page (page two), styled like the original */
     #reflectionWrap{break-before:page; page-break-before:always; margin-top:0;}
-    .reflection textarea{min-height:52mm; border:1pt solid var(--line) !important; border-radius:8pt; padding:3mm !important;}
-    .reflection h3{font-size:15pt;}
-    .reflection label{font-size:12pt; margin-top:8mm;}
+    .reflection{border:none;}
+    .reflection h3{text-align:center; text-decoration:none; font-size:17pt; background:none !important; letter-spacing:.06em;}
+    .reflection label{color:var(--green); text-decoration:underline; text-underline-offset:3px; font-size:12.5pt; margin-top:12mm;}
+    .reflection textarea{min-height:62mm; border:none !important; padding:2mm 0 !important;}
     /* Printing an open activity plan: only the plan, on A4 portrait (set by script) */
     body.plan-open main > section{display:none !important;}
     body.plan-open .overlay{position:static; background:none; padding:0; display:block;}
-    body.plan-open .plan{max-width:none; border-radius:0; padding:0;}
+    body.plan-open .plan{max-width:none; border-radius:0; padding:0; background:transparent;}
     body.plan-open .plan .barrow button{display:none !important;}
     body.plan-open .plan input, body.plan-open .plan textarea{border:none; padding:2px 0;}
     body.plan-open .domain label.ck input[type=checkbox]{appearance:none; width:11px; height:11px; border:1.2px solid var(--grey); border-radius:2px;}
@@ -315,6 +322,9 @@
 <div class="overlay hidden" id="planOverlay">
   <div class="plan" id="planBody"></div>
 </div>
+
+<div class="printframe" aria-hidden="true"></div>
+<img class="printwatermark" src="logo.png" alt="" onerror="this.style.display='none'">
 
 <script>
 /* =====================================================
@@ -1285,7 +1295,7 @@ document.getElementById("jumpDate").onchange = (e) => {
 document.getElementById("btnPrint").onclick = () => { document.getElementById("pageStyle").textContent = ""; window.print(); };
 
 /* ---- Scale the sheet so page one always fits, however much is planned ---- */
-const PRINT_W = 1032, PRINT_H = 1496; // A3 portrait inside 12mm margins, CSS px
+const PRINT_W = 995, PRINT_H = 1440; // A3 portrait inside 12mm margins and the printed frame, CSS px
 function fitSheetForPrint(){
   if (document.body.classList.contains("plan-open")) return;
   if (document.getElementById("tab-week").classList.contains("hidden")) return;

@@ -90,10 +90,43 @@
   .addbtn:hover{border-color:var(--green); color:var(--green);}
   .empty{color:var(--grey); font-size:.8rem; font-style:italic; margin:2px 0 6px;}
 
-  /* ---------- Reflection ---------- */
+  /* ---------- Shared print & PDF appearance (styled like the original form) ---------- */
   #reflectionWrap{margin-top:14px;}
   body.printlike .addbtn, body.printlike .iconbtn, body.printlike .item select,
-  body.printlike .item .linkrow, body.printlike .planchip{display:none !important;}
+  body.printlike .item .linkrow, body.printlike .planchip,
+  body.printlike .weekbar .navbtn, body.printlike .weekbar .btn,
+  body.printlike .weekbar input, body.printlike .weekbar select,
+  body.printlike .banner, body.printlike #saveStatus{display:none !important;}
+  body.printlike{background:#fff;}
+  body.printlike .weekbar{margin-bottom:2px;}
+  body.printlike .weekbar h2{font-size:.9rem; font-weight:normal;}
+  body.printlike .topicrow{justify-content:center; margin:0 0 16px;}
+  body.printlike .topiclabel{display:none;}
+  body.printlike #weekTopic{border:none; border-bottom:1.5px solid var(--ink); border-radius:0; background:none;
+    text-align:center; font-size:1.3rem; flex:0 1 55%; max-width:55%; padding:2px 6px;}
+  body.printlike .sheet, body.printlike .section, body.printlike .card{background:transparent; border:none; box-shadow:none;}
+  body.printlike .sheet{padding:0; gap:14px 24px; grid-template-rows:1fr;}
+  body.printlike .col{gap:14px; height:100%;}
+  body.printlike .col > .section:last-child{margin-top:auto;}
+  body.printlike .section{border-radius:0; padding:0 0 6px;}
+  body.printlike .section h3{background:none; border-left:none; border-radius:0; text-align:left; padding:0 0 2px;
+    text-decoration:underline; text-underline-offset:3px; font-size:1.05rem;}
+  body.printlike .item{border:none; border-bottom:1px solid var(--line); border-radius:0; padding:2px 0; margin-bottom:2px; background:transparent;}
+  body.printlike .item .txt{border-bottom:none;}
+  body.printlike .assignee-print{display:inline;}
+  body.printlike .item textarea{border:none; padding:2px 0;}
+  body.printlike .item input[type=checkbox]{appearance:none; width:12px; height:12px; border:1.2px solid var(--grey); border-radius:2px;}
+  body.printlike .item.done input[type=checkbox]{background:var(--green);}
+  body.printlike .weeklybox{background:var(--cream);}
+  body.printlike .weeklybox .txt{font-size:1.05rem;}
+  body.printlike .weeklybox .item{border-bottom:none;}
+  body.printlike .bookrow .rowlabel{margin-top:2px;}
+  body.printlike .bookrow .bookitems .item{padding:0; margin-bottom:1px;}
+  body.printlike .reflection{border:none;}
+  body.printlike .reflection h3{text-align:center; text-decoration:none; font-size:1.4rem; background:none; letter-spacing:.06em;}
+  body.printlike .reflection label{color:var(--green); text-decoration:underline; text-underline-offset:3px; font-size:1.05rem; margin-top:36px;}
+  body.printlike .reflection textarea{min-height:190px; border:none; padding:6px 0;}
+  body.printlike #reflectionWrap{margin-top:0;}
   .reflection{grid-column:1 / -1; border-top:2px solid var(--gold); padding-top:12px;}
   .reflection h3{background:var(--cream); border-left:5px solid var(--gold);}
   .reflection label{display:block; font-size:.85rem; font-weight:bold; margin:10px 0 4px; color:var(--grey);}
@@ -165,45 +198,15 @@
 
   .printframe, .printwatermark{display:none;}
 
-  /* ---------- Print (styled like the original form; size set by the paper picker) ---------- */
+  /* ---------- Print media: page-level rules (visuals come from body.printlike, added on beforeprint) ---------- */
   @media print{
     @page{margin:12mm;}
     body{background:#fff; font-size:11pt;}
-    header, nav, .weekbar .navbtn, .weekbar .btn, .weekbar input, .weekbar select, .banner, .addbtn, .iconbtn,
-    .item select, .item .linkrow, .planchip, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
+    header, nav, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
     main{max-width:none; padding:4mm 5mm;}
-    /* Page frame and logo watermark, repeated on every page */
     .printframe{display:block; position:fixed; inset:0; border:4px double #8FBF9F; border-radius:6pt; pointer-events:none;}
     .printwatermark{display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:52%; opacity:.09; z-index:-1;}
-    .sheet, .section, .card{background:transparent;}
-    .weekbar h2{font-size:16pt;}
-    .topicrow{margin:2mm 0 4mm;}
-    .topiclabel{font-size:13pt;}
-    #weekTopic{border:none; background:none; font-size:13pt; padding:0; max-width:none;}
-    .sheet{border:none; padding:0; gap:5mm 8mm; grid-template-rows:1fr;}
-    .col{gap:5mm; height:100%;}
-    .col > .section:last-child{margin-top:auto;}
-    /* Sections like the original: underlined green headings, no boxes */
-    .section{border:none; border-radius:0; padding:0 0 2mm; break-inside:avoid;}
-    .section h3{background:none !important; border-left:none; border-radius:0; text-align:left; padding:0 0 2px;
-      text-decoration:underline; text-underline-offset:3px; font-size:13pt;}
-    .item{border:none; border-bottom:1px solid var(--line); border-radius:0; padding:2px 0; margin-bottom:2px;}
-    .item .txt{border-bottom:none;}
-    .assignee-print{display:inline;}
-    .item textarea, .reflection textarea{border:none; padding:2px 0;}
-    .item input[type=checkbox]{appearance:none; width:12px; height:12px; border:1.2px solid var(--grey); border-radius:2px;}
-    .item.done input[type=checkbox]{background:var(--green);}
-    .weeklybox{background:var(--cream) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
-    .weeklybox .txt{font-size:13pt;}
-    .weeklybox .item{border-bottom:none;}
-    .bookrow .rowlabel{margin-top:2px;}
-    .bookrow .bookitems .item{padding:0; margin-bottom:1px;}
-    /* Reflection: its own page (page two), styled like the original */
-    #reflectionWrap{break-before:page; page-break-before:always; margin-top:0;}
-    .reflection{border:none;}
-    .reflection h3{text-align:center; text-decoration:none; font-size:17pt; background:none !important; letter-spacing:.06em;}
-    .reflection label{color:var(--green); text-decoration:underline; text-underline-offset:3px; font-size:12.5pt; margin-top:12mm;}
-    .reflection textarea{min-height:62mm; border:none !important; padding:2mm 0 !important;}
+    #reflectionWrap{break-before:page; page-break-before:always;}
     /* Printing an open activity plan: only the plan, on A4 portrait (set by script) */
     body.plan-open main > section{display:none !important;}
     body.plan-open .overlay{position:static; background:none; padding:0; display:block;}
@@ -254,7 +257,8 @@
         <option value="A3">A3</option>
         <option value="A4">A4</option>
       </select>
-      <button class="btn small" id="btnPrint">Save PDF / print</button>
+      <button class="btn small" id="btnPdf">Save as PDF</button>
+      <button class="btn secondary small" id="btnPrint">Print</button>
     </div>
     <div class="topicrow">
       <span class="topiclabel">Topic:</span>
@@ -1298,6 +1302,99 @@ document.getElementById("jumpDate").onchange = (e) => {
   renderSheet();
 };
 document.getElementById("btnPrint").onclick = () => window.print();
+document.getElementById("btnPdf").onclick = () => savePdf();
+
+/* ---- Direct PDF: builds and downloads the file, no print dialogue ---- */
+let pdfLibsPromise = null;
+function loadPdfLibs(){
+  if (window.html2canvas && window.jspdf) return Promise.resolve();
+  if (!pdfLibsPromise){
+    const load = src => new Promise((res, rej) => {
+      const s = document.createElement("script"); s.src = src;
+      s.onload = res; s.onerror = () => rej(new Error("could not load " + src));
+      document.head.appendChild(s);
+    });
+    pdfLibsPromise = Promise.all([
+      load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"),
+      load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js")
+    ]).catch(e => { pdfLibsPromise = null; throw e; });
+  }
+  return pdfLibsPromise;
+}
+
+const PAPER_MM = { A3: { w: 297, h: 420 }, A4: { w: 210, h: 297 } };
+
+async function savePdf(){
+  const size = document.getElementById("paperSize").value || "A3";
+  status("Preparing PDF...");
+  try{ await loadPdfLibs(); }
+  catch(e){ status("PDF maker would not load; using print instead"); window.print(); return; }
+  const dims = PAPER[size];
+  const tab = document.getElementById("tab-week");
+  const sheet = document.getElementById("sheet");
+  const rwrap = document.getElementById("reflectionWrap");
+  const prev = { tabW: tab.style.width, sheetW: sheet.style.width, sheetH: sheet.style.height, rW: rwrap.style.width };
+  document.body.classList.add("printlike");
+  try{
+    tab.style.width = dims.w + "px";
+    sheet.style.width = dims.w + "px";
+    sheet.style.height = "";
+    const headH = 90; // w/c line and topic
+    const availPx = dims.h - headH;
+    sheet.style.height = Math.max(sheet.scrollHeight, availPx) + "px";
+    rwrap.style.display = "none";
+    const c1 = await html2canvas(tab, { scale: 2, backgroundColor: "#ffffff" });
+    rwrap.style.display = "";
+    rwrap.style.width = dims.w + "px";
+    const c2 = await html2canvas(rwrap, { scale: 2, backgroundColor: "#ffffff" });
+
+    const { jsPDF } = window.jspdf;
+    const pm = PAPER_MM[size];
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: size.toLowerCase() });
+    decoratePdfPage(pdf, pm);
+    placePdfImage(pdf, c1, pm);
+    pdf.addPage();
+    decoratePdfPage(pdf, pm);
+    placePdfImage(pdf, c2, pm);
+    pdf.save("Little Puddings planning w-c " + currentWeek + " " + size + ".pdf");
+    status("PDF saved " + timeNow());
+  }catch(e){
+    console.error(e);
+    status("Could not make the PDF: " + e.message);
+  }finally{
+    tab.style.width = prev.tabW || "";
+    sheet.style.width = prev.sheetW || "";
+    sheet.style.height = prev.sheetH || "";
+    rwrap.style.width = prev.rW || "";
+    rwrap.style.display = "";
+    document.body.classList.remove("printlike");
+  }
+}
+
+function decoratePdfPage(pdf, pm){
+  try{
+    const img = document.querySelector(".printwatermark");
+    if (img && img.src && img.naturalWidth){
+      const iw = pm.w * 0.52;
+      const ih = iw * (img.naturalHeight / img.naturalWidth);
+      if (pdf.GState){ pdf.setGState(new pdf.GState({ opacity: 0.09 })); }
+      pdf.addImage(img.src, "JPEG", (pm.w - iw) / 2, (pm.h - ih) / 2, iw, ih);
+      if (pdf.GState){ pdf.setGState(new pdf.GState({ opacity: 1 })); }
+    }
+  }catch(e){ /* watermark is decorative; carry on without it */ }
+  pdf.setDrawColor(143, 191, 159);
+  pdf.setLineWidth(0.5);
+  pdf.roundedRect(7, 7, pm.w - 14, pm.h - 14, 3, 3);
+  pdf.roundedRect(8.4, 8.4, pm.w - 16.8, pm.h - 16.8, 3, 3);
+}
+
+function placePdfImage(pdf, canvas, pm){
+  const margin = 13;
+  const availW = pm.w - margin * 2, availH = pm.h - margin * 2;
+  const r = Math.min(availW / canvas.width, availH / canvas.height);
+  const w = canvas.width * r, h = canvas.height * r;
+  pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (pm.w - w) / 2, margin, w, h);
+}
 
 /* ---- Scale the sheet so page one always fits the chosen paper, however much is planned ---- */
 const PAPER = { A3: { w: 995, h: 1440 }, A4: { w: 668, h: 976 } }; // portrait, inside 12mm margins and the frame, CSS px

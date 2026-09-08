@@ -55,6 +55,15 @@
   .col{display:flex; flex-direction:column; gap:16px;}
   .section h3{font-size:1rem; background:var(--pale); border-left:5px solid var(--green); padding:5px 10px; border-radius:4px; margin-bottom:8px;}
   .rowlabel{font-size:.78rem; font-weight:bold; color:var(--grey); text-transform:uppercase; letter-spacing:.04em; margin:8px 0 3px;}
+  .weeklybox{background:var(--cream); border:1.5px solid var(--gold); border-radius:8px; padding:7px 10px; margin-bottom:10px;}
+  .weeklybox .rowlabel{color:var(--gold); margin:0 0 3px;}
+  .weeklybox .item{background:transparent; border:none; padding:2px 0; margin-bottom:2px;}
+  .weeklybox .txt{font-family:Georgia, serif; font-weight:bold; font-size:1rem; color:var(--green);}
+  .bookrow{display:flex; align-items:flex-start; gap:8px; margin-bottom:2px;}
+  .bookrow .rowlabel{width:88px; flex-shrink:0; margin:9px 0 0;}
+  .bookrow .bookitems{flex:1;}
+  .bookrow .bookitems .item{margin-bottom:3px;}
+  .bookrow .addbtn, .weeklybox .addbtn{width:auto; padding:3px 10px; margin-top:2px;}
   .slotlabel{font-size:.72rem; font-weight:bold; color:var(--gold); margin:5px 0 2px;}
 
   /* ---------- Item cards ---------- */
@@ -82,6 +91,9 @@
   .empty{color:var(--grey); font-size:.8rem; font-style:italic; margin:2px 0 6px;}
 
   /* ---------- Reflection ---------- */
+  #reflectionWrap{margin-top:14px;}
+  body.printlike .addbtn, body.printlike .iconbtn, body.printlike .item select,
+  body.printlike .item .linkrow, body.printlike .planchip{display:none !important;}
   .reflection{grid-column:1 / -1; border-top:2px solid var(--gold); padding-top:12px;}
   .reflection h3{background:var(--cream); border-left:5px solid var(--gold);}
   .reflection label{display:block; font-size:.85rem; font-weight:bold; margin:10px 0 4px; color:var(--grey);}
@@ -174,6 +186,16 @@
     .item textarea, .reflection textarea{border:none; padding:2px 0;}
     .item input[type=checkbox]{appearance:none; width:12px; height:12px; border:1.2px solid var(--grey); border-radius:2px;}
     .item.done input[type=checkbox]{background:var(--green);}
+    .weeklybox{background:var(--cream) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .weeklybox .txt{font-size:13pt;}
+    .weeklybox .item{border-bottom:none;}
+    .bookrow .rowlabel{margin-top:2px;}
+    .bookrow .bookitems .item{padding:0; margin-bottom:1px;}
+    /* Reflection: always its own page (page two) with room to write */
+    #reflectionWrap{break-before:page; page-break-before:always; margin-top:0;}
+    .reflection textarea{min-height:52mm; border:1pt solid var(--line) !important; border-radius:8pt; padding:3mm !important;}
+    .reflection h3{font-size:15pt;}
+    .reflection label{font-size:12pt; margin-top:8mm;}
     /* Printing an open activity plan: only the plan, on A4 portrait (set by script) */
     body.plan-open main > section{display:none !important;}
     body.plan-open .overlay{position:static; background:none; padding:0; display:block;}
@@ -227,6 +249,7 @@
       <input type="text" id="weekTopic" placeholder="Topic for the week">
     </div>
     <div class="sheet" id="sheet"></div>
+    <div id="reflectionWrap"></div>
   </section>
 
   <!-- ================= MY TASKS ================= -->
@@ -823,11 +846,20 @@ function renderSheet(){
     const box = document.createElement("div"); box.className = "section";
     const h = document.createElement("h3"); h.textContent = sec.title; box.appendChild(h);
 
-    if (sec.rows){ // Books: Mon-Fri + Weekly, titles only
-      sec.rows.forEach(([k,label]) => {
-        const rl = document.createElement("div"); rl.className = "rowlabel"; rl.textContent = label; box.appendChild(rl);
-        items.filter(i => i.section===sec.id && i.day===k).forEach(i => box.appendChild(itemCard(i, currentWeek, "book")));
-        if (edit) box.appendChild(addButton(sec.id, k, null, "+ Add book"));
+    if (sec.rows){ // Books: weekly story on top, then Mon-Fri with the title beside the day
+      const weekly = document.createElement("div"); weekly.className = "weeklybox";
+      const wl = document.createElement("div"); wl.className = "rowlabel"; wl.textContent = "Weekly story"; weekly.appendChild(wl);
+      items.filter(i => i.section===sec.id && i.day==="weekly").forEach(i => weekly.appendChild(itemCard(i, currentWeek, "book")));
+      if (edit) weekly.appendChild(addButton(sec.id, "weekly", null, "+ Add the weekly story"));
+      box.appendChild(weekly);
+      DAYS.forEach(([k,label]) => {
+        const row = document.createElement("div"); row.className = "bookrow";
+        const rl = document.createElement("div"); rl.className = "rowlabel"; rl.textContent = label; row.appendChild(rl);
+        const bi = document.createElement("div"); bi.className = "bookitems";
+        items.filter(i => i.section===sec.id && i.day===k).forEach(i => bi.appendChild(itemCard(i, currentWeek, "book")));
+        if (edit) bi.appendChild(addButton(sec.id, k, null, "+ Add book"));
+        row.appendChild(bi);
+        box.appendChild(row);
       });
     } else if (sec.id === "provision"){ // Provision: what's out, typed by kind, with resources
       const secItems = items.filter(i => i.section===sec.id);
@@ -859,9 +891,11 @@ function renderSheet(){
 
   sheet.appendChild(left); sheet.appendChild(right);
 
-  // Reflection
+  // Reflection (page two of the printed sheet)
+  const rw = document.getElementById("reflectionWrap");
+  rw.innerHTML = "";
   const w = getWeek(currentWeek) || { reflection:{well:"",notSoWell:"",improve:""} };
-  const refl = document.createElement("div"); refl.className = "section reflection";
+  const refl = document.createElement("div"); refl.className = "section reflection card";
   const rh = document.createElement("h3"); rh.textContent = "Reflection"; refl.appendChild(rh);
   [["well","What went well this week?"],["notSoWell","What did not work as well as intended?"],["improve","How can we improve, or what do we need to change for next time?"]].forEach(([key,label]) => {
     const l = document.createElement("label"); l.textContent = label; refl.appendChild(l);
@@ -875,7 +909,7 @@ function renderSheet(){
     refl.appendChild(ta);
     requestAnimationFrame(() => autoGrow(ta));
   });
-  sheet.appendChild(refl);
+  rw.appendChild(refl);
 }
 
 /* ===================== Render: my tasks ===================== */
@@ -1249,6 +1283,35 @@ document.getElementById("jumpDate").onchange = (e) => {
   renderSheet();
 };
 document.getElementById("btnPrint").onclick = () => { document.getElementById("pageStyle").textContent = ""; window.print(); };
+
+/* ---- Scale the sheet so page one always fits, however much is planned ---- */
+const PRINT_W = 1032, PRINT_H = 1496; // A3 portrait inside 12mm margins, CSS px
+function fitSheetForPrint(){
+  if (document.body.classList.contains("plan-open")) return;
+  if (document.getElementById("tab-week").classList.contains("hidden")) return;
+  const sheet = document.getElementById("sheet");
+  document.body.classList.add("printlike");
+  const avail = PRINT_H - 160; // room for the w/c heading and topic line
+  let s = 1;
+  sheet.style.transform = ""; sheet.style.height = ""; sheet.style.width = PRINT_W + "px";
+  for (let i = 0; i < 4; i++){
+    const h = sheet.scrollHeight;
+    if (!h || h * s <= avail) break;
+    s = Math.max(0.4, avail / h);
+    sheet.style.width = (PRINT_W / s) + "px";
+  }
+  const h = sheet.scrollHeight;
+  sheet.style.transformOrigin = "top left";
+  sheet.style.transform = "scale(" + s + ")";
+  if (h) sheet.style.height = (h * s) + "px";
+}
+function unfitSheet(){
+  const sheet = document.getElementById("sheet");
+  document.body.classList.remove("printlike");
+  sheet.style.transform = ""; sheet.style.width = ""; sheet.style.height = ""; sheet.style.transformOrigin = "";
+}
+window.addEventListener("beforeprint", fitSheetForPrint);
+window.addEventListener("afterprint", unfitSheet);
 document.getElementById("btnCarryAll").onclick = carryAll;
 document.getElementById("btnRefresh").onclick = () => syncFromCloud(false);
 

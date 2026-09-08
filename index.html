@@ -151,9 +151,9 @@
   .fw .strands{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;}
   @media (max-width:640px){ .fw .strands{grid-template-columns:1fr;} }
 
-  /* ---------- Print (A3 landscape sheet) ---------- */
+  /* ---------- Print (A3 portrait sheet) ---------- */
   @media print{
-    @page{size:A3 landscape; margin:12mm;}
+    @page{size:A3 portrait; margin:12mm;}
     body{background:#fff; font-size:11pt;}
     header, nav, .weekbar .navbtn, .weekbar .btn, .weekbar input, .banner, .addbtn, .iconbtn,
     .item select, .item .linkrow, .planchip, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}

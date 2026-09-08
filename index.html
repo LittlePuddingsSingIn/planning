@@ -1324,6 +1324,36 @@ function loadPdfLibs(){
 
 const PAPER_MM = { A3: { w: 297, h: 420 }, A4: { w: 210, h: 297 } };
 
+function snapForPdf(el){
+  el.setAttribute("data-snap-root", "1");
+  const srcFields = el.querySelectorAll("input[type=text], input[type=date], textarea");
+  return html2canvas(el, {
+    scale: 3,
+    backgroundColor: "#ffffff",
+    onclone: (doc) => {
+      const root = doc.querySelector('[data-snap-root="1"]');
+      if (!root) return;
+      const cloneFields = root.querySelectorAll("input[type=text], input[type=date], textarea");
+      cloneFields.forEach((cf, i) => {
+        const sf = srcFields[i];
+        if (!sf) return;
+        const cs = getComputedStyle(sf);
+        const div = doc.createElement("div");
+        div.textContent = sf.value || "\u00A0";
+        ["fontFamily","fontSize","fontWeight","fontStyle","lineHeight","color","textAlign",
+         "paddingTop","paddingBottom","paddingLeft","paddingRight",
+         "marginTop","marginBottom","marginLeft","marginRight",
+         "borderBottomWidth","borderBottomStyle","borderBottomColor",
+         "width","height","minHeight","letterSpacing"].forEach(p => { div.style[p] = cs[p]; });
+        div.style.boxSizing = "border-box";
+        div.style.whiteSpace = (sf.tagName === "TEXTAREA") ? "pre-wrap" : "nowrap";
+        div.style.overflow = "hidden";
+        cf.parentNode.replaceChild(div, cf);
+      });
+    }
+  }).finally(() => el.removeAttribute("data-snap-root"));
+}
+
 async function savePdf(){
   const size = document.getElementById("paperSize").value || "A3";
   status("Preparing PDF...");
@@ -1343,10 +1373,10 @@ async function savePdf(){
     const availPx = dims.h - headH;
     sheet.style.height = Math.max(sheet.scrollHeight, availPx) + "px";
     rwrap.style.display = "none";
-    const c1 = await html2canvas(tab, { scale: 2, backgroundColor: "#ffffff" });
+    const c1 = await snapForPdf(tab);
     rwrap.style.display = "";
     rwrap.style.width = dims.w + "px";
-    const c2 = await html2canvas(rwrap, { scale: 2, backgroundColor: "#ffffff" });
+    const c2 = await snapForPdf(rwrap);
 
     const { jsPDF } = window.jspdf;
     const pm = PAPER_MM[size];

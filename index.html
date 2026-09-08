@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Puddings | Weekly Planning</title>
+<script src="msal-browser.min.js"></script>
+<style>
+  :root{
+    --green:#1A7A4A; --gold:#D4A017; --grey:#6B6460;
+    --pale:#E8F1EC; --cream:#FBF3DC; --line:#CCCCCC;
+    --ink:#2B2B2B;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink); background:var(--pale); font-size:15px;}
+  h1,h2,h3{font-family:Georgia, 'Times New Roman', serif; color:var(--green); margin:0;}
+
+  /* ---------- Header ---------- */
+  header{background:#fff; border-bottom:3px solid var(--green); padding:10px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  header h1{font-size:1.35rem;}
+  header .sub{color:var(--grey); font-size:.85rem;}
+  header .spacer{flex:1;}
+  #saveStatus{font-size:.8rem; color:var(--grey);}
+  #whoami{font-size:.8rem; color:var(--grey);}
+  button{font-family:Arial, sans-serif; cursor:pointer;}
+  .btn{background:var(--green); color:#fff; border:none; border-radius:6px; padding:7px 14px; font-size:.85rem;}
+  .btn.secondary{background:#fff; color:var(--green); border:1.5px solid var(--green);}
+  .btn.small{padding:4px 10px; font-size:.78rem;}
+  .btn:disabled{opacity:.5; cursor:default;}
+
+  /* ---------- Tabs ---------- */
+  nav{display:flex; gap:6px; padding:8px 16px 0; background:#fff; border-bottom:1px solid var(--line);}
+  nav button{background:none; border:none; border-bottom:3px solid transparent; padding:8px 14px; font-size:.9rem; color:var(--grey);}
+  nav button.active{color:var(--green); border-bottom-color:var(--gold); font-weight:bold;}
+
+  main{max-width:1200px; margin:0 auto; padding:14px 16px 60px;}
+  .banner{background:var(--cream); border:1px solid var(--gold); border-radius:8px; padding:8px 12px; font-size:.85rem; margin-bottom:12px;}
+
+  /* ---------- Topic ---------- */
+  .topicrow{display:flex; align-items:center; gap:8px; margin-bottom:12px;}
+  .topiclabel{font-family:Georgia, serif; color:var(--gold); font-weight:bold; font-size:1rem;}
+  #weekTopic{flex:1; max-width:480px; border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-family:Georgia, serif; font-size:1rem; color:var(--green); background:#fff;}
+  #weekTopic:focus{outline:none; border-color:var(--gold);}
+  .donetag{display:inline-block; background:var(--pale); color:var(--green); border:1px solid var(--green); border-radius:10px; font-size:.68rem; padding:1px 8px; margin-top:4px;}
+
+  /* ---------- Week bar ---------- */
+  .weekbar{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
+  .weekbar h2{font-size:1.15rem;}
+  .navbtn{background:#fff; border:1.5px solid var(--green); color:var(--green); border-radius:6px; width:34px; height:34px; font-size:1rem;}
+  .weekbar .spacer{flex:1;}
+
+  /* ---------- Sheet ---------- */
+  .sheet{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media (max-width:820px){ .sheet{grid-template-columns:1fr;} }
+  .col{display:flex; flex-direction:column; gap:16px;}
+  .section h3{font-size:1rem; background:var(--pale); border-left:5px solid var(--green); padding:5px 10px; border-radius:4px; margin-bottom:8px;}
+  .rowlabel{font-size:.78rem; font-weight:bold; color:var(--grey); text-transform:uppercase; letter-spacing:.04em; margin:8px 0 3px;}
+  .slotlabel{font-size:.72rem; font-weight:bold; color:var(--gold); margin:5px 0 2px;}
+
+  /* ---------- Item cards ---------- */
+  .item{border:1px solid var(--line); border-radius:8px; padding:6px 8px; margin-bottom:6px; background:#fff;}
+  .item.done{background:var(--pale); }
+  .item.done .txt{text-decoration:line-through; color:var(--grey);}
+  .item .top{display:flex; align-items:center; gap:6px;}
+  .item input[type=checkbox]{width:17px; height:17px; accent-color:var(--green); flex-shrink:0;}
+  .item .txt{flex:1; border:none; border-bottom:1px dashed var(--line); font-size:.9rem; padding:3px 2px; font-family:Arial, sans-serif; background:transparent; min-width:80px;}
+  .item .txt:focus{outline:none; border-bottom-color:var(--green);}
+  .item select{border:1px solid var(--line); border-radius:5px; font-size:.75rem; color:var(--grey); padding:2px 3px; max-width:110px; background:#fff;}
+  .iconbtn{background:none; border:none; font-size:.9rem; padding:2px 4px; color:var(--grey);}
+  .iconbtn:hover{color:var(--green);}
+  .item .linkrow, .item .notesrow{margin-top:5px; display:flex; gap:6px; align-items:center;}
+  .item .linkrow input{flex:1; border:1px solid var(--line); border-radius:5px; padding:4px 6px; font-size:.8rem;}
+  .item .linkrow a{font-size:.8rem; color:var(--green); font-weight:bold; text-decoration:none; white-space:nowrap;}
+  .item textarea{flex:1; border:1px solid var(--line); border-radius:5px; padding:4px 6px; font-size:.8rem; font-family:Arial, sans-serif; resize:none; overflow:hidden; min-height:28px;}
+  .tag{display:inline-block; background:var(--cream); color:var(--grey); border:1px solid var(--gold); border-radius:10px; font-size:.68rem; padding:1px 8px; margin-top:4px;}
+  .whyrow{margin-top:5px;}
+  .minilabel{font-size:.7rem; font-weight:bold; color:var(--gold); margin:4px 0 2px; text-transform:uppercase; letter-spacing:.03em;}
+  .whyrow textarea{width:100%; border:1px solid var(--line); border-radius:5px; padding:4px 6px; font-size:.8rem; font-family:Arial, sans-serif; resize:none; overflow:hidden; min-height:28px;}
+  .assignee-print{display:none; font-size:.8rem; color:var(--grey); font-style:italic;}
+  .addbtn{background:none; border:1.5px dashed var(--line); border-radius:8px; color:var(--grey); width:100%; padding:5px; font-size:.78rem;}
+  .addbtn:hover{border-color:var(--green); color:var(--green);}
+  .empty{color:var(--grey); font-size:.8rem; font-style:italic; margin:2px 0 6px;}
+
+  /* ---------- Reflection ---------- */
+  .reflection{grid-column:1 / -1; border-top:2px solid var(--gold); padding-top:12px;}
+  .reflection h3{background:var(--cream); border-left:5px solid var(--gold);}
+  .reflection label{display:block; font-size:.85rem; font-weight:bold; margin:10px 0 4px; color:var(--grey);}
+  .reflection textarea{width:100%; border:1px solid var(--line); border-radius:8px; padding:8px; font-size:.88rem; font-family:Arial, sans-serif; resize:none; overflow:hidden; min-height:56px;}
+
+  /* ---------- My tasks ---------- */
+  .taskweek{background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:14px;}
+  .taskweek h3{font-size:1rem; margin-bottom:8px;}
+  .taskrow{display:flex; gap:8px; align-items:flex-start; padding:7px 0; border-bottom:1px dashed var(--line);}
+  .taskrow:last-child{border-bottom:none;}
+  .taskrow input[type=checkbox]{width:17px; height:17px; accent-color:var(--green); margin-top:2px;}
+  .taskrow .meta{font-size:.75rem; color:var(--grey);}
+  .taskrow .name{font-size:.9rem;}
+  .taskrow.done .name{text-decoration:line-through; color:var(--grey);}
+  .whoheading{font-family:Georgia, serif; color:var(--gold); font-size:.9rem; margin:10px 0 2px;}
+
+  /* ---------- Settings ---------- */
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:14px;}
+  .card h3{margin-bottom:10px;}
+  table{border-collapse:collapse; width:100%; font-size:.88rem;}
+  th,td{border-bottom:1px solid var(--line); text-align:left; padding:6px 8px;}
+  th{color:var(--grey); font-size:.78rem; text-transform:uppercase;}
+  .card input[type=text], .card input[type=email]{border:1px solid var(--line); border-radius:6px; padding:6px 8px; font-size:.88rem;}
+  details{font-size:.88rem;}
+  details summary{cursor:pointer; color:var(--green); font-weight:bold; margin-bottom:6px;}
+  details ol{margin:6px 0; padding-left:20px;}
+  details li{margin-bottom:6px;}
+  code{background:var(--pale); padding:1px 5px; border-radius:4px; font-size:.82rem;}
+
+  .hidden{display:none !important;}
+
+  /* ---------- Activity plans ---------- */
+  .planchip{display:inline-block; background:var(--pale); color:var(--green); border:1px solid var(--green); border-radius:10px; font-size:.68rem; padding:1px 8px; margin-top:4px; cursor:pointer; font-weight:bold;}
+  .planrow{display:flex; gap:10px; align-items:center; padding:9px 4px; border-bottom:1px dashed var(--line); cursor:pointer;}
+  .planrow:hover{background:var(--pale);}
+  .planrow .t{flex:1;}
+  .planrow .t .name{font-size:.92rem; font-weight:bold;}
+  .planrow .t .meta{font-size:.75rem; color:var(--grey);}
+  .status{font-size:.7rem; border-radius:10px; padding:2px 9px; font-weight:bold;}
+  .status.planned{background:var(--cream); color:var(--grey); border:1px solid var(--gold);}
+  .status.evaluated{background:var(--pale); color:var(--green); border:1px solid var(--green);}
+  .planfilters{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+  .planfilters input, .planfilters select{border:1px solid var(--line); border-radius:6px; padding:6px 8px; font-size:.88rem;}
+
+  /* ---------- Plan editor overlay ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(43,43,43,.45); display:flex; justify-content:center; align-items:flex-start; overflow:auto; padding:20px 10px; z-index:50;}
+  .plan{background:#fff; border-radius:12px; max-width:820px; width:100%; padding:18px 22px 26px;}
+  .plan h2{font-size:1.2rem; border-bottom:3px solid var(--green); padding-bottom:8px; margin-bottom:12px;}
+  .plan .barrow{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px;}
+  .plan label{display:block; font-size:.82rem; font-weight:bold; color:var(--grey); margin:12px 0 3px;}
+  .plan input[type=text], .plan input[type=date]{width:100%; border:1px solid var(--line); border-radius:6px; padding:7px 9px; font-size:.9rem; font-family:Arial,sans-serif;}
+  .plan textarea{width:100%; border:1px solid var(--line); border-radius:6px; padding:7px 9px; font-size:.9rem; font-family:Arial,sans-serif; resize:none; overflow:hidden; min-height:52px;}
+  .plan .half{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:640px){ .plan .half{grid-template-columns:1fr;} }
+  .gccgrid{display:grid; grid-template-columns:1fr 1fr; gap:8px 16px;}
+  @media (max-width:640px){ .gccgrid{grid-template-columns:1fr;} }
+  .domain{border:1px solid var(--line); border-radius:8px; padding:7px 10px;}
+  .domain .dname{font-family:Georgia, serif; color:var(--green); font-size:.9rem; margin-bottom:4px;}
+  .domain label.ck{display:flex; align-items:center; gap:6px; font-weight:normal; color:var(--ink); font-size:.82rem; margin:3px 0;}
+  .domain input[type=checkbox]{accent-color:var(--green); width:15px; height:15px;}
+  .gccnote{background:var(--cream); border:1px solid var(--gold); border-radius:8px; padding:8px 12px; font-size:.82rem;}
+
+  /* ---------- Settings: framework editor ---------- */
+  .fw{border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:8px;}
+  .fw input{border:1px solid var(--line); border-radius:6px; padding:5px 8px; font-size:.85rem; font-family:Arial,sans-serif;}
+  .fw .dn{width:100%; font-weight:bold; margin-bottom:6px;}
+  .fw .strands{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;}
+  @media (max-width:640px){ .fw .strands{grid-template-columns:1fr;} }
+
+  /* ---------- Print (A3 landscape sheet) ---------- */
+  @media print{
+    @page{size:A3 landscape; margin:12mm;}
+    body{background:#fff; font-size:11pt;}
+    header, nav, .weekbar .navbtn, .weekbar .btn, .weekbar input, .banner, .addbtn, .iconbtn,
+    .item select, .item .linkrow, .planchip, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
+    main{max-width:none; padding:0;}
+    .weekbar h2{font-size:16pt;}
+    .topicrow{margin:2mm 0 4mm;}
+    .topiclabel{font-size:13pt;}
+    #weekTopic{border:none; background:none; font-size:13pt; padding:0; max-width:none;}
+    .sheet{border:none; padding:0; gap:6mm;}
+    .col{gap:6mm;}
+    .section{border:1.5pt solid var(--line); border-radius:14pt; padding:4mm 5mm; break-inside:avoid; background:#fff;}
+    .section h3{background:var(--pale); border-left:none; border-radius:10pt; text-align:center; padding:4px 10px;}
+    .reflection{border-top:none; padding-top:4mm;}
+    .reflection h3{background:var(--cream);}
+    .item{border:none; border-bottom:1px solid var(--line); border-radius:0; padding:2px 0; margin-bottom:2px;}
+    .item .txt{border-bottom:none;}
+    .assignee-print{display:inline;}
+    .item textarea, .reflection textarea{border:none; padding:2px 0;}
+    .item input[type=checkbox]{appearance:none; width:12px; height:12px; border:1.2px solid var(--grey); border-radius:2px;}
+    .item.done input[type=checkbox]{background:var(--green);}
+    /* Printing an open activity plan: only the plan, on A4 portrait (set by script) */
+    body.plan-open main > section{display:none !important;}
+    body.plan-open .overlay{position:static; background:none; padding:0; display:block;}
+    body.plan-open .plan{max-width:none; border-radius:0; padding:0;}
+    body.plan-open .plan .barrow button{display:none !important;}
+    body.plan-open .plan input, body.plan-open .plan textarea{border:none; padding:2px 0;}
+    body.plan-open .domain label.ck input[type=checkbox]{appearance:none; width:11px; height:11px; border:1.2px solid var(--grey); border-radius:2px;}
+    body.plan-open .domain label.ck input[type=checkbox]:checked{background:var(--green);}
+  }
+</style>
+<style id="pageStyle"></style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Little Puddings</h1>
+    <div class="sub">Weekly planning</div>
+  </div>
+  <div class="spacer"></div>
+  <span id="saveStatus"></span>
+  <span id="whoami"></span>
+  <button class="btn secondary small hidden" id="btnRefresh">Refresh</button>
+  <button class="btn small" id="btnAuth">Sign in</button>
+</header>
+
+<nav>
+  <button data-tab="week" class="active">This week's sheet</button>
+  <button data-tab="mytasks">My tasks</button>
+  <button data-tab="plans">Activity plans</button>
+  <button data-tab="settings" id="navSettings">Settings</button>
+</nav>
+
+<main>
+  <div class="banner hidden" id="localBanner">Working on this device only. Sign in with your Little Puddings Microsoft account to share the planning with the team.</div>
+
+  <!-- ================= WEEK SHEET ================= -->
+  <section id="tab-week">
+    <div class="weekbar">
+      <button class="navbtn" id="prevWeek">&#8249;</button>
+      <h2 id="weekTitle">w/c</h2>
+      <button class="navbtn" id="nextWeek">&#8250;</button>
+      <button class="btn secondary small" id="btnToday">This week</button>
+      <input type="date" id="jumpDate" title="Jump to any week, past or future" style="border:1.5px solid var(--green);border-radius:6px;padding:5px 7px;font-size:.82rem;color:var(--green);font-family:Arial,sans-serif;">
+      <div class="spacer"></div>
+      <button class="btn secondary small mgr" id="btnCarryAll">Move unfinished to next week</button>
+      <button class="btn small" id="btnPrint">Print sheet</button>
+    </div>
+    <div class="topicrow">
+      <span class="topiclabel">Topic:</span>
+      <input type="text" id="weekTopic" placeholder="Topic for the week">
+    </div>
+    <div class="sheet" id="sheet"></div>
+  </section>
+
+  <!-- ================= MY TASKS ================= -->
+  <section id="tab-mytasks" class="hidden">
+    <h2 style="margin-bottom:10px;" id="mytasksTitle">My tasks</h2>
+    <div id="mytasksBody"></div>
+  </section>
+
+  <!-- ================= ACTIVITY PLANS ================= -->
+  <section id="tab-plans" class="hidden">
+    <div class="weekbar">
+      <h2>Activity plans</h2>
+      <div class="spacer"></div>
+      <button class="btn small mgr" id="btnNewPlan">+ New activity plan</button>
+    </div>
+    <div class="planfilters">
+      <input type="text" id="planSearch" placeholder="Search plans..." style="flex:1;min-width:160px;">
+      <select id="planFilter">
+        <option value="all">All plans</option>
+        <option value="upcoming">This week & ahead</option>
+        <option value="past">Past weeks</option>
+        <option value="toeval">Awaiting evaluation</option>
+      </select>
+    </div>
+    <div class="card" id="plansList"></div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section id="tab-settings" class="hidden">
+    <div class="card">
+      <h3>Practitioners</h3>
+      <p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Add each team member here so tasks can be assigned to them. The email must match the Microsoft account they sign in with.</p>
+      <table id="pracTable"><thead><tr><th>Name</th><th>Email</th><th></th></tr></thead><tbody></tbody></table>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        <input type="text" id="pracName" placeholder="Name">
+        <input type="email" id="pracEmail" placeholder="name@groundedandcurious.co.uk" style="min-width:240px;">
+        <button class="btn small" id="btnAddPrac">Add</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Growing Curious Children framework</h3>
+      <p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Enter your GCC domains and their strands here. They are stored in your OneDrive planning file, never in this public page, so the framework stays protected. They appear as tick boxes on every activity plan.</p>
+      <div id="fwList"></div>
+      <button class="btn secondary small" id="btnAddDomain">+ Add domain</button>
+    </div>
+    <div class="card">
+      <h3>Setup notes</h3>
+      <details>
+        <summary>One-off setup for cloud sync (same pattern as the OTJ tool)</summary>
+        <ol>
+          <li>Open the OTJ tool's <code>index.html</code>, find its <code>clientId</code> and <code>tenantId</code> values, and paste them into the CONFIG block at the top of this file (search for <code>PASTE</code>).</li>
+          <li>In the Azure app registration, under Authentication, add a new redirect URI: <code>https://littlepuddingssingin.github.io/planning/</code></li>
+          <li>In the GitHub repo, create a folder called <code>planning</code> and upload this file as <code>index.html</code> plus a copy of <code>msal-browser.min.js</code> into that same folder.</li>
+          <li>Sign in here as the manager and make any change; the folder <code>- Little Puddings Planning</code> will be created in your OneDrive with <code>planning.json</code> inside.</li>
+          <li>Share that folder with each practitioner with <strong>Can edit</strong> rights (this is the step that makes sync work for them, exactly as with the OTJ folder).</li>
+          <li>Each practitioner opens the page in a full browser tab (not a popped-out window) and signs in with their own groundedandcurious.co.uk account.</li>
+        </ol>
+      </details>
+    </div>
+  </section>
+</main>
+
+<div class="overlay hidden" id="planOverlay">
+  <div class="plan" id="planBody"></div>
+</div>
+
+<script>
+/* =====================================================
+   CONFIG: copy clientId and tenantId from the OTJ tool
+   ===================================================== */
+const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
+const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
+const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
+const MANAGER_EMAIL = "susanne@groundedandcurious.co.uk";
+const ALLOWED_DOMAIN = "@groundedandcurious.co.uk";
+const FOLDER_NAME = "- Little Puddings Planning";
+const FILE_NAME   = "planning.json";
+const GRAPH = "https://graph.microsoft.com/v1.0";
+const SCOPES = ["User.Read", "Files.ReadWrite.All"];
+
+/* ===================== State ===================== */
+const LS_KEY = "lp-planning-v1";
+let state = loadLocal() || { dataVersion: 1, practitioners: [], weeks: {} };
+if (!state.gcc) state.gcc = [];
+if (!state.plans) state.plans = [];
+let currentWeek = mondayOf(new Date());
+let account = null;       // MSAL account
+let role = "local";       // local | manager | practitioner
+let sharedDrive = null;   // {driveId, itemId} for practitioners
+let saveTimer = null;
+let activeTab = "week";
+
+function loadLocal(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){ return null; } }
+function saveLocal(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function now(){ return Date.now(); }
+
+/* ===================== Dates ===================== */
+function mondayOf(d){
+  const x = new Date(d); const day = (x.getDay() + 6) % 7;
+  x.setDate(x.getDate() - day); x.setHours(0,0,0,0);
+  return isoDate(x);
+}
+function isoDate(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function addWeeks(key, n){ const d = new Date(key + "T00:00:00"); d.setDate(d.getDate() + 7*n); return isoDate(d); }
+function fmtWeek(key){
+  const d = new Date(key + "T00:00:00");
+  return "w/c Monday " + d.getDate() + " " + d.toLocaleDateString("en-GB",{month:"long"}) + " " + d.getFullYear();
+}
+function fmtShort(key){
+  const d = new Date(key + "T00:00:00");
+  return d.getDate() + " " + d.toLocaleDateString("en-GB",{month:"short"});
+}
+
+/* ===================== Sections ===================== */
+const DAYS = [["mon","Monday"],["tue","Tuesday"],["wed","Wednesday"],["thu","Thursday"],["fri","Friday"]];
+const SECTIONS = [
+  { id:"books",   title:"Books", col:"left", rows: DAYS.concat([["weekly","Weekly"]]) },
+  { id:"cooking", title:"Cooking, baking & self-care", col:"right" },
+  { id:"garden",  title:"Garden jobs & nature walk", col:"left" },
+  { id:"provision", title:"Provision", col:"left" },
+  { id:"songs",   title:"New songs & rhymes", col:"left" },
+  { id:"goals",   title:"Specific goals & activities", col:"right", slots:true }
+];
+function sectionLabel(item){
+  const s = SECTIONS.find(x => x.id === item.section);
+  let lab = s ? s.title : item.section;
+  if (item.day){ const d = DAYS.find(x=>x[0]===item.day); lab += " · " + (d ? d[1] : "Weekly"); }
+  if (item.slot) lab += " " + item.slot.toUpperCase();
+  return lab;
+}
+
+/* ===================== Week data ===================== */
+function getWeek(key){ return state.weeks[key]; }
+function ensureWeek(key){
+  if (!state.weeks[key]) state.weeks[key] = { items: [], reflection: { well:"", notSoWell:"", improve:"", updatedAt:0 } };
+  if (!state.weeks[key].reflection) state.weeks[key].reflection = { well:"", notSoWell:"", improve:"", updatedAt:0 };
+  return state.weeks[key];
+}
+function liveItems(key){
+  const w = getWeek(key);
+  return w ? w.items.filter(i => !i.deleted) : [];
+}
+
+/* ===================== Roles ===================== */
+function canEdit(){ return role !== "practitioner"; }
+function myPractitioner(){
+  if (!account) return null;
+  const em = (account.username || "").toLowerCase();
+  return state.practitioners.find(p => p.active !== false && p.email.toLowerCase() === em) || null;
+}
+
+/* ===================== Merge (never lose data) ===================== */
+function mergeById(a, b){
+  const m = {};
+  (a||[]).concat(b||[]).forEach(x => {
+    if (!m[x.id] || (x.updatedAt||0) >= (m[x.id].updatedAt||0)) m[x.id] = x;
+  });
+  return Object.values(m);
+}
+function mergeState(local, cloud){
+  if (!cloud) return local;
+  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [] };
+  const pm = {};
+  (local.practitioners||[]).concat(cloud.practitioners||[]).forEach(p => {
+    const k = p.id || p.email;
+    if (!pm[k] || (p.updatedAt||0) >= (pm[k].updatedAt||0)) pm[k] = p;
+  });
+  out.practitioners = Object.values(pm);
+  out.gcc = mergeById(local.gcc, cloud.gcc);
+  out.plans = mergeById(local.plans, cloud.plans);
+  const keys = new Set(Object.keys(local.weeks||{}).concat(Object.keys(cloud.weeks||{})));
+  keys.forEach(k => {
+    const a = (local.weeks||{})[k], b = (cloud.weeks||{})[k];
+    if (!a){ out.weeks[k] = b; return; }
+    if (!b){ out.weeks[k] = a; return; }
+    const im = {};
+    (a.items||[]).concat(b.items||[]).forEach(i => {
+      if (!im[i.id] || (i.updatedAt||0) >= (im[i.id].updatedAt||0)) im[i.id] = i;
+    });
+    const ra = a.reflection || {updatedAt:0}, rb = b.reflection || {updatedAt:0};
+    const tA = a.topicUpdatedAt || 0, tB = b.topicUpdatedAt || 0;
+    out.weeks[k] = { items: Object.values(im),
+      reflection: (ra.updatedAt||0) >= (rb.updatedAt||0) ? ra : rb,
+      topic: tA >= tB ? (a.topic || "") : (b.topic || ""),
+      topicUpdatedAt: Math.max(tA, tB) };
+  });
+  return out;
+}
+
+/* ===================== Auth ===================== */
+let msalApp = null;
+function configured(){ return !CLIENT_ID.includes("PASTE") && !TENANT_ID.includes("PASTE"); }
+
+function initAuth(){
+  if (!window.msal || !configured()){ updateAuthUI(); return; }
+  msalApp = new msal.PublicClientApplication({
+    auth: { clientId: CLIENT_ID, authority: "https://login.microsoftonline.com/" + TENANT_ID, redirectUri: REDIRECT_URI },
+    cache: { cacheLocation: "localStorage" }
+  });
+  msalApp.handleRedirectPromise().then(resp => {
+    if (resp && resp.account) msalApp.setActiveAccount(resp.account);
+    const accs = msalApp.getAllAccounts();
+    if (accs.length) setAccount(msalApp.getActiveAccount() || accs[0]);
+    else updateAuthUI();
+  }).catch(err => { console.error(err); status("Sign-in error: " + err.message); updateAuthUI(); });
+}
+
+function setAccount(acc){
+  const em = (acc.username || "").toLowerCase();
+  if (!em.endsWith(ALLOWED_DOMAIN)){
+    status("Please sign in with your Little Puddings work account, not " + em);
+    msalApp.setActiveAccount(null);
+    account = null; role = "local"; updateAuthUI(); return;
+  }
+  account = acc;
+  msalApp.setActiveAccount(acc);
+  role = (em === MANAGER_EMAIL) ? "manager" : "practitioner";
+  updateAuthUI();
+  syncFromCloud(true);
+}
+
+async function getToken(){
+  try{
+    const r = await msalApp.acquireTokenSilent({ scopes: SCOPES, account: account });
+    return r.accessToken;
+  }catch(e){
+    await msalApp.acquireTokenRedirect({ scopes: SCOPES });
+  }
+}
+
+function signIn(){
+  if (!configured()){ alert("Cloud sync is not set up yet. Open Settings and follow the setup notes."); return; }
+  msalApp.loginRedirect({ scopes: SCOPES, prompt: "select_account" });
+}
+function signOut(){ msalApp.logoutRedirect({ account: account }); }
+
+/* ===================== Graph / OneDrive ===================== */
+async function gfetch(token, url, opts){
+  opts = opts || {};
+  opts.headers = Object.assign({ Authorization: "Bearer " + token }, opts.headers || {});
+  return fetch(url, opts);
+}
+
+async function fileUrl(token){
+  if (role === "manager"){
+    return GRAPH + "/me/drive/root:/" + encodeURIComponent(FOLDER_NAME) + "/" + FILE_NAME + ":/content";
+  }
+  if (!sharedDrive){
+    const r = await gfetch(token, GRAPH + "/me/drive/sharedWithMe");
+    if (!r.ok) throw new Error("Could not read shared folders (" + r.status + ")");
+    const data = await r.json();
+    const hit = (data.value||[]).find(i => i.name === FOLDER_NAME && i.remoteItem);
+    if (!hit) throw new Error("The folder '" + FOLDER_NAME + "' has not been shared with you yet. Ask Sussie to share it with edit rights.");
+    sharedDrive = { driveId: hit.remoteItem.parentReference.driveId, itemId: hit.remoteItem.id };
+  }
+  return GRAPH + "/drives/" + sharedDrive.driveId + "/items/" + sharedDrive.itemId + ":/" + FILE_NAME + ":/content";
+}
+
+async function ensureFolder(token){
+  await gfetch(token, GRAPH + "/me/drive/root/children", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: FOLDER_NAME, folder: {}, "@microsoft.graph.conflictBehavior": "fail" })
+  }); // 409 = already exists, which is fine
+}
+
+async function cloudLoad(token){
+  const r = await gfetch(token, await fileUrl(token));
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error("Could not load from OneDrive (" + r.status + ")");
+  return r.json();
+}
+
+async function cloudSave(token){
+  if (role === "manager") await ensureFolder(token);
+  const r = await gfetch(token, await fileUrl(token), {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(state)
+  });
+  if (!r.ok) throw new Error("Save to OneDrive failed (" + r.status + ")");
+}
+
+async function syncFromCloud(fullRender){
+  if (!account) return;
+  try{
+    status("Syncing...");
+    const token = await getToken(); if (!token) return;
+    const cloud = await cloudLoad(token);
+    state = mergeState(state, cloud);
+    saveLocal();
+    if (fullRender) renderAll(); else renderTab();
+    status("Up to date " + timeNow());
+  }catch(e){ console.error(e); status(e.message); }
+}
+
+/* ===================== Saving ===================== */
+function timeNow(){ return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}); }
+function status(msg){ document.getElementById("saveStatus").textContent = msg; }
+
+function markDirty(){
+  saveLocal();
+  status("Saving...");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(persist, 1500);
+}
+
+async function persist(){
+  saveLocal();
+  if (!account){ status("Saved on this device " + timeNow()); return; }
+  try{
+    const token = await getToken(); if (!token) return;
+    const cloud = await cloudLoad(token);
+    state = mergeState(state, cloud);
+    saveLocal();
+    await cloudSave(token);
+    status("Saved to OneDrive " + timeNow());
+  }catch(e){ console.error(e); status("Not saved to OneDrive: " + e.message); }
+}
+
+/* ===================== Item operations ===================== */
+function addItem(section, day, slot){
+  const w = ensureWeek(currentWeek);
+  w.items.push({ id: uid(), section: section, day: day||null, slot: slot||null,
+    text:"", link:"", notes:"", assignedTo:null, done:false, deleted:false,
+    carriedFrom:null, createdAt: now(), updatedAt: now() });
+  markDirty(); renderSheet();
+  const last = document.querySelector('#sheet .item[data-id="' + w.items[w.items.length-1].id + '"] .txt');
+  if (last) last.focus();
+}
+function findItem(weekKey, id){
+  const w = getWeek(weekKey); if (!w) return null;
+  return w.items.find(i => i.id === id) || null;
+}
+function touch(item){ item.updatedAt = now(); markDirty(); }
+
+function moveItem(weekKey, id, targetKey){
+  const item = findItem(weekKey, id); if (!item) return;
+  const target = targetKey || addWeeks(weekKey, 1);
+  const tw = ensureWeek(target);
+  tw.items.push(Object.assign({}, item, { id: uid(), done:false, deleted:false,
+    carriedFrom: weekKey, movedTo:null, createdAt: now(), updatedAt: now() }));
+  item.deleted = true; item.movedTo = target; item.updatedAt = now();
+  markDirty(); renderSheet();
+  status("Moved to " + fmtWeek(target).replace("w/c Monday","w/c"));
+}
+function carryAll(){
+  const NOT_TASKS = ["books","songs","provision"];
+  const unfinished = liveItems(currentWeek).filter(i => !i.done && i.text.trim() && !NOT_TASKS.includes(i.section));
+  if (!unfinished.length){ alert("Everything on this sheet is either done or empty. Nothing to move."); return; }
+  if (!confirm("Move " + unfinished.length + " unfinished item(s) to next week?")) return;
+  unfinished.forEach(i => moveItem(currentWeek, i.id));
+}
+function deleteItem(weekKey, id){
+  const item = findItem(weekKey, id); if (!item) return;
+  if (item.text.trim() && !confirm("Delete this activity?")) return;
+  item.deleted = true; item.updatedAt = now();
+  markDirty(); renderSheet();
+}
+
+/* ===================== Render: sheet ===================== */
+function autoGrow(el){ el.style.height = "auto"; el.style.height = (el.scrollHeight + 2) + "px"; }
+
+function currentUserName(){
+  const me = myPractitioner();
+  if (me) return me.name;
+  if (account) return account.username.split("@")[0];
+  return "";
+}
+function stampDone(item, checked){
+  item.done = checked;
+  if (checked){ item.doneBy = currentUserName(); item.doneAt = isoDate(new Date()); }
+  else { item.doneBy = null; item.doneAt = null; }
+  touch(item);
+}
+function doneText(item){
+  let t = "Done";
+  if (item.doneBy) t += " · " + item.doneBy;
+  if (item.doneAt) t += " · " + fmtShort(item.doneAt);
+  return t;
+}
+
+function itemCard(item, weekKey, simple){
+  const div = document.createElement("div");
+  div.className = "item" + (item.done ? " done" : "");
+  div.dataset.id = item.id;
+  const edit = canEdit();
+
+  if (simple === "provision"){ // Provision: what's out and available, not a task
+    const top = document.createElement("div"); top.className = "top";
+    const PROV_TYPES = [["continuous","Continuous provision"],["invitation","Invitation"],["provocation","Provocation"]];
+    const tsel = document.createElement("select");
+    tsel.innerHTML = PROV_TYPES.map(([v,l]) => '<option value="'+v+'">'+l+'</option>').join("");
+    tsel.value = item.provType || "continuous";
+    tsel.disabled = !edit;
+    top.appendChild(tsel);
+    const txt = document.createElement("input"); txt.className = "txt"; txt.value = item.text;
+    txt.placeholder = "e.g. salt tray for mark making"; txt.readOnly = !edit;
+    txt.oninput = () => { item.text = txt.value; touch(item); };
+    top.appendChild(txt);
+    const resRow = document.createElement("div"); resRow.className = "notesrow" + (item.notes ? "" : " hidden");
+    top.appendChild(iconBtn("&#9998;", "Resources needed", () => {
+      resRow.classList.toggle("hidden");
+      const t = resRow.querySelector("textarea");
+      if (!resRow.classList.contains("hidden")){ autoGrow(t); t.focus(); }
+    }));
+    if (edit) top.appendChild(iconBtn("&#10005;", "Remove", () => deleteItem(weekKey, item.id)));
+    div.appendChild(top);
+    const prn = document.createElement("span"); prn.className = "assignee-print";
+    prn.textContent = (PROV_TYPES.find(t => t[0] === (item.provType || "continuous")) || [])[1] || "";
+    div.appendChild(prn);
+    tsel.onchange = () => { item.provType = tsel.value; touch(item); prn.textContent = (PROV_TYPES.find(t => t[0] === tsel.value) || [])[1] || ""; };
+    const rt = document.createElement("textarea"); rt.value = item.notes || ""; rt.placeholder = "Resources needed for this";
+    rt.oninput = () => { item.notes = rt.value; touch(item); autoGrow(rt); };
+    resRow.appendChild(rt);
+    div.appendChild(resRow);
+    if (item.notes) requestAnimationFrame(() => autoGrow(rt));
+    return div;
+  }
+
+  if (simple){ // Books and songs: just the title, no task machinery
+    const isSong = simple === "song";
+    const top = document.createElement("div"); top.className = "top";
+    const txt = document.createElement("input"); txt.className = "txt"; txt.value = item.text;
+    txt.placeholder = isSong ? "Song or rhyme" : "Book title"; txt.readOnly = !edit;
+    txt.oninput = () => { item.text = txt.value; touch(item); };
+    top.appendChild(txt);
+    let linkRow = null, lyricsRow = null;
+    if (isSong){
+      top.appendChild(iconBtn("&#128279;", "Add or show a link to the lyrics", () => linkRow.classList.toggle("hidden")));
+      top.appendChild(iconBtn("&#9998;", "Type the lyrics", () => {
+        lyricsRow.classList.toggle("hidden");
+        const t = lyricsRow.querySelector("textarea");
+        if (!lyricsRow.classList.contains("hidden")){ autoGrow(t); if (edit) t.focus(); }
+      }));
+    }
+    if (edit) top.appendChild(iconBtn("&#10005;", "Remove", () => deleteItem(weekKey, item.id)));
+    div.appendChild(top);
+    if (isSong){
+      linkRow = document.createElement("div"); linkRow.className = "linkrow" + (item.link ? "" : " hidden");
+      const linkIn = document.createElement("input"); linkIn.value = item.link || ""; linkIn.placeholder = "Paste a link to the lyrics";
+      linkIn.readOnly = !edit;
+      const linkA = document.createElement("a"); linkA.textContent = "Open"; linkA.target = "_blank"; linkA.rel = "noopener";
+      linkA.href = safeHref(item.link); linkA.classList.toggle("hidden", !item.link);
+      linkIn.oninput = () => { item.link = linkIn.value.trim(); touch(item); linkA.classList.toggle("hidden", !item.link); linkA.href = safeHref(item.link); };
+      linkRow.appendChild(linkIn); linkRow.appendChild(linkA);
+      div.appendChild(linkRow);
+      lyricsRow = document.createElement("div"); lyricsRow.className = "notesrow" + (item.notes ? "" : " hidden");
+      const lt = document.createElement("textarea"); lt.value = item.notes || ""; lt.placeholder = "Type the lyrics here";
+      lt.readOnly = !edit;
+      lt.oninput = () => { item.notes = lt.value; touch(item); autoGrow(lt); };
+      lyricsRow.appendChild(lt);
+      div.appendChild(lyricsRow);
+      if (item.notes) requestAnimationFrame(() => autoGrow(lt));
+    }
+    return div;
+  }
+
+  const prac = state.practitioners.filter(p => p.active !== false);
+  const assignedName = (prac.find(p=>p.id===item.assignedTo)||{}).name || "";
+
+  const top = document.createElement("div"); top.className = "top";
+
+  const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!item.done;
+  cb.title = "Mark as done";
+  cb.onchange = () => {
+    stampDone(item, cb.checked);
+    div.classList.toggle("done", item.done);
+    doneTag.textContent = doneText(item);
+    doneTag.classList.toggle("hidden", !item.done);
+  };
+  top.appendChild(cb);
+
+  const txt = document.createElement("input"); txt.className = "txt"; txt.value = item.text;
+  txt.placeholder = item.section === "goals" ? "e.g. walk to the woods, litter picking, library visit, a visitor" : "Activity or task";
+  txt.readOnly = !edit;
+  txt.oninput = () => { item.text = txt.value; touch(item); };
+  top.appendChild(txt);
+
+  const sel = document.createElement("select");
+  sel.disabled = !edit;
+  sel.innerHTML = '<option value="">Anyone</option>' + prac.map(p => '<option value="'+p.id+'">'+esc(p.name)+'</option>').join("");
+  sel.value = item.assignedTo || "";
+  sel.onchange = () => { item.assignedTo = sel.value || null; touch(item); prn.textContent = sel.value ? (prac.find(p=>p.id===sel.value)||{}).name : ""; };
+  top.appendChild(sel);
+
+  const planBtn = iconBtn("&#128203;", item.planId ? "Open activity plan" : "Attach an activity plan", () => {
+    if (item.planId){
+      const p = state.plans.find(x => x.id === item.planId && !x.deleted);
+      if (p){ openPlan(p.id); return; }
+    }
+    if (!edit){ alert("No activity plan attached to this yet."); return; }
+    const p = createPlan(item.text || "New activity", weekKey, item.id);
+    item.planId = p.id; touch(item);
+    openPlan(p.id);
+  });
+  top.appendChild(planBtn);
+  const linkBtn = iconBtn("&#128279;", "Add or show a link", () => { linkRow.classList.toggle("hidden"); });
+  top.appendChild(linkBtn);
+  const noteBtn = iconBtn("&#9998;", "Preparation notes", () => { noteRow.classList.toggle("hidden"); const t = noteRow.querySelector("textarea"); if(!noteRow.classList.contains("hidden")){ autoGrow(t); t.focus(); } });
+  top.appendChild(noteBtn);
+  if (edit){
+    top.appendChild(iconBtn("&#8594;", "Move to next week", () => moveItem(weekKey, item.id)));
+    top.appendChild(iconBtn("&#10005;", "Delete", () => deleteItem(weekKey, item.id)));
+  }
+  div.appendChild(top);
+
+  const prn = document.createElement("span"); prn.className = "assignee-print"; prn.textContent = assignedName;
+  div.appendChild(prn);
+
+  const linkRow = document.createElement("div"); linkRow.className = "linkrow" + (item.link ? "" : " hidden");
+  const linkIn = document.createElement("input"); linkIn.value = item.link || ""; linkIn.placeholder = "Paste a link (recipe, song, activity plan...)";
+  linkIn.readOnly = !edit;
+  linkIn.oninput = () => { item.link = linkIn.value.trim(); touch(item); linkA.classList.toggle("hidden", !item.link); linkA.href = safeHref(item.link); };
+  const linkA = document.createElement("a"); linkA.textContent = "Open"; linkA.target = "_blank"; linkA.rel = "noopener";
+  linkA.href = safeHref(item.link); linkA.classList.toggle("hidden", !item.link);
+  linkRow.appendChild(linkIn); linkRow.appendChild(linkA);
+  div.appendChild(linkRow);
+
+  const noteRow = document.createElement("div"); noteRow.className = "notesrow" + (item.notes ? "" : " hidden");
+  const ta = document.createElement("textarea"); ta.value = item.notes || ""; ta.placeholder = "Preparation notes (what to get ready, how it went...)";
+  ta.oninput = () => { item.notes = ta.value; touch(item); autoGrow(ta); };
+  noteRow.appendChild(ta);
+  div.appendChild(noteRow);
+  if (item.notes) requestAnimationFrame(() => autoGrow(ta));
+
+  if (item.section === "goals"){ // The why: intent and impact in everyday words
+    const whyRow = document.createElement("div");
+    whyRow.className = "whyrow" + ((item.whyIntent || item.whyImpact) ? "" : " hidden");
+    [["whyIntent","What we want them to get from this"],["whyImpact","How we'll know it landed / what next"]].forEach(([key,label]) => {
+      const l = document.createElement("div"); l.className = "minilabel"; l.textContent = label; whyRow.appendChild(l);
+      const wt = document.createElement("textarea"); wt.value = item[key] || "";
+      wt.placeholder = "In everyday words...";
+      wt.oninput = () => { item[key] = wt.value; touch(item); autoGrow(wt); };
+      whyRow.appendChild(wt);
+      if (item[key]) requestAnimationFrame(() => autoGrow(wt));
+    });
+    top.insertBefore(iconBtn("&#128161;", "The why: what we want them to get from this, and how we'll know", () => {
+      whyRow.classList.toggle("hidden");
+      if (!whyRow.classList.contains("hidden")){ whyRow.querySelectorAll("textarea").forEach(autoGrow); whyRow.querySelector("textarea").focus(); }
+    }), noteBtn.nextSibling);
+    div.appendChild(whyRow);
+  }
+
+  if (item.carriedFrom){
+    const tag = document.createElement("span"); tag.className = "tag";
+    tag.textContent = "Carried over from w/c " + fmtShort(item.carriedFrom);
+    div.appendChild(tag);
+  }
+  const doneTag = document.createElement("span");
+  doneTag.className = "donetag" + (item.done ? "" : " hidden");
+  doneTag.textContent = doneText(item);
+  div.appendChild(doneTag);
+  if (item.planId && state.plans.some(p => p.id === item.planId && !p.deleted)){
+    const chip = document.createElement("span"); chip.className = "planchip";
+    chip.textContent = "Activity plan";
+    chip.onclick = () => openPlan(item.planId);
+    div.appendChild(chip);
+  }
+  return div;
+}
+
+function iconBtn(html, title, fn){
+  const b = document.createElement("button"); b.className = "iconbtn"; b.innerHTML = html; b.title = title; b.onclick = fn; return b;
+}
+function esc(s){ const d = document.createElement("div"); d.textContent = s == null ? "" : s; return d.innerHTML; }
+function safeHref(url){
+  if (!url) return "#";
+  return /^https?:\/\//i.test(url) ? url : "https://" + url;
+}
+
+function addButton(section, day, slot, label){
+  const b = document.createElement("button"); b.className = "addbtn"; b.textContent = label || "+ Add";
+  b.onclick = () => addItem(section, day, slot);
+  return b;
+}
+
+function renderSheet(){
+  document.getElementById("weekTitle").textContent = fmtWeek(currentWeek);
+  const topicIn = document.getElementById("weekTopic");
+  const wkData = getWeek(currentWeek);
+  topicIn.value = (wkData && wkData.topic) || "";
+  topicIn.readOnly = !canEdit();
+  const sheet = document.getElementById("sheet");
+  sheet.innerHTML = "";
+  const items = liveItems(currentWeek);
+  const edit = canEdit();
+
+  const left = document.createElement("div"); left.className = "col";
+  const right = document.createElement("div"); right.className = "col";
+
+  SECTIONS.forEach(sec => {
+    const box = document.createElement("div"); box.className = "section";
+    const h = document.createElement("h3"); h.textContent = sec.title; box.appendChild(h);
+
+    if (sec.rows){ // Books: Mon-Fri + Weekly, titles only
+      sec.rows.forEach(([k,label]) => {
+        const rl = document.createElement("div"); rl.className = "rowlabel"; rl.textContent = label; box.appendChild(rl);
+        items.filter(i => i.section===sec.id && i.day===k).forEach(i => box.appendChild(itemCard(i, currentWeek, "book")));
+        if (edit) box.appendChild(addButton(sec.id, k, null, "+ Add book"));
+      });
+    } else if (sec.id === "provision"){ // Provision: what's out, typed by kind, with resources
+      const secItems = items.filter(i => i.section===sec.id);
+      secItems.forEach(i => box.appendChild(itemCard(i, currentWeek, "provision")));
+      if (!secItems.length && !edit){ const e = document.createElement("div"); e.className="empty"; e.textContent = "Nothing planned"; box.appendChild(e); }
+      if (edit) box.appendChild(addButton(sec.id, null, null, "+ Add provision"));
+    } else if (sec.id === "songs"){ // Songs: titles plus a lyrics link
+      const secItems = items.filter(i => i.section===sec.id);
+      secItems.forEach(i => box.appendChild(itemCard(i, currentWeek, "song")));
+      if (!secItems.length && !edit){ const e = document.createElement("div"); e.className="empty"; e.textContent = "Nothing planned"; box.appendChild(e); }
+      if (edit) box.appendChild(addButton(sec.id, null, null, "+ Add song or rhyme"));
+    } else if (sec.slots){ // Goals: Mon-Fri AM/PM
+      DAYS.forEach(([k,label]) => {
+        const rl = document.createElement("div"); rl.className = "rowlabel"; rl.textContent = label; box.appendChild(rl);
+        ["am","pm"].forEach(slot => {
+          const sl = document.createElement("div"); sl.className = "slotlabel"; sl.textContent = slot.toUpperCase(); box.appendChild(sl);
+          items.filter(i => i.section===sec.id && i.day===k && i.slot===slot).forEach(i => box.appendChild(itemCard(i, currentWeek)));
+          if (edit) box.appendChild(addButton(sec.id, k, slot));
+        });
+      });
+    } else {
+      const secItems = items.filter(i => i.section===sec.id);
+      secItems.forEach(i => box.appendChild(itemCard(i, currentWeek)));
+      if (!secItems.length && !edit){ const e = document.createElement("div"); e.className="empty"; e.textContent = "Nothing planned"; box.appendChild(e); }
+      if (edit) box.appendChild(addButton(sec.id, null, null));
+    }
+    (sec.col === "left" ? left : right).appendChild(box);
+  });
+
+  sheet.appendChild(left); sheet.appendChild(right);
+
+  // Reflection
+  const w = getWeek(currentWeek) || { reflection:{well:"",notSoWell:"",improve:""} };
+  const refl = document.createElement("div"); refl.className = "section reflection";
+  const rh = document.createElement("h3"); rh.textContent = "Reflection"; refl.appendChild(rh);
+  [["well","What went well this week?"],["notSoWell","What did not work as well as intended?"],["improve","How can we improve, or what do we need to change for next time?"]].forEach(([key,label]) => {
+    const l = document.createElement("label"); l.textContent = label; refl.appendChild(l);
+    const ta = document.createElement("textarea");
+    ta.value = (w.reflection && w.reflection[key]) || "";
+    ta.oninput = () => {
+      const wk = ensureWeek(currentWeek);
+      wk.reflection[key] = ta.value; wk.reflection.updatedAt = now();
+      markDirty(); autoGrow(ta);
+    };
+    refl.appendChild(ta);
+    requestAnimationFrame(() => autoGrow(ta));
+  });
+  sheet.appendChild(refl);
+}
+
+/* ===================== Render: my tasks ===================== */
+function renderMyTasks(){
+  const body = document.getElementById("mytasksBody");
+  const title = document.getElementById("mytasksTitle");
+  body.innerHTML = "";
+  const me = myPractitioner();
+  const managerView = role !== "practitioner";
+  title.textContent = managerView ? "Tasks by practitioner" : "My tasks";
+
+  const start = mondayOf(new Date());
+  let any = false;
+  for (let n = 0; n < 5; n++){
+    const key = addWeeks(start, n);
+    const items = liveItems(key).filter(i => i.text.trim());
+    let mine;
+    if (managerView) mine = items.filter(i => i.assignedTo);
+    else mine = me ? items.filter(i => i.assignedTo === me.id) : [];
+    if (!mine.length) continue;
+    any = true;
+    const wk = document.createElement("div"); wk.className = "taskweek";
+    const h = document.createElement("h3"); h.textContent = fmtWeek(key) + (n===0 ? " (this week)" : ""); wk.appendChild(h);
+
+    if (managerView){
+      const groups = {};
+      mine.forEach(i => { (groups[i.assignedTo] = groups[i.assignedTo] || []).push(i); });
+      Object.keys(groups).forEach(pid => {
+        const p = state.practitioners.find(x => x.id === pid);
+        const gh = document.createElement("div"); gh.className = "whoheading"; gh.textContent = p ? p.name : "Unassigned"; wk.appendChild(gh);
+        groups[pid].forEach(i => wk.appendChild(taskRow(i, key)));
+      });
+    } else {
+      mine.forEach(i => wk.appendChild(taskRow(i, key)));
+    }
+    body.appendChild(wk);
+  }
+  if (!any){
+    const e = document.createElement("div"); e.className = "banner";
+    e.textContent = managerView ? "No assigned tasks in the next few weeks yet. Assign tasks from the weekly sheet using the dropdown on each activity."
+      : (me ? "Nothing assigned to you in the next few weeks. Check the weekly sheet to see the full plan."
+            : "Your account is not on the practitioner list yet. Ask Sussie to add you in Settings.");
+    body.appendChild(e);
+  }
+}
+
+function taskRow(item, weekKey){
+  const row = document.createElement("div"); row.className = "taskrow" + (item.done ? " done" : "");
+  const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!item.done;
+  cb.onchange = () => {
+    stampDone(item, cb.checked);
+    row.classList.toggle("done", item.done);
+    dt.textContent = doneText(item);
+    dt.classList.toggle("hidden", !item.done);
+  };
+  row.appendChild(cb);
+  const wrap = document.createElement("div"); wrap.style.flex = "1";
+  const nm = document.createElement("div"); nm.className = "name"; nm.textContent = item.text; wrap.appendChild(nm);
+  const meta = document.createElement("div"); meta.className = "meta";
+  meta.textContent = sectionLabel(item) + (item.carriedFrom ? " · carried over" : "");
+  wrap.appendChild(meta);
+  const dt = document.createElement("span");
+  dt.className = "donetag" + (item.done ? "" : " hidden");
+  dt.textContent = doneText(item);
+  wrap.appendChild(dt);
+  if (item.link){
+    const a = document.createElement("a"); a.href = safeHref(item.link); a.target = "_blank"; a.rel = "noopener";
+    a.textContent = "Open link"; a.style.cssText = "font-size:.8rem;color:var(--green);font-weight:bold;text-decoration:none;";
+    wrap.appendChild(a);
+  }
+  if (item.planId && state.plans.some(p => p.id === item.planId && !p.deleted)){
+    const pc = document.createElement("span"); pc.className = "planchip"; pc.textContent = "Activity plan";
+    pc.onclick = () => openPlan(item.planId);
+    wrap.appendChild(pc);
+  }
+  if (item.section === "goals"){
+    [["whyIntent","What we want them to get from this"],["whyImpact","How we'll know it landed / what next"]].forEach(([key,label]) => {
+      const l = document.createElement("div"); l.className = "minilabel"; l.textContent = label; wrap.appendChild(l);
+      const wt = document.createElement("textarea"); wt.value = item[key] || "";
+      wt.placeholder = "In everyday words...";
+      wt.style.cssText = "width:100%;border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:.8rem;font-family:Arial,sans-serif;resize:none;overflow:hidden;min-height:28px;";
+      wt.oninput = () => { item[key] = wt.value; touch(item); autoGrow(wt); };
+      wrap.appendChild(wt);
+      requestAnimationFrame(() => autoGrow(wt));
+    });
+  }
+  const ta = document.createElement("textarea"); ta.value = item.notes || ""; ta.placeholder = "Preparation notes";
+  ta.style.cssText = "width:100%;margin-top:4px;border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:.8rem;font-family:Arial,sans-serif;resize:none;overflow:hidden;min-height:28px;";
+  ta.oninput = () => { item.notes = ta.value; touch(item); autoGrow(ta); };
+  wrap.appendChild(ta);
+  requestAnimationFrame(() => autoGrow(ta));
+  row.appendChild(wrap);
+  return row;
+}
+
+/* ===================== Render: settings ===================== */
+function renderSettings(){
+  const tb = document.querySelector("#pracTable tbody");
+  tb.innerHTML = "";
+  state.practitioners.filter(p => p.active !== false).forEach(p => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + esc(p.name) + "</td><td>" + esc(p.email) + "</td>";
+    const td = document.createElement("td");
+    const b = document.createElement("button"); b.className = "btn secondary small"; b.textContent = "Remove";
+    b.onclick = () => {
+      if (!confirm("Remove " + p.name + " from the list? Their past tasks stay on old sheets.")) return;
+      p.active = false; p.updatedAt = now(); markDirty(); renderSettings();
+    };
+    td.appendChild(b); tr.appendChild(td); tb.appendChild(tr);
+  });
+}
+document.getElementById("btnAddPrac").onclick = () => {
+  const name = document.getElementById("pracName").value.trim();
+  const email = document.getElementById("pracEmail").value.trim().toLowerCase();
+  if (!name || !email){ alert("A name and an email are both needed."); return; }
+  if (!email.endsWith(ALLOWED_DOMAIN)){ alert("Use their " + ALLOWED_DOMAIN + " account so sign-in matches."); return; }
+  state.practitioners.push({ id: uid(), name: name, email: email, active: true, updatedAt: now() });
+  document.getElementById("pracName").value = ""; document.getElementById("pracEmail").value = "";
+  markDirty(); renderSettings();
+};
+
+/* ===================== Activity plans ===================== */
+const PLAN_FIELDS = [
+  ["resources", "Resources", "What we need ready before we start"],
+  ["children", "Children taking part (name and age)", ""],
+  ["interests", "Current interests / links to previous learning", "Why this activity, why now, for these children"],
+  ["goals", "What we want them to get from this", "Adult intent, in everyday words"],
+  ["whyImpact", "How we'll know it landed / what next", "In everyday words, so anyone on the team could say it"],
+  ["keyLanguage", "Key language", "Words and phrases to weave in naturally"],
+  ["evaluation", "Evaluation: what we noticed overall", "How the activity actually unfolded"],
+  ["individualEval", "What we noticed for individual children", "One or two lines per child taking part"],
+  ["nextSteps", "Next steps", "What to offer next and how to extend it, based on what we noticed"]
+];
+
+function createPlan(title, weekKey, itemId){
+  const p = { id: uid(), title: title || "New activity", weekKey: weekKey || currentWeek, itemId: itemId || null,
+    date: "", completedBy: "", strands: [], phaseFocus: "",
+    resources:"", children:"", interests:"", goals:"", whyImpact:"", keyLanguage:"", evaluation:"", individualEval:"", nextSteps:"",
+    deleted:false, createdAt: now(), updatedAt: now() };
+  state.plans.push(p);
+  markDirty();
+  return p;
+}
+function touchPlan(p){ p.updatedAt = now(); markDirty(); }
+function planStatus(p){ return ((p.evaluation||"").trim() || (p.individualEval||"").trim()) ? "evaluated" : "planned"; }
+
+function renderPlans(){
+  const box = document.getElementById("plansList");
+  box.innerHTML = "";
+  const q = document.getElementById("planSearch").value.trim().toLowerCase();
+  const f = document.getElementById("planFilter").value;
+  const thisWeek = mondayOf(new Date());
+  let plans = state.plans.filter(p => !p.deleted);
+  if (q) plans = plans.filter(p => (p.title + " " + p.children + " " + p.keyLanguage + " " + p.goals).toLowerCase().includes(q));
+  if (f === "upcoming") plans = plans.filter(p => p.weekKey >= thisWeek);
+  if (f === "past") plans = plans.filter(p => p.weekKey < thisWeek);
+  if (f === "toeval") plans = plans.filter(p => planStatus(p) === "planned" && p.weekKey <= thisWeek);
+  plans.sort((a,b) => (b.weekKey||"").localeCompare(a.weekKey||"") || (b.createdAt-a.createdAt));
+
+  if (!plans.length){
+    const e = document.createElement("div"); e.className = "empty";
+    e.textContent = q ? "No plans match that search." : "No activity plans here yet. Attach one to any activity on the weekly sheet with the clipboard button, or start one fresh.";
+    box.appendChild(e); return;
+  }
+  plans.forEach(p => {
+    const row = document.createElement("div"); row.className = "planrow";
+    row.onclick = () => openPlan(p.id);
+    const t = document.createElement("div"); t.className = "t";
+    const nm = document.createElement("div"); nm.className = "name"; nm.textContent = p.title || "Untitled activity";
+    const meta = document.createElement("div"); meta.className = "meta";
+    meta.textContent = fmtWeek(p.weekKey).replace("w/c Monday","w/c") + (p.strands.length ? " · " + p.strands.length + " strand" + (p.strands.length>1?"s":"") + " tagged" : "");
+    t.appendChild(nm); t.appendChild(meta); row.appendChild(t);
+    const st = document.createElement("span"); st.className = "status " + planStatus(p);
+    st.textContent = planStatus(p) === "evaluated" ? "Evaluated" : "Planned";
+    row.appendChild(st);
+    box.appendChild(row);
+  });
+}
+
+let openPlanId = null;
+function openPlan(id){
+  const p = state.plans.find(x => x.id === id && !x.deleted);
+  if (!p) return;
+  openPlanId = id;
+  const body = document.getElementById("planBody");
+  body.innerHTML = "";
+  const edit = canEdit();
+
+  const bar = document.createElement("div"); bar.className = "barrow";
+  const back = document.createElement("button"); back.className = "btn secondary small"; back.textContent = "Close"; back.onclick = closePlan;
+  bar.appendChild(back);
+  const wkBtn = document.createElement("button"); wkBtn.className = "btn secondary small"; wkBtn.textContent = "Open week sheet";
+  wkBtn.onclick = () => { closePlan(); currentWeek = p.weekKey; switchTab("week"); };
+  bar.appendChild(wkBtn);
+  const sp = document.createElement("div"); sp.style.flex = "1"; bar.appendChild(sp);
+  const pr = document.createElement("button"); pr.className = "btn small"; pr.textContent = "Print plan"; pr.onclick = printPlan;
+  bar.appendChild(pr);
+  if (edit){
+    const del = document.createElement("button"); del.className = "btn secondary small"; del.textContent = "Delete";
+    del.onclick = () => {
+      if (!confirm("Delete this activity plan?")) return;
+      p.deleted = true; touchPlan(p); closePlan(); renderTab();
+    };
+    bar.appendChild(del);
+  }
+  body.appendChild(bar);
+
+  const h = document.createElement("h2"); h.textContent = "Activity plan"; body.appendChild(h);
+
+  const tl = document.createElement("label"); tl.textContent = "Activity"; body.appendChild(tl);
+  const ti = document.createElement("input"); ti.type = "text"; ti.value = p.title;
+  ti.oninput = () => { p.title = ti.value; touchPlan(p); };
+  body.appendChild(ti);
+
+  const half = document.createElement("div"); half.className = "half";
+  const d1 = document.createElement("div");
+  const dl = document.createElement("label"); dl.textContent = "Date"; d1.appendChild(dl);
+  const di = document.createElement("input"); di.type = "date"; di.value = p.date || "";
+  di.onchange = () => { p.date = di.value; if (di.value) p.weekKey = mondayOf(new Date(di.value + "T00:00:00")); touchPlan(p); };
+  d1.appendChild(di); half.appendChild(d1);
+  const d2 = document.createElement("div");
+  const cl = document.createElement("label"); cl.textContent = "Completed by"; d2.appendChild(cl);
+  const ci = document.createElement("input"); ci.type = "text"; ci.value = p.completedBy || "";
+  ci.oninput = () => { p.completedBy = ci.value; touchPlan(p); };
+  d2.appendChild(ci); half.appendChild(d2);
+  body.appendChild(half);
+
+  // GCC domains & strands
+  const gl = document.createElement("label"); gl.textContent = "Growing Curious Children: domains and strands"; body.appendChild(gl);
+  const activeGcc = state.gcc.filter(d => !d.deleted);
+  if (!activeGcc.length){
+    const note = document.createElement("div"); note.className = "gccnote";
+    note.textContent = "The GCC domains and strands have not been entered yet. Add them once in Settings and they will appear here as tick boxes on every plan.";
+    body.appendChild(note);
+  } else {
+    const grid = document.createElement("div"); grid.className = "gccgrid";
+    activeGcc.forEach(dom => {
+      const dv = document.createElement("div"); dv.className = "domain";
+      const dn = document.createElement("div"); dn.className = "dname"; dn.textContent = dom.name; dv.appendChild(dn);
+      (dom.strands||[]).forEach((s, idx) => {
+        if (!s || !s.trim()) return;
+        const key = dom.id + ":" + idx;
+        const lab = document.createElement("label"); lab.className = "ck";
+        const ck = document.createElement("input"); ck.type = "checkbox"; ck.checked = p.strands.includes(key);
+        ck.onchange = () => {
+          if (ck.checked){ if (!p.strands.includes(key)) p.strands.push(key); }
+          else p.strands = p.strands.filter(k => k !== key);
+          touchPlan(p);
+        };
+        lab.appendChild(ck); lab.appendChild(document.createTextNode(s));
+        dv.appendChild(lab);
+      });
+      grid.appendChild(dv);
+    });
+    body.appendChild(grid);
+    const pl = document.createElement("label"); pl.textContent = "Phase focus (Seed / Shoot / Flower, can differ by child and domain)"; body.appendChild(pl);
+    const pi = document.createElement("input"); pi.type = "text"; pi.value = p.phaseFocus || "";
+    pi.oninput = () => { p.phaseFocus = pi.value; touchPlan(p); };
+    body.appendChild(pi);
+  }
+
+  PLAN_FIELDS.forEach(([key, label, hint]) => {
+    const l = document.createElement("label"); l.textContent = label; body.appendChild(l);
+    const ta = document.createElement("textarea"); ta.value = p[key] || ""; ta.placeholder = hint;
+    ta.oninput = () => { p[key] = ta.value; touchPlan(p); autoGrow(ta); };
+    body.appendChild(ta);
+    requestAnimationFrame(() => autoGrow(ta));
+  });
+
+  document.getElementById("planOverlay").classList.remove("hidden");
+  document.body.classList.add("plan-open");
+}
+function closePlan(){
+  openPlanId = null;
+  document.getElementById("planOverlay").classList.add("hidden");
+  document.body.classList.remove("plan-open");
+  renderTab();
+}
+function printPlan(){
+  document.getElementById("pageStyle").textContent = "@media print{@page{size:A4 portrait;margin:14mm;}}";
+  window.print();
+  setTimeout(() => { document.getElementById("pageStyle").textContent = ""; }, 500);
+}
+document.getElementById("planOverlay").onclick = (e) => { if (e.target === document.getElementById("planOverlay")) closePlan(); };
+document.getElementById("btnNewPlan").onclick = () => { const p = createPlan("", currentWeek, null); openPlan(p.id); };
+document.getElementById("planSearch").oninput = renderPlans;
+document.getElementById("planFilter").onchange = renderPlans;
+
+/* ===================== Settings: GCC framework editor ===================== */
+function renderFramework(){
+  const box = document.getElementById("fwList");
+  box.innerHTML = "";
+  state.gcc.filter(d => !d.deleted).forEach(dom => {
+    const dv = document.createElement("div"); dv.className = "fw";
+    const dn = document.createElement("input"); dn.className = "dn"; dn.value = dom.name; dn.placeholder = "Domain name";
+    dn.oninput = () => { dom.name = dn.value; dom.updatedAt = now(); markDirty(); };
+    dv.appendChild(dn);
+    const st = document.createElement("div"); st.className = "strands";
+    for (let i = 0; i < 3; i++){
+      const si = document.createElement("input"); si.value = (dom.strands||["","",""])[i] || ""; si.placeholder = "Strand " + (i+1);
+      si.oninput = () => { if (!dom.strands) dom.strands = ["","",""]; dom.strands[i] = si.value; dom.updatedAt = now(); markDirty(); };
+      st.appendChild(si);
+    }
+    dv.appendChild(st);
+    const rm = document.createElement("button"); rm.className = "btn secondary small"; rm.textContent = "Remove domain"; rm.style.marginTop = "6px";
+    rm.onclick = () => {
+      if (!confirm("Remove this domain? Plans that tagged its strands keep their other tags.")) return;
+      dom.deleted = true; dom.updatedAt = now(); markDirty(); renderFramework();
+    };
+    dv.appendChild(rm);
+    box.appendChild(dv);
+  });
+  if (!state.gcc.filter(d => !d.deleted).length){
+    const e = document.createElement("div"); e.className = "empty"; e.textContent = "No domains entered yet.";
+    box.appendChild(e);
+  }
+}
+document.getElementById("btnAddDomain").onclick = () => {
+  state.gcc.push({ id: uid(), name: "", strands: ["","",""], deleted:false, updatedAt: now() });
+  markDirty(); renderFramework();
+};
+
+/* ===================== Tabs & chrome ===================== */
+const TABS = ["week","mytasks","plans","settings"];
+function switchTab(tab){
+  activeTab = tab;
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("active", x.dataset.tab === tab));
+  TABS.forEach(t => document.getElementById("tab-" + t).classList.toggle("hidden", t !== activeTab));
+  renderTab();
+}
+document.querySelectorAll("nav button").forEach(b => { b.onclick = () => switchTab(b.dataset.tab); });
+function renderTab(){
+  if (activeTab === "week") renderSheet();
+  else if (activeTab === "mytasks") renderMyTasks();
+  else if (activeTab === "plans") renderPlans();
+  else { renderSettings(); renderFramework(); }
+}
+function renderAll(){ updateAuthUI(); renderTab(); }
+
+function updateAuthUI(){
+  const btn = document.getElementById("btnAuth");
+  const who = document.getElementById("whoami");
+  const refresh = document.getElementById("btnRefresh");
+  const banner = document.getElementById("localBanner");
+  if (account){
+    btn.textContent = "Sign out"; btn.onclick = signOut;
+    who.textContent = account.username + (role === "manager" ? " (manager)" : "");
+    refresh.classList.remove("hidden");
+    banner.classList.add("hidden");
+  } else {
+    btn.textContent = "Sign in"; btn.onclick = signIn;
+    who.textContent = "";
+    refresh.classList.add("hidden");
+    banner.classList.remove("hidden");
+  }
+  document.getElementById("navSettings").classList.toggle("hidden", role === "practitioner");
+  document.querySelectorAll(".mgr").forEach(el => el.classList.toggle("hidden", role === "practitioner"));
+}
+
+document.getElementById("prevWeek").onclick = () => { currentWeek = addWeeks(currentWeek, -1); renderSheet(); };
+document.getElementById("nextWeek").onclick = () => { currentWeek = addWeeks(currentWeek, 1); renderSheet(); };
+document.getElementById("weekTopic").oninput = (e) => {
+  const wk = ensureWeek(currentWeek);
+  wk.topic = e.target.value; wk.topicUpdatedAt = now();
+  markDirty();
+};
+document.getElementById("btnToday").onclick = () => { currentWeek = mondayOf(new Date()); renderSheet(); };
+document.getElementById("jumpDate").onchange = (e) => {
+  if (!e.target.value) return;
+  currentWeek = mondayOf(new Date(e.target.value + "T00:00:00"));
+  renderSheet();
+};
+document.getElementById("btnPrint").onclick = () => { document.getElementById("pageStyle").textContent = ""; window.print(); };
+document.getElementById("btnCarryAll").onclick = carryAll;
+document.getElementById("btnRefresh").onclick = () => syncFromCloud(false);
+
+/* ===================== Start ===================== */
+renderAll();
+initAuth();
+</script>
+</body>
+</html>

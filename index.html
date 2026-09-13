@@ -196,13 +196,16 @@
   .fw .strands{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;}
   @media (max-width:640px){ .fw .strands{grid-template-columns:1fr;} }
 
+  .buildfoot{text-align:center; color:var(--grey); font-size:.72rem; padding:18px 16px 26px;}
+  body.printlike .buildfoot{display:none !important;}
+
   .printframe, .printwatermark{display:none;}
 
   /* ---------- Print media: page-level rules (visuals come from body.printlike, added on beforeprint) ---------- */
   @media print{
     @page{margin:12mm;}
     body{background:#fff; font-size:11pt;}
-    header, nav, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
+    header, nav, .buildfoot, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
     main{max-width:none; padding:4mm 5mm;}
     .printframe{display:block; position:fixed; inset:0; border:4px double #8FBF9F; border-radius:6pt; pointer-events:none;}
     .printwatermark{display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:52%; opacity:.09; z-index:-1;}
@@ -333,6 +336,8 @@
   </section>
 </main>
 
+<div class="buildfoot">Little Puddings weekly planning &middot; build <span id="buildStamp"></span> &middot; if this build number is older than the latest one, you are looking at an old copy: refresh the page (Ctrl+F5)</div>
+
 <div class="overlay hidden" id="planOverlay">
   <div class="plan" id="planBody"></div>
 </div>
@@ -344,6 +349,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
+const BUILD = "2026-09-13a";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -553,7 +559,7 @@ async function cloudSave(token){
   const r = await gfetch(token, await fileUrl(token), {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(state)
+    body: JSON.stringify(Object.assign({}, state, { savedByBuild: BUILD }))
   });
   if (!r.ok) throw new Error("Save to OneDrive failed (" + r.status + ")");
 }
@@ -1484,6 +1490,9 @@ function decoratePdfPage(pdf, pm){
       if (pdf.GState){ pdf.setGState(new pdf.GState({ opacity: 1 })); }
     }
   }catch(e){ /* watermark is decorative; carry on without it */ }
+  pdf.setFontSize(7);
+  pdf.setTextColor(150, 150, 150);
+  pdf.text("Little Puddings planning \u00b7 build " + BUILD, pm.w / 2, pm.h - 4, { align: "center" });
   pdf.setDrawColor(143, 191, 159);
   pdf.setLineWidth(0.5);
   pdf.roundedRect(7, 7, pm.w - 14, pm.h - 14, 3, 3);
@@ -1533,6 +1542,7 @@ document.getElementById("btnCarryAll").onclick = carryAll;
 document.getElementById("btnRefresh").onclick = () => syncFromCloud(false);
 
 /* ===================== Start ===================== */
+document.getElementById("buildStamp").textContent = BUILD;
 renderAll();
 initAuth();
 </script>

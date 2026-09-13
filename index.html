@@ -309,7 +309,12 @@
       <h3>Growing Curious Children framework</h3>
       <p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Enter your GCC domains and their strands here. They are stored in your OneDrive planning file, never in this public page, so the framework stays protected. They appear as tick boxes on every activity plan.</p>
       <div id="fwList"></div>
-      <button class="btn secondary small" id="btnAddDomain">+ Add domain</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn secondary small" id="btnAddDomain">+ Add domain</button>
+        <button class="btn small" id="btnImportFw">Import from Tapestry CSV</button>
+        <input type="file" id="fwCsvFile" accept=".csv,text/csv" style="display:none;">
+      </div>
+      <p style="font-size:.78rem;color:var(--grey);margin:8px 0 0;">Import accepts the Tapestry framework CSV (Curriculum Areas 1 / Curriculum Organisers 1) or any simple two-column file of domain, strand. Matching domain names are updated rather than duplicated, so existing plan ticks are kept.</p>
     </div>
     <div class="card">
       <h3>Setup notes</h3>
@@ -1249,6 +1254,73 @@ function renderFramework(){
 document.getElementById("btnAddDomain").onclick = () => {
   state.gcc.push({ id: uid(), name: "", strands: ["","",""], deleted:false, updatedAt: now() });
   markDirty(); renderFramework();
+};
+
+/* ---- Framework import from the Tapestry CSV ---- */
+function parseCsvText(text){
+  const rows = []; let row = [], field = "", inQ = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (inQ){
+      if (c === '"'){ if (text[i + 1] === '"'){ field += '"'; i++; } else inQ = false; }
+      else field += c;
+    } else {
+      if (c === '"') inQ = true;
+      else if (c === ','){ row.push(field); field = ""; }
+      else if (c === '\n'){ row.push(field); rows.push(row); row = []; field = ""; }
+      else if (c !== '\r') field += c;
+    }
+  }
+  if (field.length || row.length){ row.push(field); rows.push(row); }
+  return rows.filter(r => r.some(x => x.trim() !== ""));
+}
+
+function applyFrameworkCsv(text){
+  const rows = parseCsvText(text);
+  if (!rows.length) throw new Error("The file looks empty.");
+  const heads = rows[0].map(h => h.trim().toLowerCase());
+  let di = heads.indexOf("curriculum areas 1");
+  let si = heads.indexOf("curriculum organisers 1");
+  let start = 1;
+  if (di < 0 || si < 0){
+    di = 0; si = 1;
+    start = (heads[0] === "domain" || heads[0] === "domains") ? 1 : 0;
+  }
+  const map = new Map();
+  for (let r = start; r < rows.length; r++){
+    const dom = (rows[r][di] || "").trim();
+    const str = (rows[r][si] || "").trim();
+    if (!dom || !str) continue;
+    if (!map.has(dom)) map.set(dom, []);
+    const list = map.get(dom);
+    if (!list.includes(str)) list.push(str);
+  }
+  if (!map.size) throw new Error("No domains and strands were found. Expected the Tapestry columns (Curriculum Areas 1 / Curriculum Organisers 1) or a two-column file of domain, strand.");
+  let added = 0, updated = 0, strandCount = 0;
+  map.forEach((list, name) => {
+    const strands = list.slice(0, 3);
+    strandCount += strands.length;
+    const existing = state.gcc.find(d => !d.deleted && (d.name || "").trim().toLowerCase() === name.toLowerCase());
+    if (existing){ existing.name = name; existing.strands = strands; existing.updatedAt = now(); updated++; }
+    else { state.gcc.push({ id: uid(), name: name, strands: strands, deleted: false, updatedAt: now() }); added++; }
+  });
+  markDirty(); renderFramework();
+  return "Framework imported: " + map.size + " domains, " + strandCount + " strands" +
+    (updated ? " (" + updated + " updated, " + added + " new)" : "");
+}
+
+document.getElementById("btnImportFw").onclick = () => document.getElementById("fwCsvFile").click();
+document.getElementById("fwCsvFile").onchange = (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{ status(applyFrameworkCsv(reader.result)); }
+    catch(err){ alert(err.message); }
+  };
+  reader.onerror = () => alert("Could not read that file.");
+  reader.readAsText(file);
 };
 
 /* ===================== Tabs & chrome ===================== */

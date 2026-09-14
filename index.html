@@ -207,7 +207,6 @@
     body{background:#fff; font-size:11pt;}
     header, nav, .buildfoot, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
     main{max-width:none; padding:4mm 5mm;}
-    .printframe{display:block; position:fixed; inset:0; border:4px double #8FBF9F; border-radius:6pt; pointer-events:none;}
     .printwatermark{display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:52%; opacity:.09; z-index:-1;}
     #reflectionWrap{break-before:page; page-break-before:always;}
     /* Printing an open activity plan: only the plan, on A4 portrait (set by script) */
@@ -349,7 +348,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-13a";
+const BUILD = "2026-09-14a";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1493,10 +1492,6 @@ function decoratePdfPage(pdf, pm){
   pdf.setFontSize(7);
   pdf.setTextColor(150, 150, 150);
   pdf.text("Little Puddings planning \u00b7 build " + BUILD, pm.w / 2, pm.h - 4, { align: "center" });
-  pdf.setDrawColor(143, 191, 159);
-  pdf.setLineWidth(0.5);
-  pdf.roundedRect(7, 7, pm.w - 14, pm.h - 14, 3, 3);
-  pdf.roundedRect(8.4, 8.4, pm.w - 16.8, pm.h - 16.8, 3, 3);
 }
 
 function placePdfImage(pdf, canvas, pm){

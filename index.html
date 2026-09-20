@@ -200,6 +200,16 @@
   .buildfoot{text-align:center; color:var(--grey); font-size:.72rem; padding:18px 16px 26px;}
   body.printlike .buildfoot{display:none !important;}
 
+  /* View mode: the printed look on screen; navigation stays, editing sleeps */
+  body.viewmode .weekbar .navbtn, body.viewmode #btnToday, body.viewmode #btnMode,
+  body.viewmode #jumpDate, body.viewmode #paperSize, body.viewmode #btnPdf,
+  body.viewmode #btnPrint{display:inline-block !important;}
+  body.viewmode #btnMode{background:var(--green); color:#fff; border:none;}
+  body.viewmode .item .txt, body.viewmode .item textarea, body.viewmode .whyrow textarea,
+  body.viewmode #weekTopic, body.viewmode .reflection textarea{pointer-events:none;}
+  body.viewmode ::placeholder{color:transparent;}
+  body.viewmode main{background:#fff;}
+
   .printframe, .printwatermark{display:none;}
 
   /* ---------- Print media: page-level rules (visuals come from body.printlike, added on beforeprint) ---------- */
@@ -252,6 +262,7 @@
       <button class="navbtn" id="prevWeek">&#8249;</button>
       <h2 id="weekTitle">w/c</h2>
       <button class="navbtn" id="nextWeek">&#8250;</button>
+      <button class="btn secondary small" id="btnMode">Edit</button>
       <button class="btn secondary small" id="btnToday">This week</button>
       <input type="date" id="jumpDate" title="Jump to any week, past or future" style="border:1.5px solid var(--green);border-radius:6px;padding:5px 7px;font-size:.82rem;color:var(--green);font-family:Arial,sans-serif;">
       <div class="spacer"></div>
@@ -371,7 +382,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-18a";
+const BUILD = "2026-09-20a";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1592,6 +1603,16 @@ document.getElementById("jumpDate").onchange = (e) => {
   renderSheet();
 };
 document.getElementById("btnPrint").onclick = () => window.print();
+
+/* ---- View mode: the clean, printed-look landing page ---- */
+function setViewMode(on){
+  document.body.classList.toggle("viewmode", on);
+  document.body.classList.toggle("printlike", on);
+  document.getElementById("btnMode").textContent = on ? "Edit" : "View";
+  try{ localStorage.setItem("lp-viewmode", on ? "1" : "0"); }catch(e){}
+}
+document.getElementById("btnMode").onclick = () => setViewMode(!document.body.classList.contains("viewmode"));
+setViewMode(localStorage.getItem("lp-viewmode") !== "0");
 document.getElementById("btnPdf").onclick = () => savePdf();
 
 /* ---- Direct PDF: builds and downloads the file, no print dialogue ---- */
@@ -1741,7 +1762,7 @@ function fitSheetForPrint(){
 }
 function unfitSheet(){
   const sheet = document.getElementById("sheet");
-  document.body.classList.remove("printlike");
+  if (!document.body.classList.contains("viewmode")) document.body.classList.remove("printlike");
   sheet.style.transform = ""; sheet.style.width = ""; sheet.style.height = ""; sheet.style.transformOrigin = "";
 }
 window.addEventListener("beforeprint", fitSheetForPrint);

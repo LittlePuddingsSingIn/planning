@@ -382,7 +382,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-20d";
+const BUILD = "2026-09-20e";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1145,6 +1145,9 @@ function createPlan(title, weekKey, itemId){
   return p;
 }
 function touchPlan(p){ p.updatedAt = now(); markDirty(); }
+function planScheduled(p){
+  return !!(p.itemId && Object.values(state.weeks).some(wk => (wk.items || []).some(i => i.id === p.itemId && !i.deleted)));
+}
 function planStatus(p){ return ((p.evaluation||"").trim() || (p.individualEval||"").trim()) ? "evaluated" : "planned"; }
 
 function renderPlans(){
@@ -1171,11 +1174,25 @@ function renderPlans(){
     const t = document.createElement("div"); t.className = "t";
     const nm = document.createElement("div"); nm.className = "name"; nm.textContent = p.title || "Untitled activity";
     const meta = document.createElement("div"); meta.className = "meta";
-    meta.textContent = fmtWeek(p.weekKey).replace("w/c Monday","w/c") + (p.strands.length ? " · " + p.strands.length + " strand" + (p.strands.length>1?"s":"") + " tagged" : "") + (p.fromNextStep ? " · from the Noticing Room" : "") + (p.children ? " · " + p.children : "");
+    const parts = [];
+    if (planScheduled(p)) parts.push(fmtWeek(p.weekKey).replace("w/c Monday","w/c"));
+    if (p.strands.length) parts.push(p.strands.length + " strand" + (p.strands.length>1?"s":"") + " tagged");
+    if (p.fromNextStep) parts.push("from the Noticing Room");
+    if (p.children) parts.push(p.children);
+    meta.textContent = parts.join(" · ");
     t.appendChild(nm); t.appendChild(meta); row.appendChild(t);
     const st = document.createElement("span"); st.className = "status " + planStatus(p);
     st.textContent = planStatus(p) === "evaluated" ? "Evaluated" : "Planned";
     row.appendChild(st);
+    if (canEdit()){
+      const del = document.createElement("button"); del.className = "iconbtn"; del.innerHTML = "&#10005;"; del.title = "Delete this plan";
+      del.onclick = (ev) => {
+        ev.stopPropagation();
+        if (!confirm("Delete the plan \"" + (p.title || "Untitled activity") + "\"?")) return;
+        p.deleted = true; p.updatedAt = now(); markDirty(); renderPlans();
+      };
+      row.appendChild(del);
+    }
     box.appendChild(row);
   });
 }

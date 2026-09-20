@@ -394,7 +394,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-20f";
+const BUILD = "2026-09-20g";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1234,14 +1234,25 @@ function openPlan(id){
   bar.appendChild(wkBtn);
   const hasLiveItem = p.itemId && Object.values(state.weeks).some(wk => (wk.items || []).some(i => i.id === p.itemId && !i.deleted));
   if (edit && !hasLiveItem){
+    const wsel = document.createElement("input"); wsel.type = "date";
+    wsel.title = "Which week to add it to (pick any day in that week)";
+    wsel.value = p.weekKey || currentWeek;
     const dsel = document.createElement("select");
     dsel.innerHTML = DAYS.map(([k, l]) => '<option value="' + k + '">' + l + '</option>').join("");
     const ssel = document.createElement("select");
     ssel.innerHTML = '<option value="am">AM</option><option value="pm">PM</option>';
-    [dsel, ssel].forEach(x => { x.style.cssText = "border:1px solid var(--line);border-radius:5px;font-size:.78rem;padding:3px;"; bar.appendChild(x); });
-    const addBtn = document.createElement("button"); addBtn.className = "btn small"; addBtn.textContent = "Add to week sheet";
+    const addBtn = document.createElement("button"); addBtn.className = "btn small";
+    const labelBtn = () => {
+      const wk = wsel.value ? mondayOf(new Date(wsel.value + "T00:00:00")) : currentWeek;
+      addBtn.textContent = "Add to " + fmtWeek(wk).replace("w/c Monday", "w/c");
+    };
+    wsel.onchange = labelBtn;
+    [wsel, dsel, ssel].forEach(x => { x.style.cssText = "border:1px solid var(--line);border-radius:5px;font-size:.78rem;padding:3px;font-family:Arial,sans-serif;"; bar.appendChild(x); });
+    labelBtn();
     addBtn.onclick = () => {
-      const wk = ensureWeek(p.weekKey);
+      const target = wsel.value ? mondayOf(new Date(wsel.value + "T00:00:00")) : currentWeek;
+      p.weekKey = target;
+      const wk = ensureWeek(target);
       const item = { id: uid(), section: "goals", day: dsel.value, slot: ssel.value,
         text: p.title || "Planned activity", link: "", notes: p.approach || "", assignedTo: null,
         done: false, deleted: false, carriedFrom: null, planId: p.id,
@@ -1249,9 +1260,9 @@ function openPlan(id){
       wk.items.push(item);
       p.itemId = item.id; touchPlan(p);
       closePlan();
-      currentWeek = p.weekKey;
+      currentWeek = target;
       switchTab("week");
-      status("Added to the sheet for " + fmtWeek(p.weekKey).replace("w/c Monday", "w/c"));
+      status("Added to the sheet for " + fmtWeek(target).replace("w/c Monday", "w/c"));
     };
     bar.appendChild(addBtn);
   }

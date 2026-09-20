@@ -92,31 +92,31 @@
 
   /* ---------- Shared print & PDF appearance (styled like the original form) ---------- */
   #reflectionWrap{margin-top:14px;}
-  body.printlike .addbtn, body.printlike .iconbtn, body.printlike .item select,
-  body.printlike .item .linkrow, body.printlike .planchip,
-  body.printlike .weekbar .navbtn, body.printlike .weekbar .btn,
-  body.printlike .weekbar input, body.printlike .weekbar select,
-  body.printlike .banner, body.printlike #saveStatus{display:none !important;}
+  body.printlike #tab-week .addbtn, body.printlike #tab-week .iconbtn,
+  body.printlike #tab-week .item select, body.printlike #tab-week .item .linkrow,
+  body.printlike #tab-week .planchip,
+  body.printlike #tab-week .weekbar .navbtn, body.printlike #tab-week .weekbar .btn,
+  body.printlike #tab-week .weekbar input, body.printlike #tab-week .weekbar select{display:none !important;}
   body.printlike{background:#fff;}
-  body.printlike .weekbar{margin-bottom:2px;}
-  body.printlike .weekbar h2{font-size:.9rem; font-weight:normal;}
+  body.printlike #tab-week .weekbar{margin-bottom:2px;}
+  body.printlike #tab-week .weekbar h2{font-size:.9rem; font-weight:normal;}
   body.printlike .topicrow{justify-content:center; margin:0 0 16px;}
   body.printlike .topiclabel{display:none;}
   body.printlike #weekTopic{border:none; border-bottom:1.5px solid var(--ink); border-radius:0; background:none;
     text-align:center; font-size:1.3rem; flex:0 1 55%; max-width:55%; padding:2px 6px;}
-  body.printlike .sheet, body.printlike .section, body.printlike .card{background:transparent; border:none; box-shadow:none;}
+  body.printlike .sheet, body.printlike #tab-week .section, body.printlike #reflectionWrap .card{background:transparent; border:none; box-shadow:none;}
   body.printlike .sheet{padding:0; gap:14px 24px; grid-template-rows:1fr;}
   body.printlike .col{gap:14px; height:100%;}
   body.printlike .col > .section:last-child{margin-top:auto;}
-  body.printlike .section{border-radius:0; padding:0 0 6px;}
-  body.printlike .section h3{background:none; border-left:none; border-radius:0; text-align:left; padding:0 0 2px;
+  body.printlike #tab-week .section{border-radius:0; padding:0 0 6px;}
+  body.printlike #tab-week .section h3{background:none; border-left:none; border-radius:0; text-align:left; padding:0 0 2px;
     text-decoration:underline; text-underline-offset:3px; font-size:1.05rem;}
-  body.printlike .item{border:none; border-bottom:1px solid var(--line); border-radius:0; padding:2px 0; margin-bottom:2px; background:transparent;}
-  body.printlike .item .txt{border-bottom:none;}
+  body.printlike #tab-week .item{border:none; border-bottom:1px solid var(--line); border-radius:0; padding:2px 0; margin-bottom:2px; background:transparent;}
+  body.printlike #tab-week .item .txt{border-bottom:none;}
   body.printlike .assignee-print{display:inline;}
-  body.printlike .item textarea{border:none; padding:2px 0;}
-  body.printlike .item input[type=checkbox]{appearance:none; width:12px; height:12px; border:1.2px solid var(--grey); border-radius:2px;}
-  body.printlike .item.done input[type=checkbox]{background:var(--green);}
+  body.printlike #tab-week .item textarea{border:none; padding:2px 0;}
+  body.printlike #tab-week .item input[type=checkbox]{appearance:none; width:12px; height:12px; border:1.2px solid var(--grey); border-radius:2px;}
+  body.printlike #tab-week .item.done input[type=checkbox]{background:var(--green);}
   body.printlike .weeklybox{background:var(--cream);}
   body.printlike .weeklybox .txt{font-size:1.05rem;}
   body.printlike .weeklybox .item{border-bottom:none;}
@@ -198,16 +198,16 @@
   @media (max-width:640px){ .fw .strands{grid-template-columns:1fr;} }
 
   .buildfoot{text-align:center; color:var(--grey); font-size:.72rem; padding:18px 16px 26px;}
-  body.printlike .buildfoot{display:none !important;}
 
   /* View mode: the printed look on screen; navigation stays, editing sleeps */
-  body.viewmode .weekbar .navbtn, body.viewmode #btnToday, body.viewmode #btnMode,
+  body.viewmode #tab-week .weekbar .navbtn, body.viewmode #btnToday, body.viewmode #btnMode,
   body.viewmode #jumpDate, body.viewmode #paperSize, body.viewmode #btnPdf,
   body.viewmode #btnPrint{display:inline-block !important;}
   body.viewmode #btnMode{background:var(--green); color:#fff; border:none;}
-  body.viewmode .item .txt, body.viewmode .item textarea, body.viewmode .whyrow textarea,
-  body.viewmode #weekTopic, body.viewmode .reflection textarea{pointer-events:none;}
-  body.viewmode ::placeholder{color:transparent;}
+  body.viewmode #tab-week .item .txt, body.viewmode #tab-week .item textarea,
+  body.viewmode #tab-week .whyrow textarea,
+  body.viewmode #weekTopic, body.viewmode #tab-week .reflection textarea{pointer-events:none;}
+  body.viewmode #tab-week ::placeholder{color:transparent;}
   body.viewmode main{background:#fff;}
 
   .printframe, .printwatermark{display:none;}
@@ -216,7 +216,7 @@
   @media print{
     @page{margin:12mm;}
     body{background:#fff; font-size:11pt;}
-    header, nav, .buildfoot, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
+    header, nav, .buildfoot, .banner, #saveStatus, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
     main{max-width:none; padding:4mm 5mm;}
     .printwatermark{display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:52%; opacity:.09; z-index:-1;}
     #reflectionWrap{break-before:page; page-break-before:always;}
@@ -349,7 +349,7 @@
   </section>
 </main>
 
-<div class="buildfoot">Little Puddings weekly planning &middot; build <span id="buildStamp"></span> &middot; if this build number is older than the latest one, you are looking at an old copy: refresh the page (Ctrl+F5)</div>
+<div class="buildfoot">Little Puddings weekly planning &middot; version <span id="buildStamp"></span> &middot; <span id="buildDate"></span> &middot; an older version number means an old copy: refresh the page (Ctrl+F5)</div>
 
 <div class="overlay hidden" id="planOverlay">
   <div class="plan" id="planBody"></div>
@@ -382,7 +382,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-20a";
+const BUILD = "2026-09-20d";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1355,17 +1355,31 @@ function toInitials(name){
 }
 function importNextSteps(raw, initialsOnly){
   const parsed = parseNextSteps(raw);
-  if (initialsOnly && parsed.childName) parsed.childName = toInitials(parsed.childName);
+  const rawName = parsed.childName || "";
+  if (initialsOnly && rawName) parsed.childName = toInitials(rawName);
+  const swapName = (t) => {
+    if (!initialsOnly || !rawName) return t || "";
+    const ini = toInitials(rawName);
+    let out = t || "";
+    const forms = [rawName];
+    const first = rawName.split(/\s+/)[0];
+    if (first && first.length > 1 && first.toLowerCase() !== rawName.toLowerCase()) forms.push(first);
+    forms.forEach(n => {
+      const re = new RegExp("\\b" + n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?:'s)?\\b", "gi");
+      out = out.replace(re, m => m.toLowerCase().endsWith("'s") ? ini.replace(/\.$/, "") + ".'s" : ini);
+    });
+    return out;
+  };
   if (!parsed.steps.length) throw new Error("No next steps were found in that text. Copy the whole section, from the step title down to Worth saying.");
   parsed.steps.forEach(st => {
-    const p = createPlan(st.title, currentWeek, null);
+    const p = createPlan(swapName(st.title), currentWeek, null);
     p.children = parsed.childName || "";
-    p.interests = st.because || "";
-    let ap = st.weWill || "";
-    if (st.then) ap += (ap ? "\n" : "") + "Then: " + st.then;
-    if (st.worth) ap += (ap ? "\n" : "") + "Worth saying: " + st.worth;
+    p.interests = swapName(st.because);
+    let ap = swapName(st.weWill);
+    if (st.then) ap += (ap ? "\n" : "") + "Then: " + swapName(st.then);
+    if (st.worth) ap += (ap ? "\n" : "") + "Worth saying: " + swapName(st.worth);
     p.approach = ap;
-    p.whyImpact = st.notice || "";
+    p.whyImpact = swapName(st.notice);
     p.fromNextStep = true;
     p.updatedAt = now();
   });
@@ -1772,6 +1786,13 @@ document.getElementById("btnRefresh").onclick = () => syncFromCloud(false);
 
 /* ===================== Start ===================== */
 document.getElementById("buildStamp").textContent = BUILD;
+(function(){
+  const m = BUILD.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m){
+    const d = new Date(m[1] + "-" + m[2] + "-" + m[3] + "T00:00:00");
+    document.getElementById("buildDate").textContent = d.getDate() + " " + d.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+  }
+})();
 renderAll();
 initAuth();
 </script>

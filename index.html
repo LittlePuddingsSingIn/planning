@@ -86,6 +86,7 @@
   .minilabel{font-size:.7rem; font-weight:bold; color:var(--gold); margin:4px 0 2px; text-transform:uppercase; letter-spacing:.03em;}
   .whyrow textarea{width:100%; border:1px solid var(--line); border-radius:5px; padding:4px 6px; font-size:.8rem; font-family:Arial, sans-serif; resize:none; overflow:hidden; min-height:28px;}
   .assignee-print{display:none; font-size:.8rem; color:var(--grey); font-style:italic;}
+  .who-print{display:none; font-size:.72rem; color:var(--grey); font-weight:bold; margin-right:2px; min-width:20px;}
   .addbtn{background:none; border:1.5px dashed var(--line); border-radius:8px; color:var(--grey); width:100%; padding:5px; font-size:.78rem;}
   .addbtn:hover{border-color:var(--green); color:var(--green);}
   .empty{color:var(--grey); font-size:.8rem; font-style:italic; margin:2px 0 6px;}
@@ -113,7 +114,9 @@
     text-decoration:underline; text-underline-offset:3px; font-size:1.05rem;}
   body.printlike #tab-week .item{border:none; border-bottom:1px solid var(--line); border-radius:0; padding:2px 0; margin-bottom:2px; background:transparent;}
   body.printlike #tab-week .item .txt{border-bottom:none;}
+  body.printlike #tab-week .item .assignee-print{display:none;}
   body.printlike .assignee-print{display:inline;}
+  body.printlike #tab-week .who-print{display:inline-block;}
   body.printlike #tab-week .item textarea{border:none; padding:2px 0;}
   body.printlike #tab-week .item input[type=checkbox]{appearance:none; width:12px; height:12px; border:1.2px solid var(--grey); border-radius:2px;}
   body.printlike #tab-week .item.done input[type=checkbox]{background:var(--green);}
@@ -200,10 +203,12 @@
   .buildfoot{text-align:center; color:var(--grey); font-size:.72rem; padding:18px 16px 26px;}
 
   /* View mode: the printed look on screen; navigation stays, editing sleeps */
-  body.viewmode #tab-week .weekbar .navbtn,
-  body.viewmode #tab-week .weekbar #btnToday, body.viewmode #tab-week .weekbar #btnMode,
-  body.viewmode #tab-week .weekbar #jumpDate, body.viewmode #tab-week .weekbar #paperSize,
-  body.viewmode #tab-week .weekbar #btnPdf, body.viewmode #tab-week .weekbar #btnPrint{display:inline-block !important;}
+  @media screen{
+    body.viewmode #tab-week .weekbar .navbtn,
+    body.viewmode #tab-week .weekbar #btnToday, body.viewmode #tab-week .weekbar #btnMode,
+    body.viewmode #tab-week .weekbar #jumpDate, body.viewmode #tab-week .weekbar #paperSize,
+    body.viewmode #tab-week .weekbar #btnPdf, body.viewmode #tab-week .weekbar #btnPrint{display:inline-block !important;}
+  }
   body.viewmode #btnMode{background:var(--green); color:#fff; border:none;}
   body.viewmode #tab-week .item .txt, body.viewmode #tab-week .item textarea,
   body.viewmode #tab-week .whyrow textarea,
@@ -217,7 +222,8 @@
   @media print{
     @page{margin:12mm;}
     body{background:#fff; font-size:11pt;}
-    header, nav, .buildfoot, .banner, #saveStatus, #tab-mytasks, #tab-plans, #tab-settings{display:none !important;}
+    header, nav, .buildfoot, .banner, #saveStatus, #tab-mytasks, #tab-plans, #tab-ideas, #tab-settings{display:none !important;}
+    #tab-week ::placeholder, #reflectionWrap ::placeholder{color:transparent !important; opacity:0 !important;}
     main{max-width:none; padding:4mm 5mm;}
     .printwatermark{display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:52%; opacity:.09; z-index:-1;}
     #reflectionWrap{break-before:page; page-break-before:always;}
@@ -327,7 +333,7 @@
     <div class="card">
       <h3>Practitioners</h3>
       <p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Add each team member here so tasks can be assigned to them. The email must match the Microsoft account they sign in with.</p>
-      <table id="pracTable"><thead><tr><th>Name</th><th>Email</th><th>Can plan</th><th></th></tr></thead><tbody></tbody></table>
+      <table id="pracTable"><thead><tr><th>Name</th><th>Email</th><th>Initials</th><th>Can plan</th><th></th></tr></thead><tbody></tbody></table>
       <p style="font-size:.78rem;color:var(--grey);margin:8px 0 0;">Can plan lets that person add, edit, assign and move things on the sheet and write activity plans, everything except Settings. Leave it unticked for view-tick-and-notes only.</p>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
         <input type="text" id="pracName" placeholder="Name">
@@ -396,7 +402,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-20i";
+const BUILD = "2026-09-22c";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -472,6 +478,13 @@ function liveItems(key){
 }
 
 /* ===================== Roles ===================== */
+function initialsFromName(n){
+  return String(n || "").trim().split(/\s+/).map(w => (w[0] || "").toUpperCase()).join("");
+}
+function pracInitials(p){
+  if (!p) return "";
+  return (p.initials && p.initials.trim()) ? p.initials.trim().toUpperCase() : initialsFromName(p.name);
+}
 function canEdit(){
   if (role !== "practitioner") return true;
   const me = myPractitioner();
@@ -738,6 +751,16 @@ function itemCard(item, weekKey, simple){
     txt.oninput = () => { item.text = txt.value; touch(item); };
     top.appendChild(txt);
     const resRow = document.createElement("div"); resRow.className = "notesrow" + (item.notes ? "" : " hidden");
+    top.appendChild(iconBtn("&#128203;", item.planId ? "Open activity plan" : "Attach an activity plan", () => {
+      if (item.planId){
+        const p = state.plans.find(x => x.id === item.planId && !x.deleted);
+        if (p){ openPlan(p.id); return; }
+      }
+      if (!edit){ alert("No activity plan attached to this yet."); return; }
+      const p = createPlan(item.text || "Provision", weekKey, item.id);
+      item.planId = p.id; touch(item);
+      openPlan(p.id);
+    }));
     top.appendChild(iconBtn("&#9998;", "Resources needed", () => {
       resRow.classList.toggle("hidden");
       const t = resRow.querySelector("textarea");
@@ -745,6 +768,11 @@ function itemCard(item, weekKey, simple){
     }));
     if (edit) top.appendChild(iconBtn("&#10005;", "Remove", () => deleteItem(weekKey, item.id)));
     div.appendChild(top);
+    if (item.planId && state.plans.some(x => x.id === item.planId && !x.deleted)){
+      const chip = document.createElement("span"); chip.className = "planchip";
+      chip.textContent = "Activity plan"; chip.onclick = () => openPlan(item.planId);
+      div.appendChild(chip);
+    }
     const prn = document.createElement("span"); prn.className = "assignee-print";
     prn.textContent = (PROV_TYPES.find(t => t[0] === (item.provType || "continuous")) || [])[1] || "";
     div.appendChild(prn);
@@ -810,6 +838,12 @@ function itemCard(item, weekKey, simple){
   };
   top.appendChild(cb);
 
+  const who = document.createElement("span"); who.className = "who-print";
+  const assignedPrac = item.assignedTo ? prac.find(p => p.id === item.assignedTo) : null;
+  who.textContent = assignedPrac ? pracInitials(assignedPrac) : "";
+  who.title = assignedName || "";
+  top.appendChild(who);
+
   const txt = document.createElement("input"); txt.className = "txt"; txt.value = item.text;
   txt.placeholder = item.section === "goals" ? "e.g. walk to the woods, litter picking, library visit, a visitor" : "Activity or task";
   txt.readOnly = !edit;
@@ -820,7 +854,12 @@ function itemCard(item, weekKey, simple){
   sel.disabled = !edit;
   sel.innerHTML = '<option value="">Anyone</option>' + prac.map(p => '<option value="'+p.id+'">'+esc(p.name)+'</option>').join("");
   sel.value = item.assignedTo || "";
-  sel.onchange = () => { item.assignedTo = sel.value || null; touch(item); prn.textContent = sel.value ? (prac.find(p=>p.id===sel.value)||{}).name : ""; };
+  sel.onchange = () => {
+    item.assignedTo = sel.value || null; touch(item);
+    const ap = sel.value ? prac.find(p => p.id === sel.value) : null;
+    prn.textContent = ap ? (ap.name || "") : "";
+    who.textContent = ap ? pracInitials(ap) : ""; who.title = ap ? (ap.name || "") : "";
+  };
   top.appendChild(sel);
 
   const planBtn = iconBtn("&#128203;", item.planId ? "Open activity plan" : "Attach an activity plan", () => {
@@ -1005,7 +1044,8 @@ function renderSheet(){
       wk.reflection[key] = ta.value; wk.reflection.updatedAt = now();
       if (account && ta.value.trim()){
         if (!wk.reflection.by) wk.reflection.by = {};
-        const ini = toInitials(currentUserName());
+        const me = myPractitioner();
+        const ini = me ? pracInitials(me) : initialsFromName(currentUserName());
         const list = wk.reflection.by[key] = wk.reflection.by[key] || [];
         if (ini && !list.includes(ini)){ list.push(ini); }
       }
@@ -1118,7 +1158,19 @@ function renderSettings(){
   tb.innerHTML = "";
   state.practitioners.filter(p => p.active !== false).forEach(p => {
     const tr = document.createElement("tr");
-    tr.innerHTML = "<td>" + esc(p.name) + "</td><td>" + esc(p.email) + "</td>";
+    const tn = document.createElement("td");
+    const ni = document.createElement("input"); ni.type = "text"; ni.value = p.name || "";
+    ni.style.cssText = "border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:.85rem;width:100%;box-sizing:border-box;font-family:Arial,sans-serif;";
+    ni.oninput = () => { p.name = ni.value; p.updatedAt = now(); markDirty(); };
+    tn.appendChild(ni); tr.appendChild(tn);
+    const te = document.createElement("td"); te.textContent = p.email; tr.appendChild(te);
+    const ti = document.createElement("td");
+    const ii = document.createElement("input"); ii.type = "text"; ii.maxLength = 4;
+    ii.value = pracInitials(p);
+    ii.placeholder = initialsFromName(p.name);
+    ii.style.cssText = "border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:.85rem;width:52px;text-transform:uppercase;font-family:Arial,sans-serif;";
+    ii.oninput = () => { p.initials = ii.value.toUpperCase(); p.updatedAt = now(); markDirty(); };
+    ti.appendChild(ii); tr.appendChild(ti);
     const tp = document.createElement("td");
     const ck = document.createElement("input"); ck.type = "checkbox"; ck.checked = !!p.planner;
     ck.style.cssText = "width:17px;height:17px;accent-color:var(--green);";
@@ -1138,7 +1190,7 @@ document.getElementById("btnAddPrac").onclick = () => {
   const email = document.getElementById("pracEmail").value.trim().toLowerCase();
   if (!name || !email){ alert("A name and an email are both needed."); return; }
   if (!email.endsWith(ALLOWED_DOMAIN)){ alert("Use their " + ALLOWED_DOMAIN + " account so sign-in matches."); return; }
-  state.practitioners.push({ id: uid(), name: name, email: email, active: true, updatedAt: now() });
+  state.practitioners.push({ id: uid(), name: name, email: email, initials: initialsFromName(name), active: true, updatedAt: now() });
   document.getElementById("pracName").value = ""; document.getElementById("pracEmail").value = "";
   markDirty(); renderSettings();
 };
@@ -1597,10 +1649,19 @@ function ideaRow(b, kind, typeName){
     const target = wsel.value ? mondayOf(new Date(wsel.value + "T00:00:00")) : currentWeek;
     const wk = ensureWeek(target);
     if (kind === "provision"){
-      wk.items.push({ id: uid(), section: "provision", day: null, slot: null,
+      const p = createPlan(b.title, target, null);
+      p.children = b.children || ""; p.interests = b.because || "";
+      p.approach = b.offer || ""; p.whyImpact = b.notice || "";
+      p.resources = b.resources || ""; p.fromNextStep = true; p.updatedAt = now();
+      const fwp = matchFramework(b.domains);
+      p.strands = fwp.ticked;
+      p.domainsHint = fwp.hints.join(", ");
+      const provItem = { id: uid(), section: "provision", day: null, slot: null,
         text: b.title, provType: b.provType || "invitation", link: "", notes: IDEA_NOTES(b),
-        assignedTo: null, done: false, deleted: false, carriedFrom: null,
-        createdAt: now(), updatedAt: now() });
+        assignedTo: null, done: false, deleted: false, carriedFrom: null, planId: p.id,
+        createdAt: now(), updatedAt: now() };
+      wk.items.push(provItem);
+      p.itemId = provItem.id;
     } else {
       const p = createPlan(b.title, target, null);
       p.children = b.children || ""; p.interests = b.because || "";

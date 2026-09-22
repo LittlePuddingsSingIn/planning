@@ -404,7 +404,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-22d";
+const BUILD = "2026-09-22f";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -760,6 +760,7 @@ function itemCard(item, weekKey, simple){
       }
       if (!edit){ alert("No activity plan attached to this yet."); return; }
       const p = createPlan(item.text || "Provision", weekKey, item.id);
+      enrichPlanFromItem(p, item, weekKey);
       item.planId = p.id; touch(item);
       openPlan(p.id);
     }));
@@ -871,6 +872,7 @@ function itemCard(item, weekKey, simple){
     }
     if (!edit){ alert("No activity plan attached to this yet."); return; }
     const p = createPlan(item.text || "New activity", weekKey, item.id);
+    enrichPlanFromItem(p, item, weekKey);
     item.planId = p.id; touch(item);
     openPlan(p.id);
   });
@@ -1509,13 +1511,18 @@ function importSettingPlan(obj){
   let prov = 0, acts = 0;
   obj.entries.forEach(e => {
     const isProv = e.type === "provision";
-    state.provisionBank.push({ id: uid(), kind: isProv ? "provision" : "activity",
+    const fresh = {
+      kind: isProv ? "provision" : "activity",
       title: e.title || (isProv ? "Provision" : "Planned activity"),
       provType: isProv ? (e.provType || "invitation") : null,
       offer: e.offer || "", resources: e.resources || "", notice: e.notice || "",
       because: e.because || "", children: e.children || "",
-      domains: Array.isArray(e.domains) ? e.domains : (Array.isArray(e.strands) ? e.strands : []),
-      deleted: false, createdAt: now(), updatedAt: now() });
+      domains: Array.isArray(e.domains) ? e.domains : (Array.isArray(e.strands) ? e.strands : [])
+    };
+    const existing = state.provisionBank.find(x => !x.deleted &&
+      (x.title || "").trim().toLowerCase() === fresh.title.trim().toLowerCase());
+    if (existing){ Object.assign(existing, fresh); existing.updatedAt = now(); }
+    else state.provisionBank.push(Object.assign({ id: uid(), deleted: false, createdAt: now(), updatedAt: now() }, fresh));
     if (isProv) prov++; else acts++;
   });
   (obj.alone || []).forEach(a => {
@@ -1582,6 +1589,32 @@ function matchFramework(names){
     hints.push(domainNames[whole] || String(n));
   });
   return { ticked: [...new Set(ticked)], hints: hints };
+}
+
+function enrichPlanFromItem(p, item, weekKey){
+  const b = (state.provisionBank || []).find(x => !x.deleted &&
+    (x.title || "").trim().toLowerCase() === (item.text || "").trim().toLowerCase());
+  if (b){
+    if (!p.children) p.children = b.children || "";
+    if (!p.interests) p.interests = b.because || "";
+    if (!p.approach) p.approach = b.offer || "";
+    if (!p.whyImpact) p.whyImpact = b.notice || "";
+    if (!p.resources) p.resources = b.resources || "";
+    if (!p.strands.length && !p.domainsHint){
+      const fw = matchFramework(b.domains);
+      p.strands = fw.ticked;
+      p.domainsHint = fw.hints.join(", ");
+    }
+    p.fromNextStep = true;
+  }
+  if (!p.approach && item.notes) p.approach = item.notes;
+  if (!p.whyImpact && item.whyImpact) p.whyImpact = item.whyImpact;
+  if (!p.date && weekKey){
+    const dayIdx = item.day ? DAYS.findIndex(x => x[0] === item.day) : 0;
+    const dt = new Date(weekKey + "T00:00:00"); dt.setDate(dt.getDate() + Math.max(0, dayIdx));
+    p.date = isoDate(dt);
+  }
+  p.updatedAt = now();
 }
 
 /* ---- Ideas tab: the manager's holding pen for the setting plan ---- */
@@ -1660,6 +1693,7 @@ function ideaRow(b, kind, typeName){
       const fwp = matchFramework(b.domains);
       p.strands = fwp.ticked;
       p.domainsHint = fwp.hints.join(", ");
+      p.date = target;
       const provItem = { id: uid(), section: "provision", day: null, slot: null,
         text: b.title, provType: b.provType || "invitation", link: "", notes: IDEA_NOTES(b),
         assignedTo: null, done: false, deleted: false, carriedFrom: null, planId: p.id,
@@ -1901,19 +1935,26 @@ function loadPdfLibs(){
 
 const PAPER_MM = { A3: { w: 297, h: 420 }, A4: { w: 210, h: 297 } };
 
+const SNAP_FIELD_SEL = "input:not([type=checkbox]), textarea";
 function snapForPdf(el){
   el.setAttribute("data-snap-root", "1");
-  const srcFields = el.querySelectorAll("input[type=text], input[type=date], textarea");
+  const srcFields = el.querySelectorAll(SNAP_FIELD_SEL);
   return html2canvas(el, {
     scale: 3,
     backgroundColor: "#ffffff",
     onclone: (doc) => {
       const root = doc.querySelector('[data-snap-root="1"]');
       if (!root) return;
-      const cloneFields = root.querySelectorAll("input[type=text], input[type=date], textarea");
+      snapSwapFields(root, srcFields, doc);
+    }
+  }).finally(() => el.removeAttribute("data-snap-root"));
+}
+function snapSwapFields(root, srcFields, doc){
+      const cloneFields = root.querySelectorAll(SNAP_FIELD_SEL);
       cloneFields.forEach((cf, i) => {
         const sf = srcFields[i];
         if (!sf) return;
+        if (!sf.offsetWidth && !sf.offsetHeight){ cf.remove(); return; }
         const cs = getComputedStyle(sf);
         const div = doc.createElement("div");
         div.textContent = sf.value || "\u00A0";
@@ -1927,8 +1968,6 @@ function snapForPdf(el){
         div.style.overflow = "hidden";
         cf.parentNode.replaceChild(div, cf);
       });
-    }
-  }).finally(() => el.removeAttribute("data-snap-root"));
 }
 
 async function savePdf(){

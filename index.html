@@ -163,6 +163,8 @@
   .hidden{display:none !important;}
 
   /* ---------- Activity plans ---------- */
+  .domain.hinted{background:var(--cream); border:1px solid var(--gold); border-radius:6px; padding:6px; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  .domain.hinted .dname::after{content:" \2726 from the setting plan"; color:var(--gold); font-size:.68rem; font-style:italic; font-weight:normal;}
   .planchip{display:inline-block; background:var(--pale); color:var(--green); border:1px solid var(--green); border-radius:10px; font-size:.68rem; padding:1px 8px; margin-top:4px; cursor:pointer; font-weight:bold;}
   .planrow{display:flex; gap:10px; align-items:center; padding:9px 4px; border-bottom:1px dashed var(--line); cursor:pointer;}
   .planrow:hover{background:var(--pale);}
@@ -402,7 +404,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-22c";
+const BUILD = "2026-09-22d";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1373,8 +1375,10 @@ function openPlan(id){
     body.appendChild(note);
   } else {
     const grid = document.createElement("div"); grid.className = "gccgrid";
+    const hintNorm = (p.domainsHint || "").toLowerCase().replace(/&/g, "and");
     activeGcc.forEach(dom => {
       const dv = document.createElement("div"); dv.className = "domain";
+      if (hintNorm && hintNorm.includes((dom.name || "").toLowerCase().replace(/&/g, "and"))) dv.classList.add("hinted");
       const dn = document.createElement("div"); dn.className = "dname"; dn.textContent = dom.name; dv.appendChild(dn);
       (dom.strands||[]).forEach((s, idx) => {
         if (!s || !s.trim()) return;

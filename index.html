@@ -404,7 +404,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-25b";
+const BUILD = "2026-09-25c";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1998,6 +1998,8 @@ async function savePdf(){
   const sheet = document.getElementById("sheet");
   const rwrap = document.getElementById("reflectionWrap");
   const prev = { tabW: tab.style.width, sheetW: sheet.style.width, sheetH: sheet.style.height, rW: rwrap.style.width };
+  const pdfWasViewMode = document.body.classList.contains("viewmode");
+  document.body.classList.remove("viewmode");
   document.body.classList.add("printlike");
   try{
     tab.style.width = dims.w + "px";
@@ -2031,7 +2033,11 @@ async function savePdf(){
     sheet.style.height = prev.sheetH || "";
     rwrap.style.width = prev.rW || "";
     rwrap.style.display = "";
-    document.body.classList.remove("printlike");
+    if (pdfWasViewMode){
+      document.body.classList.add("viewmode");
+    } else {
+      document.body.classList.remove("printlike");
+    }
   }
 }
 

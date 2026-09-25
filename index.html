@@ -404,7 +404,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-25a";
+const BUILD = "2026-09-25b";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -2061,6 +2061,7 @@ function placePdfImage(pdf, canvas, pm){
 
 /* ---- Scale the sheet so page one always fits the chosen paper, however much is planned ---- */
 const PAPER = { A3: { w: 995, h: 1440 }, A4: { w: 668, h: 976 } }; // portrait, inside 12mm margins and the frame, CSS px
+let fitWasViewMode = false;
 function fitSheetForPrint(){
   if (document.body.classList.contains("plan-open")) return;
   if (document.getElementById("tab-week").classList.contains("hidden")) return;
@@ -2068,6 +2069,8 @@ function fitSheetForPrint(){
   document.getElementById("pageStyle").textContent = "@media print{@page{size:" + size + " portrait;}}";
   const dims = PAPER[size];
   const sheet = document.getElementById("sheet");
+  fitWasViewMode = document.body.classList.contains("viewmode");
+  document.body.classList.remove("viewmode");
   document.body.classList.add("printlike");
   const avail = dims.h - (size === "A3" ? 160 : 130); // room for the w/c heading and topic line
   let s = 1;
@@ -2085,7 +2088,12 @@ function fitSheetForPrint(){
 }
 function unfitSheet(){
   const sheet = document.getElementById("sheet");
-  if (!document.body.classList.contains("viewmode")) document.body.classList.remove("printlike");
+  if (fitWasViewMode){
+    document.body.classList.add("viewmode");
+    document.body.classList.add("printlike");
+  } else {
+    document.body.classList.remove("printlike");
+  }
   sheet.style.transform = ""; sheet.style.width = ""; sheet.style.height = ""; sheet.style.transformOrigin = "";
 }
 window.addEventListener("beforeprint", fitSheetForPrint);

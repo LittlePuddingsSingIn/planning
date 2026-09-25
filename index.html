@@ -404,7 +404,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-22f";
+const BUILD = "2026-09-25a";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -705,6 +705,22 @@ function carryAll(){
   if (!confirm("Move " + unfinished.length + " unfinished item(s) to next week?")) return;
   unfinished.forEach(i => moveItem(currentWeek, i.id));
 }
+function continueNextWeek(item, weekKey){
+  if (!(item.text || "").trim()){ status("Type the title first, then carry it over."); return; }
+  const nk = addWeeks(weekKey, 1);
+  const nw = ensureWeek(nk);
+  const dup = nw.items.some(i => !i.deleted && i.section === item.section &&
+    (i.day || null) === (item.day || null) &&
+    (i.text || "").trim().toLowerCase() === (item.text || "").trim().toLowerCase());
+  if (dup){ status("Already on next week's sheet."); return; }
+  nw.items.push({ id: uid(), section: item.section, day: item.day || null, slot: item.slot || null,
+    text: item.text, link: item.link || "", notes: item.notes || "",
+    provType: item.provType, planId: null, assignedTo: null,
+    done: false, deleted: false, carriedFrom: weekKey,
+    createdAt: now(), updatedAt: now() });
+  markDirty();
+  status("Copied to " + fmtWeek(nk).replace("w/c Monday", "w/c") + ". This week keeps its copy.");
+}
 function deleteItem(weekKey, id){
   const item = findItem(weekKey, id); if (!item) return;
   if (item.text.trim() && !confirm("Delete this activity?")) return;
@@ -769,6 +785,7 @@ function itemCard(item, weekKey, simple){
       const t = resRow.querySelector("textarea");
       if (!resRow.classList.contains("hidden")){ autoGrow(t); t.focus(); }
     }));
+    if (edit) top.appendChild(iconBtn("&#8594;", "Continue next week (copies it over)", () => continueNextWeek(item, weekKey)));
     if (edit) top.appendChild(iconBtn("&#10005;", "Remove", () => deleteItem(weekKey, item.id)));
     div.appendChild(top);
     if (item.planId && state.plans.some(x => x.id === item.planId && !x.deleted)){
@@ -804,6 +821,7 @@ function itemCard(item, weekKey, simple){
         if (!lyricsRow.classList.contains("hidden")){ autoGrow(t); if (edit) t.focus(); }
       }));
     }
+    if (edit) top.appendChild(iconBtn("&#8594;", "Continue next week (copies it over)", () => continueNextWeek(item, weekKey)));
     if (edit) top.appendChild(iconBtn("&#10005;", "Remove", () => deleteItem(weekKey, item.id)));
     div.appendChild(top);
     if (isSong){

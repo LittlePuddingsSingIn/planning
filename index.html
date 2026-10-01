@@ -65,6 +65,18 @@
   .bookrow .bookitems .item{margin-bottom:3px;}
   .bookrow .addbtn, .weeklybox .addbtn{width:auto; padding:3px 10px; margin-top:2px;}
   .slotlabel{font-size:.72rem; font-weight:bold; color:var(--gold); margin:5px 0 2px;}
+  .dayblock{border-radius:8px; padding:3px 8px 5px; margin:7px 0;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  .dayblock .rowlabel{margin-top:2px;}
+  .slotblock{border-radius:6px; padding:3px 7px 5px; margin:3px 0 5px;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  .day-mon{--day-pm:#DCEBE2; --day-am:#EFF7F2;}
+  .day-tue{--day-pm:#F6E8C4; --day-am:#FBF4E1;}
+  .day-wed{--day-pm:#DCE8F3; --day-am:#EFF5FA;}
+  .day-thu{--day-pm:#EAE3F2; --day-am:#F5F1F9;}
+  .day-fri{--day-pm:#DAEFED; --day-am:#EEF8F7;}
+  .slotblock.slot-am{background:var(--day-am);}
+  .slotblock.slot-pm{background:var(--day-pm);}
 
   /* ---------- Item cards ---------- */
   .item{border:1px solid var(--line); border-radius:8px; padding:6px 8px; margin-bottom:6px; background:#fff;}
@@ -404,7 +416,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-30a";
+const BUILD = "2026-10-01a";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1065,14 +1077,18 @@ function renderSheet(){
       secItems.forEach(i => box.appendChild(itemCard(i, currentWeek, "song")));
       if (!secItems.length && !edit){ const e = document.createElement("div"); e.className="empty"; e.textContent = "Nothing planned"; box.appendChild(e); }
       if (edit) box.appendChild(addButton(sec.id, null, null, "+ Add song or rhyme"));
-    } else if (sec.slots){ // Goals: Mon-Fri AM/PM
+    } else if (sec.slots){ // Goals: Mon-Fri AM/PM, each day its own tint, AM lighter than PM
       DAYS.forEach(([k,label]) => {
-        const rl = document.createElement("div"); rl.className = "rowlabel"; rl.textContent = label; box.appendChild(rl);
+        const dayBlock = document.createElement("div"); dayBlock.className = "dayblock day-" + k;
+        const rl = document.createElement("div"); rl.className = "rowlabel"; rl.textContent = label; dayBlock.appendChild(rl);
         ["am","pm"].forEach(slot => {
-          const sl = document.createElement("div"); sl.className = "slotlabel"; sl.textContent = slot.toUpperCase(); box.appendChild(sl);
-          items.filter(i => i.section===sec.id && i.day===k && i.slot===slot).forEach(i => box.appendChild(itemCard(i, currentWeek)));
-          if (edit) box.appendChild(addButton(sec.id, k, slot));
+          const slotBlock = document.createElement("div"); slotBlock.className = "slotblock slot-" + slot;
+          const sl = document.createElement("div"); sl.className = "slotlabel"; sl.textContent = slot.toUpperCase(); slotBlock.appendChild(sl);
+          items.filter(i => i.section===sec.id && i.day===k && i.slot===slot).forEach(i => slotBlock.appendChild(itemCard(i, currentWeek)));
+          if (edit) slotBlock.appendChild(addButton(sec.id, k, slot));
+          dayBlock.appendChild(slotBlock);
         });
+        box.appendChild(dayBlock);
       });
     } else {
       const secItems = items.filter(i => i.section===sec.id);

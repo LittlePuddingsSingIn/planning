@@ -404,7 +404,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-09-25c";
+const BUILD = "2026-09-30a";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -821,6 +821,19 @@ function itemCard(item, weekKey, simple){
         if (!lyricsRow.classList.contains("hidden")){ autoGrow(t); if (edit) t.focus(); }
       }));
     }
+    if (edit && item.section === "books"){
+      const bdsel = document.createElement("select");
+      bdsel.title = "Move this book to a different day";
+      bdsel.style.cssText = "border:1px solid var(--line);border-radius:5px;font-size:.72rem;padding:2px;font-family:Arial,sans-serif;max-width:92px;";
+      const opts = [["weekly","Weekly story"]].concat(DAYS);
+      bdsel.innerHTML = opts.map(([k, l]) => '<option value="' + k + '"' + (k === item.day ? " selected" : "") + '>' + l + '</option>').join("");
+      bdsel.onchange = () => {
+        item.day = bdsel.value; touch(item);
+        status("Moved to " + (bdsel.value === "weekly" ? "the weekly story" : (DAYS.find(x => x[0] === bdsel.value) || ["",""])[1]));
+        renderSheet();
+      };
+      top.appendChild(bdsel);
+    }
     if (edit) top.appendChild(iconBtn("&#8594;", "Continue next week (copies it over)", () => continueNextWeek(item, weekKey)));
     if (edit) top.appendChild(iconBtn("&#10005;", "Remove", () => deleteItem(weekKey, item.id)));
     div.appendChild(top);
@@ -899,11 +912,38 @@ function itemCard(item, weekKey, simple){
   top.appendChild(linkBtn);
   const noteBtn = iconBtn("&#9998;", "Preparation notes", () => { noteRow.classList.toggle("hidden"); const t = noteRow.querySelector("textarea"); if(!noteRow.classList.contains("hidden")){ autoGrow(t); t.focus(); } });
   top.appendChild(noteBtn);
+  let dayRow = null;
+  if (edit && item.section === "goals"){
+    top.appendChild(iconBtn("&#8644;", "Move to a different day or slot", () => {
+      dayRow.classList.toggle("hidden");
+    }));
+  }
   if (edit){
     top.appendChild(iconBtn("&#8594;", "Move to next week", () => moveItem(weekKey, item.id)));
     top.appendChild(iconBtn("&#10005;", "Delete", () => deleteItem(weekKey, item.id)));
   }
   div.appendChild(top);
+  if (edit && item.section === "goals"){
+    dayRow = document.createElement("div"); dayRow.className = "notesrow hidden";
+    dayRow.style.cssText = "display:flex;gap:6px;align-items:center;padding:4px 0;";
+    const lbl = document.createElement("span");
+    lbl.style.cssText = "font-size:.78rem;color:var(--grey);font-family:Arial,sans-serif;";
+    lbl.textContent = "Move to:";
+    const mdsel = document.createElement("select");
+    mdsel.innerHTML = DAYS.map(([k, l]) => '<option value="' + k + '"' + (k === item.day ? " selected" : "") + '>' + l + '</option>').join("");
+    const mssel = document.createElement("select");
+    mssel.innerHTML = '<option value="am"' + (item.slot === "am" ? " selected" : "") + '>AM</option><option value="pm"' + (item.slot === "pm" ? " selected" : "") + '>PM</option>';
+    [mdsel, mssel].forEach(x => { x.style.cssText = "border:1px solid var(--line);border-radius:5px;font-size:.78rem;padding:3px;font-family:Arial,sans-serif;"; });
+    const applyMove = () => {
+      item.day = mdsel.value; item.slot = mssel.value; touch(item);
+      const dl = (DAYS.find(x => x[0] === item.day) || ["",""])[1];
+      status("Moved to " + dl + " " + item.slot.toUpperCase());
+      renderSheet();
+    };
+    mdsel.onchange = applyMove; mssel.onchange = applyMove;
+    dayRow.appendChild(lbl); dayRow.appendChild(mdsel); dayRow.appendChild(mssel);
+    div.appendChild(dayRow);
+  }
 
   const prn = document.createElement("span"); prn.className = "assignee-print"; prn.textContent = assignedName;
   div.appendChild(prn);

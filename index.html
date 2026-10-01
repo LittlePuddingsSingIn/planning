@@ -230,6 +230,11 @@
   body.viewmode #tab-week ::placeholder{color:transparent;}
   body.viewmode main{background:#fff;}
 
+  /* Notes are for the app and the plan, not the wall: hidden when capturing
+     for PDF (printlike without viewmode), but still visible in View mode. */
+  body.printlike:not(.viewmode) #tab-week .item .notesrow{display:none !important;}
+  body.printlike:not(.viewmode) #tab-week .item.songcard .notesrow{display:block !important;}
+
   .printframe, .printwatermark{display:none;}
 
   /* ---------- Print media: page-level rules (visuals come from body.printlike, added on beforeprint) ---------- */
@@ -238,6 +243,8 @@
     body{background:#fff; font-size:11pt;}
     header, nav, .buildfoot, .banner, #saveStatus, #tab-mytasks, #tab-plans, #tab-ideas, #tab-settings{display:none !important;}
     #tab-week ::placeholder, #reflectionWrap ::placeholder{color:transparent !important; opacity:0 !important;}
+    #tab-week .item .notesrow{display:none !important;}
+    #tab-week .item.songcard .notesrow{display:block !important;}
     main{max-width:none; padding:4mm 5mm;}
     .printwatermark{display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:52%; opacity:.09; z-index:-1;}
     #reflectionWrap{break-before:page; page-break-before:always;}
@@ -416,7 +423,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-10-01a";
+const BUILD = "2026-10-01b";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -819,6 +826,7 @@ function itemCard(item, weekKey, simple){
 
   if (simple){ // Books and songs: just the title, no task machinery
     const isSong = simple === "song";
+    if (isSong) div.classList.add("songcard");
     const top = document.createElement("div"); top.className = "top";
     const txt = document.createElement("input"); txt.className = "txt"; txt.value = item.text;
     txt.placeholder = isSong ? "Song or rhyme" : "Book title"; txt.readOnly = !edit;

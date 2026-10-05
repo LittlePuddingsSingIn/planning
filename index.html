@@ -65,6 +65,7 @@
   .bookrow .bookitems .item{margin-bottom:3px;}
   .bookrow .addbtn, .weeklybox .addbtn{width:auto; padding:3px 10px; margin-top:2px;}
   .slotlabel{font-size:.72rem; font-weight:bold; color:var(--gold); margin:5px 0 2px;}
+  .provgrouplabel{font-size:.7rem; font-weight:bold; color:var(--green); text-transform:uppercase; letter-spacing:.5px; margin:8px 0 2px;}
   .dayblock{border-radius:8px; padding:3px 8px 5px; margin:7px 0;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;}
   .dayblock .rowlabel{margin-top:2px;}
@@ -423,7 +424,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-10-01b";
+const BUILD = "2026-10-01c";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -815,7 +816,7 @@ function itemCard(item, weekKey, simple){
     const prn = document.createElement("span"); prn.className = "assignee-print";
     prn.textContent = (PROV_TYPES.find(t => t[0] === (item.provType || "continuous")) || [])[1] || "";
     div.appendChild(prn);
-    tsel.onchange = () => { item.provType = tsel.value; touch(item); prn.textContent = (PROV_TYPES.find(t => t[0] === tsel.value) || [])[1] || ""; };
+    tsel.onchange = () => { item.provType = tsel.value; touch(item); renderSheet(); };
     const rt = document.createElement("textarea"); rt.value = item.notes || ""; rt.placeholder = "Resources needed for this";
     rt.oninput = () => { item.notes = rt.value; touch(item); autoGrow(rt); };
     resRow.appendChild(rt);
@@ -1068,9 +1069,15 @@ function renderSheet(){
         row.appendChild(bi);
         box.appendChild(row);
       });
-    } else if (sec.id === "provision"){ // Provision: what's out, typed by kind, with resources
+    } else if (sec.id === "provision"){ // Provision: grouped as continuous / invitations / provocations
       const secItems = items.filter(i => i.section===sec.id);
-      secItems.forEach(i => box.appendChild(itemCard(i, currentWeek, "provision")));
+      [["continuous","Continuous provision"],["invitation","Invitations"],["provocation","Provocations"]].forEach(([pk, plabel]) => {
+        const gi = secItems.filter(i => (i.provType || "continuous") === pk);
+        if (!gi.length) return;
+        const gl = document.createElement("div"); gl.className = "provgrouplabel"; gl.textContent = plabel;
+        box.appendChild(gl);
+        gi.forEach(i => box.appendChild(itemCard(i, currentWeek, "provision")));
+      });
       if (!secItems.length && !edit){ const e = document.createElement("div"); e.className="empty"; e.textContent = "Nothing planned"; box.appendChild(e); }
       if (edit) box.appendChild(addButton(sec.id, null, null, "+ Add provision"));
       const bankLive = (state.provisionBank || []).filter(b => !b.deleted && (b.kind || "provision") === "provision");
@@ -2040,14 +2047,23 @@ function snapSwapFields(root, srcFields, doc){
         const cs = getComputedStyle(sf);
         const div = doc.createElement("div");
         div.textContent = sf.value || "\u00A0";
+        div.className = cf.className;
+        if (cf.id) div.id = cf.id;
         ["fontFamily","fontSize","fontWeight","fontStyle","lineHeight","color","textAlign",
          "paddingTop","paddingBottom","paddingLeft","paddingRight",
          "marginTop","marginBottom","marginLeft","marginRight",
          "borderBottomWidth","borderBottomStyle","borderBottomColor",
-         "width","height","minHeight","letterSpacing"].forEach(p => { div.style[p] = cs[p]; });
+         "letterSpacing"].forEach(p => { div.style[p] = cs[p]; });
         div.style.boxSizing = "border-box";
-        div.style.whiteSpace = (sf.tagName === "TEXTAREA") ? "pre-wrap" : "nowrap";
-        div.style.overflow = "hidden";
+        if (sf.tagName === "TEXTAREA"){
+          div.style.whiteSpace = "pre-wrap";
+          div.style.width = "100%";
+          div.style.height = "auto";
+          div.style.overflow = "visible";
+        } else {
+          div.style.whiteSpace = "nowrap";
+          div.style.overflow = "hidden";
+        }
         cf.parentNode.replaceChild(div, cf);
       });
 }

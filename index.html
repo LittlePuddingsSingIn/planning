@@ -364,6 +364,18 @@
       </div>
     </div>
     <div class="card">
+      <h3>Repeating activities</h3>
+      <p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Things that happen every week, like Squiggle, set up once. They appear on each week's sheet automatically (this week and future weeks) with the right days, slot and person. Removing one from a single week's sheet removes it for that week only; removing it here stops it appearing from now on.</p>
+      <div id="repList"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px;">
+        <input type="text" id="repText" placeholder="Activity, e.g. Squiggle" style="border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:.85rem;flex:1;min-width:160px;font-family:Arial,sans-serif;">
+        <span id="repDays" style="display:flex;gap:6px;align-items:center;font-size:.78rem;font-family:Arial,sans-serif;"></span>
+        <select id="repSlot" style="border:1px solid var(--line);border-radius:6px;padding:6px;font-size:.82rem;"><option value="am">AM</option><option value="pm">PM</option></select>
+        <select id="repWho" style="border:1px solid var(--line);border-radius:6px;padding:6px;font-size:.82rem;"></select>
+        <button class="btn small" id="btnAddRepeat">Add</button>
+      </div>
+    </div>
+    <div class="card">
       <h3>Growing Curious Children framework</h3>
       <p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Enter your GCC domains and their strands here. They are stored in your OneDrive planning file, never in this public page, so the framework stays protected. They appear as tick boxes on every activity plan.</p>
       <div id="fwList"></div>
@@ -424,7 +436,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-10-01c";
+const BUILD = "2026-10-01d";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -528,7 +540,7 @@ function mergeById(a, b){
 }
 function mergeState(local, cloud){
   if (!cloud) return local;
-  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [], provisionBank: [] };
+  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [], provisionBank: [], repeats: [] };
   const pm = {};
   (local.practitioners||[]).concat(cloud.practitioners||[]).forEach(p => {
     const k = p.id || p.email;
@@ -538,6 +550,7 @@ function mergeState(local, cloud){
   out.gcc = mergeById(local.gcc, cloud.gcc);
   out.plans = mergeById(local.plans, cloud.plans);
   out.provisionBank = mergeById(local.provisionBank, cloud.provisionBank);
+  out.repeats = mergeById(local.repeats, cloud.repeats);
   const keys = new Set(Object.keys(local.weeks||{}).concat(Object.keys(cloud.weeks||{})));
   keys.forEach(k => {
     const a = (local.weeks||{})[k], b = (cloud.weeks||{})[k];
@@ -1036,7 +1049,28 @@ function addButton(section, day, slot, label){
   return b;
 }
 
+function materialiseRepeats(weekKey){
+  if (!canEdit()) return;
+  const reps = (state.repeats || []).filter(r => !r.deleted);
+  if (!reps.length) return;
+  if (weekKey < mondayOf(new Date())) return;
+  const wk = ensureWeek(weekKey);
+  let added = false;
+  reps.forEach(r => {
+    (r.days && r.days.length ? r.days : [null]).forEach(dy => {
+      const detId = "rep_" + r.id + "_" + weekKey + (dy ? "_" + dy : "");
+      if (wk.items.some(i => i.id === detId)) return;
+      wk.items.push({ id: detId, section: "goals", day: dy, slot: r.slot || "am",
+        text: r.text, link: "", notes: "", assignedTo: r.assignedTo || null,
+        done: false, deleted: false, carriedFrom: null,
+        createdAt: now(), updatedAt: now() });
+      added = true;
+    });
+  });
+  if (added) markDirty();
+}
 function renderSheet(){
+  materialiseRepeats(currentWeek);
   document.getElementById("weekTitle").textContent = fmtWeek(currentWeek);
   const topicIn = document.getElementById("weekTopic");
   const wkData = getWeek(currentWeek);
@@ -1247,6 +1281,7 @@ function taskRow(item, weekKey){
 
 /* ===================== Render: settings ===================== */
 function renderSettings(){
+  renderRepeats();
   const tb = document.querySelector("#pracTable tbody");
   tb.innerHTML = "";
   state.practitioners.filter(p => p.active !== false).forEach(p => {
@@ -1278,6 +1313,61 @@ function renderSettings(){
     td.appendChild(b); tr.appendChild(td); tb.appendChild(tr);
   });
 }
+function renderRepeats(){
+  const dayWrap = document.getElementById("repDays");
+  if (!dayWrap.children.length){
+    DAYS.forEach(([k, l]) => {
+      const lab = document.createElement("label");
+      lab.style.cssText = "display:flex;align-items:center;gap:3px;";
+      const ck = document.createElement("input"); ck.type = "checkbox"; ck.value = k;
+      ck.style.cssText = "width:15px;height:15px;accent-color:var(--green);";
+      lab.appendChild(ck); lab.appendChild(document.createTextNode(l.slice(0,3)));
+      dayWrap.appendChild(lab);
+    });
+  }
+  const who = document.getElementById("repWho");
+  who.innerHTML = '<option value="">Anyone</option>' + state.practitioners.filter(p => p.active !== false).map(p => '<option value="' + p.id + '">' + esc(p.name) + '</option>').join("");
+  const box = document.getElementById("repList");
+  box.innerHTML = "";
+  const reps = (state.repeats || []).filter(r => !r.deleted);
+  if (!reps.length){
+    const p = document.createElement("p"); p.style.cssText = "font-size:.82rem;color:var(--grey);font-style:italic;";
+    p.textContent = "Nothing repeating yet.";
+    box.appendChild(p); return;
+  }
+  reps.forEach(r => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line);font-family:Arial,sans-serif;font-size:.86rem;";
+    const t = document.createElement("div"); t.style.flex = "1";
+    const dayNames = (r.days || []).map(d => (DAYS.find(x => x[0] === d) || ["",""])[1].slice(0,3)).join(", ");
+    const whoName = r.assignedTo ? ((state.practitioners.find(p => p.id === r.assignedTo) || {}).name || "") : "Anyone";
+    t.innerHTML = "<strong>" + esc(r.text) + "</strong> <span style='color:var(--grey);font-size:.78rem;'>\u00b7 " + esc(dayNames) + " " + (r.slot || "am").toUpperCase() + " \u00b7 " + esc(whoName) + "</span>";
+    row.appendChild(t);
+    const del = document.createElement("button"); del.className = "iconbtn"; del.innerHTML = "&#10005;"; del.title = "Stop repeating (weeks already made keep their copies)";
+    del.onclick = () => {
+      if (!confirm("Stop \"" + r.text + "\" repeating? Weeks already made keep their copies.")) return;
+      r.deleted = true; r.updatedAt = now(); markDirty(); renderRepeats();
+    };
+    row.appendChild(del);
+    box.appendChild(row);
+  });
+}
+document.getElementById("btnAddRepeat").onclick = () => {
+  const text = document.getElementById("repText").value.trim();
+  const days = [...document.querySelectorAll("#repDays input:checked")].map(c => c.value);
+  if (!text){ alert("Give the activity a name."); return; }
+  if (!days.length){ alert("Tick at least one day."); return; }
+  if (!state.repeats) state.repeats = [];
+  state.repeats.push({ id: uid(), text: text, days: days,
+    slot: document.getElementById("repSlot").value,
+    assignedTo: document.getElementById("repWho").value || null,
+    deleted: false, updatedAt: now() });
+  document.getElementById("repText").value = "";
+  document.querySelectorAll("#repDays input:checked").forEach(c => { c.checked = false; });
+  markDirty(); renderRepeats();
+  status("Repeating activity added. It will appear on this week and every week from now on.");
+};
+
 document.getElementById("btnAddPrac").onclick = () => {
   const name = document.getElementById("pracName").value.trim();
   const email = document.getElementById("pracEmail").value.trim().toLowerCase();

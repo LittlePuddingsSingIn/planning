@@ -238,6 +238,35 @@
 
   .printframe, .printwatermark{display:none;}
 
+  /* ---------- Story extensions ---------- */
+  .sheet.hasext{grid-template-rows:auto auto;}
+  body.printlike .sheet.hasext{grid-template-rows:1fr auto;}
+  .storyext{grid-column:1 / -1;}
+  .storyexthead{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;}
+  .storyexthead h3{flex:1; margin:0;}
+  .sxnote{font-size:.78rem; color:var(--grey); font-style:italic;}
+  .sxgrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px;}
+  .sxcard{border:1px solid var(--line); border-radius:8px; padding:7px 9px; background:#fff; font-size:.8rem;}
+  .sxtitle{font-family:Georgia, serif; font-weight:bold; color:var(--green); font-size:.92rem; margin-bottom:3px; line-height:1.25;}
+  .sxday{display:block; font-family:Arial, sans-serif; font-size:.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:.04em;}
+  .sxlabel{font-size:.66rem; font-weight:bold; color:var(--gold); text-transform:uppercase; letter-spacing:.03em; margin-top:4px;}
+  .sxfield textarea{width:100%; border:1px solid transparent; border-radius:5px; padding:1px 3px; font-size:.8rem; font-family:Arial, sans-serif; resize:none; overflow:hidden; background:transparent; line-height:1.3;}
+  .sxfield textarea:focus{outline:none; border-color:var(--line); background:#fff;}
+  .sx-summary textarea{color:var(--ink);}
+  .sx-message textarea{font-style:italic;}
+  .sxlink{margin-top:4px; font-size:.74rem; line-height:1.3;}
+  .sxgcc{color:var(--green); font-weight:bold;}
+  .sxeyfs{color:var(--grey); font-size:.72rem;}
+  .sxact{margin-top:1px;}
+  .sxwarn{background:var(--cream); border:1px solid var(--gold); border-radius:8px; font-size:.65rem; padding:0 6px; color:var(--grey);}
+  .sxregen{font-size:.72rem; margin-top:3px;}
+  body.printlike .storyext{border-top:none;}
+  body.printlike .sxcard{border:none; border-left:2px solid var(--gold); border-radius:0; padding:0 0 0 7px; background:transparent;}
+  body.printlike .sxfield textarea{border:none; padding:0;}
+  body.viewmode .sxgen, body.viewmode .sxregen, body.viewmode .sxnote{display:none !important;}
+  body.printlike:not(.viewmode) .sxbtn, body.printlike:not(.viewmode) .sxnote, body.printlike:not(.viewmode) .sxwarn, body.printlike:not(.viewmode) .sxregen{display:none !important;}
+  @media print{ .sxbtn, .sxnote, .sxwarn, .sxregen{display:none !important;} }
+
   /* ---------- Print media: page-level rules (visuals come from body.printlike, added on beforeprint) ---------- */
   @media print{
     @page{margin:12mm;}
@@ -376,6 +405,10 @@
       </div>
     </div>
     <div class="card">
+      <h3>Story ideas (Claude)</h3>
+      <div id="storySettings"></div>
+    </div>
+    <div class="card">
       <h3>Growing Curious Children framework</h3>
       <p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Enter your GCC domains and their strands here. They are stored in your OneDrive planning file, never in this public page, so the framework stays protected. They appear as tick boxes on every activity plan.</p>
       <div id="fwList"></div>
@@ -436,7 +469,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-10-01d";
+const BUILD = "2026-10-30a";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -452,6 +485,7 @@ const LS_KEY = "lp-planning-v1";
 let state = loadLocal() || { dataVersion: 1, practitioners: [], weeks: {} };
 if (!state.gcc) state.gcc = [];
 if (!state.plans) state.plans = [];
+if (!state.storyBank) state.storyBank = [];
 let currentWeek = mondayOf(new Date());
 let account = null;       // MSAL account
 let role = "local";       // local | manager | practitioner
@@ -540,7 +574,7 @@ function mergeById(a, b){
 }
 function mergeState(local, cloud){
   if (!cloud) return local;
-  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [], provisionBank: [], repeats: [] };
+  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [], provisionBank: [], repeats: [], storyBank: [] };
   const pm = {};
   (local.practitioners||[]).concat(cloud.practitioners||[]).forEach(p => {
     const k = p.id || p.email;
@@ -551,6 +585,7 @@ function mergeState(local, cloud){
   out.plans = mergeById(local.plans, cloud.plans);
   out.provisionBank = mergeById(local.provisionBank, cloud.provisionBank);
   out.repeats = mergeById(local.repeats, cloud.repeats);
+  out.storyBank = mergeById(local.storyBank, cloud.storyBank);
   const keys = new Set(Object.keys(local.weeks||{}).concat(Object.keys(cloud.weeks||{})));
   keys.forEach(k => {
     const a = (local.weeks||{})[k], b = (cloud.weeks||{})[k];
@@ -1149,6 +1184,7 @@ function renderSheet(){
   });
 
   sheet.appendChild(left); sheet.appendChild(right);
+  renderStoryExtensions();
 
   // Reflection (page two of the printed sheet)
   const rw = document.getElementById("reflectionWrap");
@@ -2043,7 +2079,7 @@ function renderTab(){
   else if (activeTab === "mytasks") renderMyTasks();
   else if (activeTab === "plans") renderPlans();
   else if (activeTab === "ideas") renderIdeas();
-  else { renderSettings(); renderFramework(); }
+  else { renderSettings(); renderStorySettings(); renderFramework(); }
 }
 function renderAll(){ updateAuthUI(); renderTab(); }
 
@@ -2276,6 +2312,347 @@ window.addEventListener("beforeprint", fitSheetForPrint);
 window.addEventListener("afterprint", unfitSheet);
 document.getElementById("btnCarryAll").onclick = carryAll;
 document.getElementById("btnRefresh").onclick = () => syncFromCloud(false);
+
+/* ===================== Story extensions and the Story Bank =====================
+   Ideas for each lunchtime book are written by Claude through the Anthropic API.
+   The API key lives only in this browser on the manager's device (localStorage),
+   never in planning.json and never in this public page. Only book titles, the
+   week's topic, the weekly story and the GCC domain and strand names are sent:
+   no children, no staff, no setting details. Results are kept in state.storyBank
+   (shared through OneDrive) so a book done once fills in straight away next time. */
+const AI_KEY_LS = "lp-planning-anthropic-key";
+const AI_MODEL_LS = "lp-planning-anthropic-model";
+const AI_DEFAULT_MODEL = "claude-sonnet-5-5";
+const EYFS_AREAS = [
+  ["CL", "Communication and Language"],
+  ["PSED", "Personal, Social and Emotional Development"],
+  ["PD", "Physical Development"],
+  ["L", "Literacy"],
+  ["M", "Mathematics"],
+  ["UW", "Understanding the World"],
+  ["EAD", "Expressive Arts and Design"]
+];
+function eyfsName(code){ const a = EYFS_AREAS.find(x => x[0] === code); return a ? a[1] : (code || ""); }
+function aiKey(){ try{ return localStorage.getItem(AI_KEY_LS) || ""; }catch(e){ return ""; } }
+function aiModel(){ try{ return localStorage.getItem(AI_MODEL_LS) || AI_DEFAULT_MODEL; }catch(e){ return AI_DEFAULT_MODEL; } }
+function bookKey(t){ return String(t || "").toLowerCase().replace(/^\s*(the|a|an)\s+/, "").replace(/[^a-z0-9]/g, ""); }
+function bankEntry(title){
+  const k = bookKey(title); if (!k) return null;
+  return (state.storyBank || []).find(b => !b.deleted && b.key === k) || null;
+}
+function lunchBooks(weekKey){
+  const order = DAYS.map(d => d[0]);
+  return liveItems(weekKey).filter(i => i.section === "books" && i.day !== "weekly" && (i.text || "").trim())
+    .sort((a, b) => order.indexOf(a.day) - order.indexOf(b.day));
+}
+function weeklyStoryTitle(weekKey){
+  const w = liveItems(weekKey).find(i => i.section === "books" && i.day === "weekly" && (i.text || "").trim());
+  return w ? w.text.trim() : "";
+}
+function dayName(k){ const d = DAYS.find(x => x[0] === k); return d ? d[1] : ""; }
+function gccStrandList(){
+  return state.gcc.filter(d => !d.deleted && (d.name || "").trim()).map(d => ({
+    domain: d.name.trim(), strands: (d.strands || []).map(s => (s || "").trim()).filter(Boolean) }));
+}
+function cleanText(s){ return String(s == null ? "" : s).replace(/\s*[—–]\s*/g, ", ").trim(); }
+
+let aiBusy = false;
+async function generateStoryIdeas(titles){
+  const key = aiKey();
+  if (!key){ alert("Add your Claude API key first: Settings, then Story ideas."); return; }
+  if (aiBusy) return;
+  const list = titles.filter(Boolean);
+  if (!list.length){ status("No lunchtime books to generate ideas for."); return; }
+  const gcc = gccStrandList();
+  if (!gcc.length){ alert("Enter your GCC domains and strands in Settings first, so the ideas can be linked to them."); return; }
+  aiBusy = true; renderStoryExtensions();
+  status("Asking Claude for ideas for " + list.length + " book" + (list.length > 1 ? "s" : "") + "...");
+  const wk = getWeek(currentWeek) || {};
+  const sys = [
+    "You help the practitioners at Little Puddings, a small childminding setting in England, plan story extensions for their lunchtime stories.",
+    "The children are aged about 2 and a half to 4. Activities happen in the afternoon with the children who do not nap.",
+    "Write in British English. Never use em dashes or en dashes; use commas, colons or full stops instead.",
+    "Keep everything short and practical: this goes on a busy A3 planning sheet, so it must be lighter than a full story card.",
+    "Activities must need little preparation and only cheap, everyday resources (paper, tape, water, natural materials, toys already in a setting). Indoors or in the garden.",
+    "Link each book to exactly one strand from the setting's Growing Curious Children (GCC) framework, using the domain and strand names exactly as given, and to the EYFS area it best supports.",
+    "If you do not recognise a book with confidence, say so plainly in the summary (start it with 'Not sure of this book:') and base the ideas on the title only, so staff know to check it.",
+    "Reply with JSON only, no other text."
+  ].join(" ");
+  const user = {
+    task: "Write a story extension for each book.",
+    weekTopic: (wk.topic || "").trim() || null,
+    weeklyStory: weeklyStoryTitle(currentWeek) || null,
+    books: list,
+    gccFramework: gcc,
+    eyfsAreas: EYFS_AREAS.map(a => ({ code: a[0], name: a[1] })),
+    replyFormat: { books: [{
+      title: "the title exactly as given",
+      summary: "one sentence, no more than 25 words, what happens in the story",
+      message: "the big idea in no more than 12 words",
+      gccDomain: "one domain name exactly as given",
+      gccStrand: "one strand name exactly as given, from that domain",
+      eyfsStory: "EYFS area code the story itself best supports",
+      question: "one open question to ask the children while reading or after",
+      activity: "one low-prep afternoon activity linked to the book, no more than 40 words",
+      eyfsActivity: "EYFS area code the activity best supports (try to vary across the week)"
+    }] }
+  };
+  try{
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({ model: aiModel(), max_tokens: 4000, system: sys,
+        messages: [{ role: "user", content: JSON.stringify(user) }] })
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok){
+      const msg = (data && data.error && data.error.message) || ("HTTP " + r.status);
+      if (r.status === 401) throw new Error("the API key was not accepted. Check it in Settings, Story ideas.");
+      if (r.status === 404 && /model/i.test(msg)) throw new Error("the model name was not recognised (" + aiModel() + "). Check it in Settings, Story ideas.");
+      throw new Error(msg);
+    }
+    const text = (data.content || []).filter(c => c.type === "text").map(c => c.text).join("");
+    const m = text.match(/\{[\s\S]*\}/);
+    if (!m) throw new Error("Claude's reply was not in the expected format. Try again.");
+    const parsed = JSON.parse(m[0]);
+    const out = Array.isArray(parsed.books) ? parsed.books : [];
+    let saved = 0;
+    out.forEach((b, idx) => {
+      const title = list.find(t => bookKey(t) === bookKey(b.title)) || list[idx] || b.title;
+      if (!title) return;
+      saveBankEntry(title, b);
+      saved++;
+    });
+    markDirty();
+    status("Ideas added for " + saved + " book" + (saved === 1 ? "" : "s") + " " + timeNow());
+  }catch(e){
+    console.error(e);
+    status("Could not get ideas: " + e.message);
+    alert("Could not get ideas: " + e.message);
+  }finally{
+    aiBusy = false;
+    renderSheet();
+  }
+}
+function saveBankEntry(title, b){
+  if (!state.storyBank) state.storyBank = [];
+  const k = bookKey(title);
+  let e = state.storyBank.find(x => !x.deleted && x.key === k);
+  if (!e){ e = { id: uid(), key: k, createdAt: now() }; state.storyBank.push(e); }
+  const gcc = gccStrandList();
+  let dom = cleanText(b.gccDomain), str = cleanText(b.gccStrand);
+  const hit = gcc.find(d => d.strands.some(s => s.toLowerCase() === str.toLowerCase()));
+  if (hit){ dom = hit.domain; str = hit.strands.find(s => s.toLowerCase() === str.toLowerCase()); }
+  const code = c => { c = String(c || "").toUpperCase().trim(); return EYFS_AREAS.some(a => a[0] === c) ? c : ""; };
+  Object.assign(e, {
+    title: title.trim(),
+    summary: cleanText(b.summary), message: cleanText(b.message),
+    gccDomain: dom, gccStrand: str, strandChecked: !!hit,
+    eyfsStory: code(b.eyfsStory), eyfsActivity: code(b.eyfsActivity),
+    question: cleanText(b.question), activity: cleanText(b.activity),
+    deleted: false, updatedAt: now()
+  });
+  return e;
+}
+
+/* ---- The Story extensions block on the week sheet ---- */
+function renderStoryExtensions(){
+  const sheet = document.getElementById("sheet");
+  if (!sheet) return;
+  let box = document.getElementById("storyExt");
+  const books = lunchBooks(currentWeek);
+  if (!books.length){ if (box) box.remove(); sheet.classList.remove("hasext"); return; }
+  if (!box){ box = document.createElement("div"); box.id = "storyExt"; box.className = "section storyext"; }
+  sheet.appendChild(box);
+  sheet.classList.add("hasext");
+  box.innerHTML = "";
+  const edit = canEdit();
+  const head = document.createElement("div"); head.className = "storyexthead";
+  const h = document.createElement("h3"); h.textContent = "Story extensions"; head.appendChild(h);
+  const missing = books.filter(b => !bankEntry(b.text));
+  if (edit && aiKey()){
+    if (missing.length){
+      const g = document.createElement("button"); g.className = "btn small sxbtn sxgen";
+      g.textContent = aiBusy ? "Asking Claude..." : "Generate ideas (" + missing.length + ")";
+      g.disabled = aiBusy;
+      g.onclick = () => generateStoryIdeas(missing.map(b => b.text.trim()));
+      head.appendChild(g);
+    }
+  } else if (edit && (role === "manager" || role === "local") && missing.length){
+    const n = document.createElement("span"); n.className = "sxnote";
+    n.textContent = "Add your Claude API key in Settings to generate ideas";
+    head.appendChild(n);
+  }
+  const pb = document.createElement("button"); pb.className = "btn secondary small sxbtn";
+  pb.textContent = "Lunchtime Stories sheet (A4)";
+  pb.onclick = printLunchtimeSheet;
+  head.appendChild(pb);
+  box.appendChild(head);
+
+  const grid = document.createElement("div"); grid.className = "sxgrid";
+  books.forEach(item => {
+    const e = bankEntry(item.text);
+    const card = document.createElement("div"); card.className = "sxcard";
+    const t = document.createElement("div"); t.className = "sxtitle";
+    t.innerHTML = '<span class="sxday">' + esc(dayName(item.day)) + '</span> ' + esc(item.text.trim());
+    card.appendChild(t);
+    if (!e){
+      const em = document.createElement("div"); em.className = "empty";
+      em.textContent = aiBusy ? "Writing ideas..." : "No ideas yet";
+      card.appendChild(em);
+      grid.appendChild(card); return;
+    }
+    const fields = [
+      ["summary", null, 2], ["message", "Message", 1],
+      ["question", "Talk about", 2], ["activity", "Afternoon activity", 3]
+    ];
+    const field = (key, label, rows) => {
+      const wrap = document.createElement("div"); wrap.className = "sxfield sx-" + key;
+      if (label){ const l = document.createElement("div"); l.className = "sxlabel"; l.textContent = label; wrap.appendChild(l); }
+      const ta = document.createElement("textarea"); ta.value = e[key] || ""; ta.rows = rows; ta.readOnly = !edit;
+      ta.oninput = () => { e[key] = ta.value; e.updatedAt = now(); markDirty(); autoGrow(ta); };
+      wrap.appendChild(ta);
+      requestAnimationFrame(() => autoGrow(ta));
+      return wrap;
+    };
+    card.appendChild(field("summary", null, 2));
+    card.appendChild(field("message", "Message", 1));
+    const link = document.createElement("div"); link.className = "sxlink";
+    link.innerHTML = '<span class="sxgcc">' + esc(e.gccDomain || "") + (e.gccStrand ? " &middot; " + esc(e.gccStrand) : "") + '</span>' +
+      (e.eyfsStory ? ' <span class="sxeyfs">EYFS: ' + esc(eyfsName(e.eyfsStory)) + '</span>' : "") +
+      (e.strandChecked === false && e.gccStrand ? ' <span class="sxwarn" title="This strand is not in your framework list. Check it.">check strand</span>' : "");
+    card.appendChild(link);
+    card.appendChild(field("question", "Talk about", 2));
+    card.appendChild(field("activity", "Afternoon activity", 3));
+    if (e.eyfsActivity){
+      const ea = document.createElement("div"); ea.className = "sxeyfs sxact"; ea.textContent = "Activity EYFS: " + eyfsName(e.eyfsActivity);
+      card.appendChild(ea);
+    }
+    if (edit && aiKey()){
+      const rg = document.createElement("button"); rg.className = "iconbtn sxregen"; rg.title = "Write new ideas for this book";
+      rg.innerHTML = "&#8635; New ideas"; rg.disabled = aiBusy;
+      rg.onclick = () => { if (confirm("Replace the ideas for " + item.text.trim() + " with new ones? This also updates the Story Bank.")) generateStoryIdeas([item.text.trim()]); };
+      card.appendChild(rg);
+    }
+    grid.appendChild(card);
+  });
+  box.appendChild(grid);
+}
+
+/* ---- The A4 Lunchtime Stories sheet, opened in its own window to print or save ---- */
+function printLunchtimeSheet(){
+  const books = lunchBooks(currentWeek);
+  const wk = getWeek(currentWeek) || {};
+  const logo = (document.querySelector(".printwatermark") || {}).src || "";
+  const rows = books.map(item => {
+    const e = bankEntry(item.text) || {};
+    return '<tr><td class="day">' + esc(dayName(item.day)) + '</td><td>' +
+      '<div class="bt">' + esc(item.text.trim()) + '</div>' +
+      (e.summary ? '<div class="sm">' + esc(e.summary) + '</div>' : '<div class="sm muted">No ideas generated yet</div>') +
+      (e.message ? '<div><b>Message:</b> ' + esc(e.message) + '</div>' : '') +
+      (e.gccDomain ? '<div class="gcc">' + esc(e.gccDomain) + (e.gccStrand ? ' &middot; <i>' + esc(e.gccStrand) + '</i>' : '') +
+        (e.eyfsStory ? ' <span class="ey">EYFS: ' + esc(eyfsName(e.eyfsStory)) + '</span>' : '') + '</div>' : '') +
+      (e.question ? '<div><b>Talk about:</b> ' + esc(e.question) + '</div>' : '') +
+      (e.activity ? '<div class="act"><b>Afternoon activity:</b> ' + esc(e.activity) +
+        (e.eyfsActivity ? ' <span class="ey">(' + esc(eyfsName(e.eyfsActivity)) + ')</span>' : '') + '</div>' : '') +
+      '</td></tr>';
+  }).join("");
+  const days = DAYS.filter(d => books.some(b => b.day === d[0]));
+  const strip = '<table class="strip"><tr><th></th>' + days.map(d => '<th>' + d[1].slice(0,3) + '</th>').join("") + '</tr>' +
+    EYFS_AREAS.map(a => '<tr><td class="an">' + esc(a[1]) + '</td>' + days.map(d => {
+      const es = books.filter(b => b.day === d[0]).map(b => bankEntry(b.text) || {});
+      const s = es.some(e => e.eyfsStory === a[0]), ac = es.some(e => e.eyfsActivity === a[0]);
+      return '<td>' + (s ? '<span class="dot g"></span>' : '') + (ac ? '<span class="dot y"></span>' : '') + '</td>';
+    }).join("") + '</tr>').join("") + '</table>';
+  const html = '<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"><title>Lunchtime Stories ' + esc(currentWeek) + '</title><style>' +
+    '@page{size:A4 portrait;margin:12mm;}body{font-family:Arial,sans-serif;color:#2B2B2B;font-size:9.5pt;margin:0;}' +
+    'h1{font-family:Georgia,serif;color:#1A7A4A;font-size:20pt;margin:0;}.head{display:flex;align-items:center;gap:12px;border-bottom:2px solid #D4A017;padding-bottom:6px;margin-bottom:8px;}' +
+    '.head img{height:46px;}.sub{color:#6B6460;font-size:9.5pt;}.ws{background:#FBF3DC;border-radius:6px;padding:5px 9px;margin-bottom:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}' +
+    'table.main{border-collapse:collapse;width:100%;}table.main td{border-bottom:1px solid #CCCCCC;padding:5px 6px;vertical-align:top;}' +
+    'td.day{font-family:Georgia,serif;color:#1A7A4A;font-weight:bold;width:66px;}.bt{font-family:Georgia,serif;color:#1A7A4A;font-weight:bold;font-size:11pt;}' +
+    '.sm{margin:2px 0;}.muted{color:#6B6460;font-style:italic;}.gcc{color:#1A7A4A;margin:2px 0;}.ey{color:#6B6460;font-size:8.5pt;}.act{margin-top:2px;}' +
+    'h2{font-family:Georgia,serif;color:#1A7A4A;font-size:12pt;margin:12px 0 4px;}table.strip{border-collapse:collapse;font-size:8.5pt;}' +
+    'table.strip th,table.strip td{border:1px solid #CCCCCC;padding:3px 6px;text-align:center;}table.strip td.an{text-align:left;}' +
+    '.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 1px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.dot.g{background:#1A7A4A;}.dot.y{background:#D4A017;}' +
+    '.legend{font-size:8.5pt;color:#6B6460;margin-top:4px;}.foot{margin-top:10px;font-size:7.5pt;color:#999;text-align:center;}' +
+    '</style></head><body>' +
+    '<div class="head">' + (logo ? '<img src="' + logo + '" alt="">' : '') + '<div><h1>Lunchtime Stories</h1><div class="sub">' + esc(fmtWeek(currentWeek)) +
+      ((wk.topic || "").trim() ? ' &middot; Topic: ' + esc(wk.topic.trim()) : '') + '</div></div></div>' +
+    (weeklyStoryTitle(currentWeek) ? '<div class="ws"><b>Weekly story:</b> ' + esc(weeklyStoryTitle(currentWeek)) + '</div>' : '') +
+    '<table class="main">' + rows + '</table>' +
+    '<h2>EYFS coverage this week</h2>' + strip +
+    '<div class="legend"><span class="dot g"></span> the story &nbsp; <span class="dot y"></span> the afternoon activity</div>' +
+    '<div class="foot">Little Puddings &middot; staff planning record &middot; planning build ' + esc(BUILD) + '</div>' +
+    '<script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script></body></html>';
+  const w = window.open("", "_blank");
+  if (!w){ alert("Your browser blocked the new window. Allow pop-ups for this page and try again."); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+}
+
+/* ---- Settings: the API key (this device only) and the Story Bank ---- */
+function renderStorySettings(){
+  const box = document.getElementById("storySettings");
+  if (!box) return;
+  const has = !!aiKey();
+  const bank = (state.storyBank || []).filter(b => !b.deleted).sort((a, b) => sortTitle(a.title).localeCompare(sortTitle(b.title)));
+  box.innerHTML =
+    '<p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Claude writes the story extensions for the lunchtime books. Your API key is kept in this browser on this device only. It is never saved to OneDrive or into this page, so the team cannot see it. Only book titles, the topic and your GCC domain and strand names are sent: no children or staff.</p>' +
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' +
+      '<input type="password" id="aiKeyIn" autocomplete="off" placeholder="' + (has ? "A key is saved on this device" : "Paste your API key here") + '" style="flex:1;min-width:240px;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:.85rem;">' +
+      '<button class="btn small" id="aiKeySave">Save key</button>' +
+      (has ? '<button class="btn secondary small" id="aiKeyTest">Test</button><button class="btn secondary small" id="aiKeyForget">Forget key</button>' : '') +
+    '</div>' +
+    '<div style="font-size:.8rem;margin-top:6px;color:' + (has ? 'var(--green)' : 'var(--grey)') + ';" id="aiKeyState">' + (has ? "Key saved on this device. Generate ideas from the Story extensions box on the week sheet." : "No key on this device yet.") + '</div>' +
+    '<details style="margin-top:8px;"><summary>Model</summary><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input type="text" id="aiModelIn" value="' + esc(aiModel()) + '" style="border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:.85rem;min-width:220px;"><button class="btn secondary small" id="aiModelSave">Save</button></div><p style="font-size:.78rem;color:var(--grey);">Only change this if a test says the model name was not recognised.</p></details>' +
+    '<h3 style="margin:14px 0 6px;">Story Bank (' + bank.length + ' book' + (bank.length === 1 ? '' : 's') + ')</h3>' +
+    '<p style="font-size:.8rem;color:var(--grey);margin:0 0 6px;">Every book that has had ideas written is kept here and fills in straight away when it comes round again. Edits made on the week sheet are saved here too.</p>' +
+    (bank.length ? '<details><summary>Show the books</summary>' + bank.map(b =>
+      '<div style="display:flex;gap:8px;align-items:center;border-bottom:1px dashed var(--line);padding:4px 0;font-size:.85rem;"><span style="flex:1;">' + esc(b.title) +
+      ' <span style="color:var(--grey);font-size:.75rem;">' + esc(b.gccStrand || "") + '</span></span><button class="btn secondary small" data-sbdel="' + b.id + '">Remove</button></div>').join("") + '</details>' : '');
+  document.getElementById("aiKeySave").onclick = () => {
+    const v = document.getElementById("aiKeyIn").value.trim();
+    if (!v){ alert("Paste the key into the box first."); return; }
+    if (!/^sk-ant-/.test(v) && !confirm("That does not look like a Claude API key (they start sk-ant-). Save it anyway?")) return;
+    try{ localStorage.setItem(AI_KEY_LS, v); }catch(e){ alert("This browser would not save the key."); return; }
+    renderStorySettings(); status("API key saved on this device");
+  };
+  const f = document.getElementById("aiKeyForget");
+  if (f) f.onclick = () => { if (!confirm("Remove the API key from this device?")) return; try{ localStorage.removeItem(AI_KEY_LS); }catch(e){} renderStorySettings(); };
+  const t = document.getElementById("aiKeyTest");
+  if (t) t.onclick = testAiKey;
+  document.getElementById("aiModelSave").onclick = () => {
+    const v = document.getElementById("aiModelIn").value.trim() || AI_DEFAULT_MODEL;
+    try{ localStorage.setItem(AI_MODEL_LS, v); }catch(e){}
+    status("Model saved: " + v);
+  };
+  box.querySelectorAll("[data-sbdel]").forEach(btn => btn.onclick = () => {
+    const e = state.storyBank.find(x => x.id === btn.dataset.sbdel);
+    if (!e || !confirm("Remove the saved ideas for " + e.title + "? They can be generated again.")) return;
+    e.deleted = true; e.updatedAt = now(); markDirty(); renderStorySettings();
+  });
+}
+function sortTitle(t){ return String(t || "").toLowerCase().replace(/^(the|a|an)\s+/, ""); }
+async function testAiKey(){
+  const st = document.getElementById("aiKeyState");
+  st.style.color = "var(--grey)"; st.textContent = "Testing...";
+  try{
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-api-key": aiKey(), "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+      body: JSON.stringify({ model: aiModel(), max_tokens: 10, messages: [{ role: "user", content: "Reply with the word ready." }] })
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error((d.error && d.error.message) || ("HTTP " + r.status));
+    st.style.color = "var(--green)"; st.textContent = "Connected. The key works on this device.";
+  }catch(e){
+    st.style.color = "var(--burgundy, #A13A2A)"; st.textContent = "Test failed: " + e.message;
+  }
+}
 
 /* ===================== Start ===================== */
 document.getElementById("buildStamp").textContent = BUILD;

@@ -245,7 +245,7 @@
   .storyexthead{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;}
   .storyexthead h3{flex:1; margin:0;}
   .sxnote{font-size:.78rem; color:var(--grey); font-style:italic;}
-  .sxgrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px;}
+  .sxgrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px;}
   .sxcard{border:1px solid var(--line); border-radius:8px; padding:7px 9px; background:#fff; font-size:.8rem;}
   .sxtitle{font-family:Georgia, serif; font-weight:bold; color:var(--green); font-size:.92rem; margin-bottom:3px; line-height:1.25;}
   .sxday{display:block; font-family:Arial, sans-serif; font-size:.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:.04em;}
@@ -260,8 +260,16 @@
   .sxact{margin-top:1px;}
   .sxwarn{background:var(--cream); border:1px solid var(--gold); border-radius:8px; font-size:.65rem; padding:0 6px; color:var(--grey);}
   .sxregen{font-size:.72rem; margin-top:3px;}
+  .sxweekly{background:var(--cream); border-color:var(--gold); -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  .sxweekly .sxday{color:var(--green); font-weight:bold;}
+  .sxblurb{margin-top:4px;}
+  .sxblurb .iconbtn{font-size:.72rem; padding:0;}
+  .sxblurb textarea{width:100%; border:1px solid var(--line); border-radius:5px; padding:4px 6px; font-size:.76rem; font-family:Arial, sans-serif; resize:none; overflow:hidden; margin-top:3px; background:#fff;}
   body.printlike .storyext{border-top:none;}
   body.printlike .sxcard{border:none; border-left:2px solid var(--gold); border-radius:0; padding:0 0 0 7px; background:transparent;}
+  body.printlike .sxcard.sxweekly{background:var(--cream); padding:4px 6px 4px 7px;}
+  body.viewmode .sxblurb, body.printlike .sxblurb{display:none !important;}
+  @media print{ .sxblurb{display:none !important;} }
   body.printlike .sxfield textarea{border:none; padding:0;}
   body.viewmode .sxgen, body.viewmode .sxregen, body.viewmode .sxnote{display:none !important;}
   body.printlike:not(.viewmode) .sxbtn, body.printlike:not(.viewmode) .sxnote, body.printlike:not(.viewmode) .sxwarn, body.printlike:not(.viewmode) .sxregen{display:none !important;}
@@ -469,7 +477,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-10-30a";
+const BUILD = "2026-10-30b";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -2345,11 +2353,16 @@ function lunchBooks(weekKey){
   return liveItems(weekKey).filter(i => i.section === "books" && i.day !== "weekly" && (i.text || "").trim())
     .sort((a, b) => order.indexOf(a.day) - order.indexOf(b.day));
 }
+function storyBooks(weekKey){
+  const w = liveItems(weekKey).filter(i => i.section === "books" && i.day === "weekly" && (i.text || "").trim());
+  return w.concat(lunchBooks(weekKey));
+}
+function hasIdeas(e){ return !!(e && (e.summary || "").trim()); }
 function weeklyStoryTitle(weekKey){
   const w = liveItems(weekKey).find(i => i.section === "books" && i.day === "weekly" && (i.text || "").trim());
   return w ? w.text.trim() : "";
 }
-function dayName(k){ const d = DAYS.find(x => x[0] === k); return d ? d[1] : ""; }
+function dayName(k){ if (k === "weekly") return "Weekly story"; const d = DAYS.find(x => x[0] === k); return d ? d[1] : ""; }
 function gccStrandList(){
   return state.gcc.filter(d => !d.deleted && (d.name || "").trim()).map(d => ({
     domain: d.name.trim(), strands: (d.strands || []).map(s => (s || "").trim()).filter(Boolean) }));
@@ -2362,6 +2375,7 @@ async function generateStoryIdeas(titles){
   if (!key){ alert("Add your Claude API key first: Settings, then Story ideas."); return; }
   if (aiBusy) return;
   const list = titles.filter(Boolean);
+  const withBlurbs = list.map(t => { const e = bankEntry(t); const bl = e && (e.blurb || "").trim(); return bl ? { title: t, blurb: bl } : { title: t }; });
   if (!list.length){ status("No lunchtime books to generate ideas for."); return; }
   const gcc = gccStrandList();
   if (!gcc.length){ alert("Enter your GCC domains and strands in Settings first, so the ideas can be linked to them."); return; }
@@ -2375,6 +2389,7 @@ async function generateStoryIdeas(titles){
     "Keep everything short and practical: this goes on a busy A3 planning sheet, so it must be lighter than a full story card.",
     "Activities must need little preparation and only cheap, everyday resources (paper, tape, water, natural materials, toys already in a setting). Indoors or in the garden.",
     "Link each book to exactly one strand from the setting's Growing Curious Children (GCC) framework, using the domain and strand names exactly as given, and to the EYFS area it best supports.",
+    "Where staff have given a blurb for a book, it is the back-cover text: trust it over your memory and do not say you are unsure of that book.",
     "If you do not recognise a book with confidence, say so plainly in the summary (start it with 'Not sure of this book:') and base the ideas on the title only, so staff know to check it.",
     "Reply with JSON only, no other text."
   ].join(" ");
@@ -2382,11 +2397,11 @@ async function generateStoryIdeas(titles){
     task: "Write a story extension for each book.",
     weekTopic: (wk.topic || "").trim() || null,
     weeklyStory: weeklyStoryTitle(currentWeek) || null,
-    books: list,
+    books: withBlurbs,
     gccFramework: gcc,
     eyfsAreas: EYFS_AREAS.map(a => ({ code: a[0], name: a[1] })),
     replyFormat: { books: [{
-      title: "the title exactly as given",
+      title: "the title exactly as given (the weekly story, if listed, is one of the books too)",
       summary: "one sentence, no more than 25 words, what happens in the story",
       message: "the big idea in no more than 12 words",
       gccDomain: "one domain name exactly as given",
@@ -2465,7 +2480,7 @@ function renderStoryExtensions(){
   const sheet = document.getElementById("sheet");
   if (!sheet) return;
   let box = document.getElementById("storyExt");
-  const books = lunchBooks(currentWeek);
+  const books = storyBooks(currentWeek);
   if (!books.length){ if (box) box.remove(); sheet.classList.remove("hasext"); return; }
   if (!box){ box = document.createElement("div"); box.id = "storyExt"; box.className = "section storyext"; }
   sheet.appendChild(box);
@@ -2474,7 +2489,7 @@ function renderStoryExtensions(){
   const edit = canEdit();
   const head = document.createElement("div"); head.className = "storyexthead";
   const h = document.createElement("h3"); h.textContent = "Story extensions"; head.appendChild(h);
-  const missing = books.filter(b => !bankEntry(b.text));
+  const missing = books.filter(b => !hasIdeas(bankEntry(b.text)));
   if (edit && aiKey()){
     if (missing.length){
       const g = document.createElement("button"); g.className = "btn small sxbtn sxgen";
@@ -2497,14 +2512,34 @@ function renderStoryExtensions(){
   const grid = document.createElement("div"); grid.className = "sxgrid";
   books.forEach(item => {
     const e = bankEntry(item.text);
-    const card = document.createElement("div"); card.className = "sxcard";
+    const card = document.createElement("div"); card.className = "sxcard" + (item.day === "weekly" ? " sxweekly" : "");
     const t = document.createElement("div"); t.className = "sxtitle";
     t.innerHTML = '<span class="sxday">' + esc(dayName(item.day)) + '</span> ' + esc(item.text.trim());
     card.appendChild(t);
-    if (!e){
+    const blurbBox = () => {
+      if (!edit) return null;
+      const wrap = document.createElement("div"); wrap.className = "sxblurb";
+      const tg = document.createElement("button"); tg.className = "iconbtn"; tg.innerHTML = "&#9998; About this book";
+      tg.title = "Paste the blurb from the back cover so Claude knows the story";
+      const ta = document.createElement("textarea"); ta.rows = 3;
+      ta.placeholder = "Paste the blurb from the back of the book, then press " + (hasIdeas(e) ? "New ideas" : "Generate ideas");
+      ta.value = (e && e.blurb) || "";
+      ta.classList.toggle("hidden", !(e && e.blurb));
+      tg.onclick = () => { ta.classList.toggle("hidden"); if (!ta.classList.contains("hidden")){ autoGrow(ta); ta.focus(); } };
+      ta.oninput = () => {
+        let en = bankEntry(item.text);
+        if (!en){ en = { id: uid(), key: bookKey(item.text), title: item.text.trim(), createdAt: now(), deleted: false }; state.storyBank.push(en); }
+        en.blurb = ta.value; en.updatedAt = now(); markDirty(); autoGrow(ta);
+      };
+      wrap.appendChild(tg); wrap.appendChild(ta);
+      if (!ta.classList.contains("hidden")) requestAnimationFrame(() => autoGrow(ta));
+      return wrap;
+    };
+    if (!hasIdeas(e)){
       const em = document.createElement("div"); em.className = "empty";
       em.textContent = aiBusy ? "Writing ideas..." : "No ideas yet";
       card.appendChild(em);
+      const bb = blurbBox(); if (bb) card.appendChild(bb);
       grid.appendChild(card); return;
     }
     const fields = [
@@ -2533,6 +2568,7 @@ function renderStoryExtensions(){
       const ea = document.createElement("div"); ea.className = "sxeyfs sxact"; ea.textContent = "Activity EYFS: " + eyfsName(e.eyfsActivity);
       card.appendChild(ea);
     }
+    const bb = blurbBox(); if (bb) card.appendChild(bb);
     if (edit && aiKey()){
       const rg = document.createElement("button"); rg.className = "iconbtn sxregen"; rg.title = "Write new ideas for this book";
       rg.innerHTML = "&#8635; New ideas"; rg.disabled = aiBusy;
@@ -2546,12 +2582,12 @@ function renderStoryExtensions(){
 
 /* ---- The A4 Lunchtime Stories sheet, opened in its own window to print or save ---- */
 function printLunchtimeSheet(){
-  const books = lunchBooks(currentWeek);
+  const books = storyBooks(currentWeek);
   const wk = getWeek(currentWeek) || {};
   const logo = (document.querySelector(".printwatermark") || {}).src || "";
   const rows = books.map(item => {
     const e = bankEntry(item.text) || {};
-    return '<tr><td class="day">' + esc(dayName(item.day)) + '</td><td>' +
+    return '<tr' + (item.day === "weekly" ? ' class="wk"' : '') + '><td class="day">' + esc(dayName(item.day)) + '</td><td>' +
       '<div class="bt">' + esc(item.text.trim()) + '</div>' +
       (e.summary ? '<div class="sm">' + esc(e.summary) + '</div>' : '<div class="sm muted">No ideas generated yet</div>') +
       (e.message ? '<div><b>Message:</b> ' + esc(e.message) + '</div>' : '') +
@@ -2562,8 +2598,8 @@ function printLunchtimeSheet(){
         (e.eyfsActivity ? ' <span class="ey">(' + esc(eyfsName(e.eyfsActivity)) + ')</span>' : '') + '</div>' : '') +
       '</td></tr>';
   }).join("");
-  const days = DAYS.filter(d => books.some(b => b.day === d[0]));
-  const strip = '<table class="strip"><tr><th></th>' + days.map(d => '<th>' + d[1].slice(0,3) + '</th>').join("") + '</tr>' +
+  const days = [["weekly","Weekly"]].concat(DAYS).filter(d => books.some(b => b.day === d[0]));
+  const strip = '<table class="strip"><tr><th></th>' + days.map(d => '<th>' + (d[0] === "weekly" ? "Weekly story" : d[1].slice(0,3)) + '</th>').join("") + '</tr>' +
     EYFS_AREAS.map(a => '<tr><td class="an">' + esc(a[1]) + '</td>' + days.map(d => {
       const es = books.filter(b => b.day === d[0]).map(b => bankEntry(b.text) || {});
       const s = es.some(e => e.eyfsStory === a[0]), ac = es.some(e => e.eyfsActivity === a[0]);
@@ -2573,7 +2609,7 @@ function printLunchtimeSheet(){
     '@page{size:A4 portrait;margin:12mm;}body{font-family:Arial,sans-serif;color:#2B2B2B;font-size:9.5pt;margin:0;}' +
     'h1{font-family:Georgia,serif;color:#1A7A4A;font-size:20pt;margin:0;}.head{display:flex;align-items:center;gap:12px;border-bottom:2px solid #D4A017;padding-bottom:6px;margin-bottom:8px;}' +
     '.head img{height:46px;}.sub{color:#6B6460;font-size:9.5pt;}.ws{background:#FBF3DC;border-radius:6px;padding:5px 9px;margin-bottom:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}' +
-    'table.main{border-collapse:collapse;width:100%;}table.main td{border-bottom:1px solid #CCCCCC;padding:5px 6px;vertical-align:top;}' +
+    'tr.wk td{background:#FBF3DC;-webkit-print-color-adjust:exact;print-color-adjust:exact;}table.main{border-collapse:collapse;width:100%;}table.main td{border-bottom:1px solid #CCCCCC;padding:5px 6px;vertical-align:top;}' +
     'td.day{font-family:Georgia,serif;color:#1A7A4A;font-weight:bold;width:66px;}.bt{font-family:Georgia,serif;color:#1A7A4A;font-weight:bold;font-size:11pt;}' +
     '.sm{margin:2px 0;}.muted{color:#6B6460;font-style:italic;}.gcc{color:#1A7A4A;margin:2px 0;}.ey{color:#6B6460;font-size:8.5pt;}.act{margin-top:2px;}' +
     'h2{font-family:Georgia,serif;color:#1A7A4A;font-size:12pt;margin:12px 0 4px;}table.strip{border-collapse:collapse;font-size:8.5pt;}' +
@@ -2583,7 +2619,6 @@ function printLunchtimeSheet(){
     '</style></head><body>' +
     '<div class="head">' + (logo ? '<img src="' + logo + '" alt="">' : '') + '<div><h1>Lunchtime Stories</h1><div class="sub">' + esc(fmtWeek(currentWeek)) +
       ((wk.topic || "").trim() ? ' &middot; Topic: ' + esc(wk.topic.trim()) : '') + '</div></div></div>' +
-    (weeklyStoryTitle(currentWeek) ? '<div class="ws"><b>Weekly story:</b> ' + esc(weeklyStoryTitle(currentWeek)) + '</div>' : '') +
     '<table class="main">' + rows + '</table>' +
     '<h2>EYFS coverage this week</h2>' + strip +
     '<div class="legend"><span class="dot g"></span> the story &nbsp; <span class="dot y"></span> the afternoon activity</div>' +

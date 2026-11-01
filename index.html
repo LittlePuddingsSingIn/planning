@@ -114,10 +114,11 @@
   body.printlike{background:#fff;}
   body.printlike #tab-week .weekbar{margin-bottom:2px;}
   body.printlike #tab-week .weekbar h2{font-size:.9rem; font-weight:normal;}
-  body.printlike .topicrow{justify-content:center; margin:0 0 16px;}
+  body.printlike .topicrow{justify-content:center; margin:2px 0 22px;}
   body.printlike .topiclabel{display:none;}
-  body.printlike #weekTopic{border:none; border-bottom:1.5px solid var(--ink); border-radius:0; background:none;
-    text-align:center; font-size:1.3rem; flex:0 1 55%; max-width:55%; padding:2px 6px;}
+  body.printlike #weekTopic{border:none; border-bottom:3px solid var(--gold); border-radius:0; background:none;
+    text-align:center; font-family:Georgia, 'Times New Roman', serif; font-weight:bold; color:var(--green);
+    font-size:2.3rem; line-height:1.25; flex:0 1 70%; max-width:70%; padding:2px 6px 6px;}
   body.printlike .sheet, body.printlike #tab-week .section, body.printlike #reflectionWrap .card{background:transparent; border:none; box-shadow:none;}
   body.printlike .sheet{padding:0; gap:14px 24px; grid-template-rows:1fr;}
   body.printlike .col{gap:14px; height:100%;}
@@ -477,7 +478,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-10-30b";
+const BUILD = "2026-10-30c";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -2216,12 +2217,20 @@ async function savePdf(){
   document.body.classList.remove("viewmode");
   document.body.classList.add("printlike");
   try{
-    tab.style.width = dims.w + "px";
-    sheet.style.width = dims.w + "px";
-    sheet.style.height = "";
-    const headH = 90; // w/c line and topic
-    const availPx = dims.h - headH;
-    sheet.style.height = Math.max(sheet.scrollHeight, availPx) + "px";
+    // Lay the sheet out wider when there is more on it, so page one keeps the
+    // paper's shape and fills the full width instead of shrinking to fit the height.
+    const pmFit = PAPER_MM[size];
+    const ratio = (pmFit.h - 26) / (pmFit.w - 26);
+    let W = dims.w;
+    for (let i = 0; i < 6; i++){
+      tab.style.width = W + "px"; sheet.style.width = W + "px"; sheet.style.height = "";
+      const H = tab.scrollHeight;
+      if (H <= W * ratio * 1.01) break;
+      W = Math.round(W * Math.sqrt(H / (W * ratio)));
+    }
+    const headH = tab.scrollHeight - sheet.scrollHeight;
+    sheet.style.height = Math.max(sheet.scrollHeight, Math.floor(W * ratio - headH - 4)) + "px";
+    rwrap.style.width = W + "px";
     rwrap.style.display = "none";
     const c1 = await snapForPdf(tab);
     rwrap.style.display = "";

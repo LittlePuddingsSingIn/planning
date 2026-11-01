@@ -114,11 +114,10 @@
   body.printlike{background:#fff;}
   body.printlike #tab-week .weekbar{margin-bottom:2px;}
   body.printlike #tab-week .weekbar h2{font-size:.9rem; font-weight:normal;}
-  body.printlike .topicrow{justify-content:center; margin:2px 0 22px;}
+  body.printlike .topicrow{justify-content:center; margin:0 0 16px;}
   body.printlike .topiclabel{display:none;}
-  body.printlike #weekTopic{border:none; border-bottom:3px solid var(--gold); border-radius:0; background:none;
-    text-align:center; font-family:Georgia, 'Times New Roman', serif; font-weight:bold; color:var(--green);
-    font-size:2.3rem; line-height:1.25; flex:0 1 70%; max-width:70%; padding:2px 6px 6px;}
+  body.printlike #weekTopic{border:none; border-bottom:1.5px solid var(--ink); border-radius:0; background:none;
+    text-align:center; font-size:1.3rem; flex:0 1 55%; max-width:55%; padding:2px 6px;}
   body.printlike .sheet, body.printlike #tab-week .section, body.printlike #reflectionWrap .card{background:transparent; border:none; box-shadow:none;}
   body.printlike .sheet{padding:0; gap:14px 24px; grid-template-rows:1fr;}
   body.printlike .col{gap:14px; height:100%;}
@@ -276,11 +275,54 @@
   body.printlike:not(.viewmode) .sxbtn, body.printlike:not(.viewmode) .sxnote, body.printlike:not(.viewmode) .sxwarn, body.printlike:not(.viewmode) .sxregen{display:none !important;}
   @media print{ .sxbtn, .sxnote, .sxwarn, .sxregen{display:none !important;} }
 
+  /* ---------- Activity bank ---------- */
+  .bankintro{font-size:.85rem; color:var(--grey); margin:2px 0 10px;}
+  .bankfocus{background:var(--cream); border:1px solid var(--gold); border-radius:8px; padding:8px 12px; font-size:.85rem; margin-bottom:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .bankfocus b{color:var(--green); font-family:Georgia, serif;}
+  .bankfocus .navbtn{width:30px; height:30px;}
+  .bankcard{border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:10px; background:#fff; cursor:pointer;}
+  .bankcard:hover{border-color:var(--green);}
+  .bankcard .bt{font-family:Georgia, serif; color:var(--green); font-weight:bold; font-size:1rem;}
+  .bankcard .bm{font-size:.75rem; color:var(--grey); margin-top:2px;}
+  .bankcard .ii{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:8px;}
+  @media (max-width:640px){ .bankcard .ii{grid-template-columns:1fr; gap:6px;} }
+  .ibox{border-left:3px solid var(--green); padding:1px 0 1px 8px; font-size:.8rem;}
+  .ibox .il{font-size:.66rem; font-weight:bold; text-transform:uppercase; letter-spacing:.04em; color:var(--green);}
+  .ibox.imp{border-left-color:var(--grey);} .ibox.imp .il{color:var(--grey);}
+  .ibox.impa{border-left-color:var(--gold);} .ibox.impa .il{color:var(--gold);}
+  .ibox .iv{display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+  .ibox .iv.empty{color:var(--grey); font-style:italic; margin:0;}
+  .bchip{display:inline-block; border-radius:10px; font-size:.68rem; padding:1px 8px; margin:6px 4px 0 0; font-weight:bold;}
+  .bchip.draft{background:var(--cream); color:var(--grey); border:1px solid var(--gold);}
+  .bchip.due{background:var(--gold); color:#fff;}
+  .bchip.used{background:var(--pale); color:var(--green); border:1px solid var(--green);}
+  .bchip.tagc{background:#fff; color:var(--grey); border:1px solid var(--line); font-weight:normal;}
+  .isec{border:1px solid var(--line); border-left:5px solid var(--green); border-radius:8px; padding:6px 12px 10px; margin-top:14px;}
+  .isec.imp{border-left-color:var(--grey);} .isec.impa{border-left-color:var(--gold);}
+  .isec h3{font-size:1rem; margin:4px 0 0;}
+  .isec.imp h3{color:var(--grey);} .isec.impa h3{color:var(--gold);}
+  .isec .ihint{font-size:.78rem; color:var(--grey); font-style:italic;}
+  .adapt{display:grid; grid-template-columns:110px 1fr; gap:6px 10px; align-items:start; margin-top:8px;}
+  .adapt .al{font-size:.8rem; font-weight:bold; color:var(--grey); padding-top:8px;}
+  @media (max-width:640px){ .adapt{grid-template-columns:1fr;} .adapt .al{padding-top:2px;} }
+  .plan select{max-width:100%;}
+  .plan .eyfsgrid{display:flex; flex-wrap:wrap; gap:2px 16px;}
+  .plan .eyfsgrid label.ck{display:flex; align-items:center; gap:6px; font-weight:normal; color:var(--ink); font-size:.82rem; margin:3px 0;}
+  .plan .eyfsgrid input[type=checkbox]{accent-color:var(--green); width:15px; height:15px;}
+  .histrow{border-bottom:1px dashed var(--line); padding:8px 0; font-size:.85rem;}
+  .banknote{background:var(--pale); border:1px solid var(--green); border-radius:8px; padding:6px 10px; font-size:.82rem; margin:8px 0; display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .covtable{margin:10px 0 14px;}
+  .covtable td.num, .covtable th.num{text-align:center; width:96px;}
+  .covtable td.gap{background:var(--cream);}
+  .covtable td.covdom{font-family:Georgia, serif; color:var(--green); font-weight:bold; background:var(--pale);}
+  .gapnote{color:var(--gold); font-size:.74rem;}
+  .covnote{font-size:.82rem; color:var(--grey);}
+
   /* ---------- Print media: page-level rules (visuals come from body.printlike, added on beforeprint) ---------- */
   @media print{
     @page{margin:12mm;}
     body{background:#fff; font-size:11pt;}
-    header, nav, .buildfoot, .banner, #saveStatus, #tab-mytasks, #tab-plans, #tab-ideas, #tab-settings{display:none !important;}
+    header, nav, .buildfoot, .banner, #saveStatus, #tab-mytasks, #tab-plans, #tab-ideas, #tab-bank, #tab-settings, #bankOverlay{display:none !important;}
     #tab-week ::placeholder, #reflectionWrap ::placeholder{color:transparent !important; opacity:0 !important;}
     #tab-week .item .notesrow{display:none !important;}
     #tab-week .item.songcard .notesrow{display:block !important;}
@@ -317,6 +359,7 @@
   <button data-tab="week" class="active">This week's sheet</button>
   <button data-tab="mytasks">My tasks</button>
   <button data-tab="plans">Activity plans</button>
+  <button data-tab="bank">Activity bank</button>
   <button data-tab="ideas" id="navIdeas">Ideas</button>
   <button data-tab="settings" id="navSettings">Settings</button>
 </nav>
@@ -374,6 +417,35 @@
       </select>
     </div>
     <div class="card" id="plansList"></div>
+  </section>
+
+  <!-- ================= ACTIVITY BANK ================= -->
+  <section id="tab-bank" class="hidden">
+    <div class="weekbar">
+      <h2>Activity bank</h2>
+      <div class="spacer"></div>
+      <button class="btn secondary small" id="btnBankCoverage">Coverage</button>
+      <button class="btn secondary small hidden" id="btnBankSeed">Load starter ideas</button>
+      <button class="btn small mgr" id="btnBankNew">+ New idea</button>
+    </div>
+    <p class="bankintro">Every idea carries its intent, implementation and impact, so it goes onto a week with its purpose already written. Each time it is used, what happened is added to its history.</p>
+    <div id="bankFocus"></div>
+    <div class="planfilters" id="bankFilters">
+      <input type="text" id="bankSearch" placeholder="Search ideas..." style="flex:1;min-width:160px;">
+      <select id="bankKind"><option value="all">Activities and provision</option><option value="activity">Adult-led activities</option><option value="provision">Provision</option></select>
+      <select id="bankArea"></select>
+      <select id="bankDomain"></select>
+      <select id="bankShow">
+        <option value="all">Everything</option>
+        <option value="due">Revisit due</option>
+        <option value="unused">Not used yet</option>
+        <option value="rested">Not used for 6+ weeks</option>
+        <option value="drafts">Intent still to write</option>
+        <option value="nostrand">GCC strand to tick</option>
+      </select>
+    </div>
+    <div id="bankList"></div>
+    <div id="bankCoverage" class="hidden"></div>
   </section>
 
   <!-- ================= SETTINGS ================= -->
@@ -447,6 +519,10 @@
 
 <div class="buildfoot">Little Puddings weekly planning &middot; version <span id="buildStamp"></span> &middot; <span id="buildDate"></span> &middot; an older version number means an old copy: refresh the page (Ctrl+F5)</div>
 
+<div class="overlay hidden" id="bankOverlay">
+  <div class="plan" id="bankBody"></div>
+</div>
+
 <div class="overlay hidden" id="planOverlay">
   <div class="plan" id="planBody"></div>
 </div>
@@ -478,7 +554,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-10-30c";
+const BUILD = "2026-10-31a";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -495,6 +571,7 @@ let state = loadLocal() || { dataVersion: 1, practitioners: [], weeks: {} };
 if (!state.gcc) state.gcc = [];
 if (!state.plans) state.plans = [];
 if (!state.storyBank) state.storyBank = [];
+if (!state.activityBank) state.activityBank = [];
 let currentWeek = mondayOf(new Date());
 let account = null;       // MSAL account
 let role = "local";       // local | manager | practitioner
@@ -581,9 +658,28 @@ function mergeById(a, b){
   });
   return Object.values(m);
 }
+/* Bank ideas merge like everything else (newer wins, local kept on ties so open
+   editors keep their references), but each idea's history merges entry by entry
+   so a use logged on one device is never lost to an edit made on another. */
+function mergeBank(a, b){
+  const m = {};
+  (a || []).concat(b || []).forEach(x => {
+    const cur = m[x.id];
+    if (!cur){ m[x.id] = x; return; }
+    const newer = (x.updatedAt || 0) > (cur.updatedAt || 0) ? x : cur;
+    const older = newer === x ? cur : x;
+    const hm = {};
+    (older.history || []).concat(newer.history || []).forEach(h => {
+      if (!hm[h.id] || (h.updatedAt || 0) >= (hm[h.id].updatedAt || 0)) hm[h.id] = h;
+    });
+    newer.history = Object.values(hm);
+    m[x.id] = newer;
+  });
+  return Object.values(m);
+}
 function mergeState(local, cloud){
   if (!cloud) return local;
-  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [], provisionBank: [], repeats: [], storyBank: [] };
+  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [], provisionBank: [], repeats: [], storyBank: [], activityBank: [] };
   const pm = {};
   (local.practitioners||[]).concat(cloud.practitioners||[]).forEach(p => {
     const k = p.id || p.email;
@@ -595,6 +691,7 @@ function mergeState(local, cloud){
   out.provisionBank = mergeById(local.provisionBank, cloud.provisionBank);
   out.repeats = mergeById(local.repeats, cloud.repeats);
   out.storyBank = mergeById(local.storyBank, cloud.storyBank);
+  out.activityBank = mergeBank(local.activityBank, cloud.activityBank);
   const keys = new Set(Object.keys(local.weeks||{}).concat(Object.keys(cloud.weeks||{})));
   keys.forEach(k => {
     const a = (local.weeks||{})[k], b = (cloud.weeks||{})[k];
@@ -870,6 +967,7 @@ function itemCard(item, weekKey, simple){
       chip.textContent = "Activity plan"; chip.onclick = () => openPlan(item.planId);
       div.appendChild(chip);
     }
+    const bkp = bankChip(item); if (bkp) div.appendChild(bkp);
     const prn = document.createElement("span"); prn.className = "assignee-print";
     prn.textContent = (PROV_TYPES.find(t => t[0] === (item.provType || "continuous")) || [])[1] || "";
     div.appendChild(prn);
@@ -1075,6 +1173,7 @@ function itemCard(item, weekKey, simple){
     chip.onclick = () => openPlan(item.planId);
     div.appendChild(chip);
   }
+  const bk = bankChip(item); if (bk) div.appendChild(bk);
   return div;
 }
 
@@ -1158,6 +1257,7 @@ function renderSheet(){
       });
       if (!secItems.length && !edit){ const e = document.createElement("div"); e.className="empty"; e.textContent = "Nothing planned"; box.appendChild(e); }
       if (edit) box.appendChild(addButton(sec.id, null, null, "+ Add provision"));
+      if (edit) box.appendChild(bankSheetButton("provision"));
       const bankLive = (state.provisionBank || []).filter(b => !b.deleted && (b.kind || "provision") === "provision");
       if (edit && (role === "manager" || role === "local") && bankLive.length){
         const ib = document.createElement("button"); ib.className = "addbtn";
@@ -1183,6 +1283,7 @@ function renderSheet(){
         });
         box.appendChild(dayBlock);
       });
+      if (edit) box.appendChild(bankSheetButton("activity"));
     } else {
       const secItems = items.filter(i => i.section===sec.id);
       secItems.forEach(i => box.appendChild(itemCard(i, currentWeek)));
@@ -1427,19 +1528,19 @@ document.getElementById("btnAddPrac").onclick = () => {
 const PLAN_FIELDS = [
   ["resources", "Resources", "What we need ready before we start"],
   ["children", "Children taking part (name and age)", ""],
-  ["interests", "Current interests / links to previous learning", "Why this activity, why now, for these children"],
-  ["approach", "How we'll offer it", "What we will put out or do, what comes next if they take it up, and anything worth saying"],
-  ["goals", "What we want them to get from this", "Adult intent, in everyday words"],
-  ["whyImpact", "How we'll know it landed / what next", "In everyday words, so anyone on the team could say it"],
+  ["interests", "Intent: why this, why now", "Current interests, links to previous learning, the book or season it builds on"],
+  ["goals", "Intent: what we want them to know and be able to do", "Adult intent, in everyday words"],
+  ["approach", "Implementation: how we'll offer it", "What we will put out or do, the adult's role, and what comes next if they take it up"],
   ["keyLanguage", "Key language", "Words and phrases to weave in naturally"],
-  ["evaluation", "Evaluation: what we noticed overall", "How the activity actually unfolded"],
-  ["individualEval", "What we noticed for individual children", "One or two lines per child taking part"],
+  ["whyImpact", "Impact: how we'll know it landed / what next", "In everyday words, so anyone on the team could say it"],
+  ["evaluation", "Impact: what we noticed overall", "How the activity actually unfolded"],
+  ["individualEval", "Impact: what we noticed for individual children", "One or two lines per child taking part"],
   ["nextSteps", "Next steps", "What to offer next and how to extend it, based on what we noticed"]
 ];
 
 function createPlan(title, weekKey, itemId){
   const p = { id: uid(), title: title || "New activity", weekKey: weekKey || currentWeek, itemId: itemId || null,
-    date: "", completedBy: "", strands: [], phaseFocus: "",
+    date: "", completedBy: "", strands: [], eyfs: [], phaseFocus: "",
     resources:"", children:"", interests:"", approach:"", goals:"", whyImpact:"", keyLanguage:"", evaluation:"", individualEval:"", nextSteps:"",
     deleted:false, createdAt: now(), updatedAt: now() };
   state.plans.push(p);
@@ -1554,6 +1655,12 @@ function openPlan(id){
     bar.appendChild(addBtn);
   }
   const sp = document.createElement("div"); sp.style.flex = "1"; bar.appendChild(sp);
+  if (edit && !(p.bankId && bankFind(p.bankId))){
+    const sb = document.createElement("button"); sb.className = "btn secondary small"; sb.textContent = "Save to activity bank";
+    sb.title = "Keep this as a reusable idea, with its intent, implementation and impact";
+    sb.onclick = () => { bankFromPlan(p); status("Saved to the activity bank"); openPlan(p.id); };
+    bar.appendChild(sb);
+  }
   const pr = document.createElement("button"); pr.className = "btn small"; pr.textContent = "Print plan"; pr.onclick = printPlan;
   bar.appendChild(pr);
   if (edit){
@@ -1626,6 +1733,16 @@ function openPlan(id){
     const pi = document.createElement("input"); pi.type = "text"; pi.value = p.phaseFocus || "";
     pi.oninput = () => { p.phaseFocus = pi.value; touchPlan(p); };
     body.appendChild(pi);
+  }
+  const eyl = document.createElement("label"); eyl.textContent = "EYFS areas"; body.appendChild(eyl);
+  body.appendChild(eyfsTickGrid(p, true, () => touchPlan(p)));
+  if (p.bankId && bankFind(p.bankId)){
+    const bn = document.createElement("div"); bn.className = "banknote";
+    bn.appendChild(document.createTextNode("From the activity bank. Write what happened there too, so the idea keeps its history."));
+    const ob = document.createElement("button"); ob.className = "btn secondary small"; ob.textContent = "Open the bank idea";
+    ob.onclick = () => openBankIdea(p.bankId);
+    bn.appendChild(ob);
+    body.appendChild(bn);
   }
 
   PLAN_FIELDS.forEach(([key, label, hint]) => {
@@ -1948,6 +2065,21 @@ function ideaRow(b, kind, typeName){
     status("Added to " + fmtWeek(target).replace("w/c Monday", "w/c"));
   };
   bar.appendChild(addBtn);
+  if (kind !== "alone"){
+    const sb = document.createElement("button"); sb.className = "btn secondary small";
+    const already = bankHasTitle(b.title);
+    sb.textContent = already ? "In the bank ✓" : "Save to bank"; sb.disabled = already;
+    sb.title = "Keep it as a reusable idea in the activity bank (no child names are copied)";
+    sb.onclick = () => {
+      const fw = matchFramework(b.domains);
+      newBankEntry({ title: b.title, kind: kind === "provision" ? "provision" : "activity", provType: b.provType || "invitation",
+        whyNow: b.because || "", implementation: b.offer || "", resources: b.resources || "", impact: b.notice || "",
+        strands: fw.ticked, domainsHint: fw.hints.join(", ") });
+      sb.textContent = "In the bank ✓"; sb.disabled = true;
+      status("Saved to the activity bank. Add its intent there before it goes on a week.");
+    };
+    bar.appendChild(sb);
+  }
   row.appendChild(bar);
   return row;
 }
@@ -2074,8 +2206,971 @@ document.getElementById("fwCsvFile").onchange = (e) => {
   reader.readAsText(file);
 };
 
+/* ---- Starter ideas for the topics and weekly stories up to Christmas 2026.
+   No GCC names here (the framework stays in the OneDrive file): strands are
+   ticked in the bank once loaded. Fixed ids so they never load twice. ---- */
+const SEED_IDEAS = [
+{ id:"seed-fire-safety", title:"Who helps when there is a fire?", kind:"activity", place:"indoors", lowPrep:true,
+  tags:["Fire","Bonfire night","People who help us"], books:["Flashing Fire Engines"], eyfs:["PSED","UTW","CL"],
+  intent:"Children know that fire is hot and can hurt, that firefighters help us, and that we always tell a grown-up if we see fire.",
+  whyNow:"Bonfire night week and Flashing Fire Engines; children will see and hear bonfires and fireworks at home.",
+  implementation:"Small group with the fire engine small world. Act out spotting a pretend fire (red tissue), telling a grown-up and the engine coming. Keep it calm and reassuring, not frightening.",
+  adaptBaby:"Push-along fire engine, siren sounds, a red and yellow treasure basket.", adaptToddler:"Take turns to drive the engine and make the siren; name hot, stop, help.",
+  adaptOlder:"Role play telling a grown-up; practise saying \"Help, fire!\" clearly.",
+  resources:"Fire engine or station small world, people figures, red and orange tissue, string for hoses.", keyLanguage:"hot, danger, stop, help, firefighter, siren, safe",
+  impact:"Children say or show \"hot, tell a grown-up\" in play, and use firefighter and siren in their own stories.",
+  next:"Walk past the fire station, or add firefighter uniforms to role play." },
+{ id:"seed-firework-printing", title:"Firework printing on black paper", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Fire","Bonfire night","Fireworks"], books:["Five Little Fireworks","The Bonfire Dance"], eyfs:["EAD","PD"],
+  intent:"Children explore how marks and colours burst out from one point, and choose their own colours and tools.",
+  whyNow:"Children will have seen fireworks; Five Little Fireworks gives the pattern of whoosh and burst.",
+  implementation:"Black paper, bright paint in shallow trays, cardboard tubes with one end snipped into a fringe, and forks. Leave it out as an invitation; join in with sound words as children print.",
+  adaptBaby:"Finger painting on black paper, or paint sealed in a bag to squish.", adaptToddler:"Fringed tubes and big pressing movements; name the colours.",
+  adaptOlder:"Add chalk pastels for trails; talk about big and small bursts, high and low.",
+  resources:"Black sugar paper, paint, tubes snipped at one end, forks, aprons.", keyLanguage:"whoosh, bang, sparkle, burst, high, low, bright",
+  impact:"Children choose tools and colours on purpose and describe their marks with sound or movement words.",
+  next:"Firework dancing with ribbons, or chalk fireworks on the patio." },
+{ id:"seed-five-fireworks", title:"Five little fireworks: counting back", kind:"activity", place:"indoors", lowPrep:true,
+  tags:["Fire","Bonfire night","Fireworks","Counting"], books:["Five Little Fireworks"], eyfs:["M","CL"],
+  intent:"Children join in counting back from five and begin to see that each time there is one fewer.",
+  whyNow:"Monday's lunchtime story; counting rhymes stick when they are acted out.",
+  implementation:"Five children each hold a paper firework on a stick. Count down together; each firework whooshes up and sits down. Count who is left. Swap and repeat.",
+  adaptBaby:"Lift and bounce with \"whoosh\" as the rhyme is sung.", adaptToddler:"Join in with the whoosh and actions; count with an adult.",
+  adaptOlder:"Say how many are left before counting; try it with ten.",
+  resources:"Five paper fireworks on lolly sticks.", keyLanguage:"five, four, three, two, one, none, one less, how many left",
+  impact:"Children predict or say how many are left, and count back in their own play.",
+  next:"Another counting-back rhyme next week to keep the pattern going." },
+{ id:"seed-firework-dance", title:"Fast and slow firework dancing", kind:"activity", place:"either", lowPrep:true,
+  tags:["Fire","Bonfire night","Fireworks","Movement"], books:["The Bonfire Dance"], eyfs:["PD","EAD"],
+  intent:"Children move with control, changing speed, size and level with the music, and freeze when it stops.",
+  whyNow:"The Bonfire Dance, and plenty of bonfire night energy to use.",
+  implementation:"Ribbons or scarves and music that changes: slow sparkle, fast whizz, big bang. The adult models, then follows the children's ideas. Freeze when the music stops.",
+  adaptBaby:"Held and swayed to the music; a scarf to grasp and wave.", adaptToddler:"Wave scarves high and low; stop and go.",
+  adaptOlder:"Invent a firework move for others to copy; change speed on a signal.",
+  resources:"Ribbons or chiffon scarves, music with clear changes.", keyLanguage:"fast, slow, high, low, spin, freeze, sparkle",
+  impact:"Children change how they move when the music changes, and can freeze and start again.",
+  next:"Parachute games outside, or streamers on the field." },
+{ id:"seed-hedgehog-check", title:"Stick pile and checking for hedgehogs", kind:"activity", place:"outdoors", lowPrep:true,
+  tags:["Fire","Bonfire night","Autumn","Night animals","Badgers"], books:[], eyfs:["UTW","M"],
+  intent:"Children learn that animals shelter in leaf and stick piles in autumn and that we check before moving them. They compare sticks by length.",
+  whyNow:"Bonfire week, and it leads into night animals and badgers.",
+  implementation:"Collect sticks and leaves. Build a pretend bonfire (never lit), then gently check it for hedgehogs and turn it into a hedgehog home instead. Sort long and short sticks on the way.",
+  adaptBaby:"Hold and feel a stick and a leaf; crunch leaves.", adaptToddler:"Carry sticks to the pile; find a long one and a short one.",
+  adaptOlder:"Line sticks up shortest to longest; explain why we check for hedgehogs.",
+  resources:"Garden sticks and leaves, toy hedgehog, gloves.", keyLanguage:"long, short, longer, shelter, hibernate, check, gently",
+  impact:"Children explain or show checking for animals, and compare stick lengths in their own words.",
+  next:"A permanent log pile for minibeasts; badgers and night animals next week." },
+{ id:"seed-warm-cold", title:"Warm and cold trays", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Fire","Winter","Senses"], books:[], eyfs:["UTW","CL"],
+  intent:"Children feel and compare warm and cold, and learn \"hot\" as a stop word.",
+  whyNow:"Fire week talk about hot and danger; cold mornings starting.",
+  implementation:"Two trays side by side: warm (checked, never hot) water with sponges, and ice in cold water. The adult stays close, naming warm and cold as children explore.",
+  adaptBaby:"Short supervised touches; watch faces and name the feeling.", adaptToddler:"Pour and squeeze between trays; say warm and cold.",
+  adaptOlder:"Predict what happens to ice in the warm tray, and check later.",
+  resources:"Two trays, warm water, ice, sponges, cups, towels.", keyLanguage:"warm, cold, hot, freezing, melt, stop",
+  impact:"Children use warm and cold correctly and talk about what happened to the ice.",
+  next:"Ice rescue in December." },
+{ id:"seed-in-my-heart", title:"How does my heart feel today?", kind:"activity", place:"indoors", lowPrep:true,
+  tags:["Feelings","Fire"], books:["In My Heart"], eyfs:["PSED","CL"],
+  intent:"Children begin to name feelings, know all feelings are allowed, and that a friend may feel differently.",
+  whyNow:"Weekly story In My Heart; a noisy, unsettled week for some children.",
+  implementation:"Small circle with paper hearts in different colours. Revisit a page of the book, then each child chooses a heart for how they feel and, if they want, says why. Name feelings back without fixing them.",
+  adaptBaby:"Mirror play: the adult names the baby's feelings and shows matching faces.", adaptToddler:"Choose a heart and point to a face; the adult names the feeling.",
+  adaptOlder:"Say what made them feel that way, and what helps.",
+  resources:"Paper hearts in four or five colours, the book, a mirror.", keyLanguage:"happy, sad, cross, worried, calm, excited, I feel",
+  impact:"Children name a feeling in the moment, in play or when upset, and sometimes notice a friend's.",
+  next:"Feelings faces on the wall; Ravi's Roar next week." },
+{ id:"seed-badger-sett", title:"Badger sett in a box", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Badgers","Night animals","Darkness"], books:[], eyfs:["UTW","CL"],
+  intent:"Children learn that badgers live underground and come out at night, and that animals have homes that suit them.",
+  whyNow:"Badger week; the nights are drawing in.",
+  implementation:"A big box made into a dark sett with a tunnel, toy badgers and woodland animals, leaves and a torch. Join the play to use night, day, under and inside.",
+  adaptBaby:"Peekaboo with a toy badger through the tunnel.", adaptToddler:"Post animals into the sett and say night night.",
+  adaptOlder:"Tell a badger's night-time story; compare with an animal that sleeps at night.",
+  resources:"Large cardboard box, toy badger and woodland animals, leaves, torch, blanket.", keyLanguage:"badger, sett, tunnel, underground, night, nocturnal, under, inside",
+  impact:"Children use under, inside, night and sett in their own small world stories.",
+  next:"The woodland room of the biome doll's house; digging like badgers outside." },
+{ id:"seed-dig-badger", title:"Dig like a badger: worm hunt", kind:"activity", place:"outdoors", lowPrep:true,
+  tags:["Badgers","Night animals","Minibeasts"], books:[], eyfs:["PD","UTW"],
+  intent:"Children build strong arm and shoulder movements by digging, and learn what badgers eat.",
+  whyNow:"Badger week; soft autumn soil.",
+  implementation:"Digging patch with spades and trowels. Talk about badgers' strong claws and that they eat worms. Look closely at any worms and put them back gently.",
+  adaptBaby:"Scoop soil or sand in a tray with a cup.", adaptToddler:"Fill and empty buckets; find a worm with an adult.",
+  adaptOlder:"Dig a tunnel; count worms found and compare lengths.",
+  resources:"Spades, trowels, buckets, magnifiers, a tray for worms.", keyLanguage:"dig, claws, soil, worm, wriggle, deep, gently",
+  impact:"Children dig with purpose and handle creatures gently, saying what badgers eat.",
+  next:"A minibeast hunt, leading into spiders." },
+{ id:"seed-stripes", title:"Black and white stripes", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Badgers","Patterns","Darkness"], books:[], eyfs:["EAD","M"],
+  intent:"Children notice and make stripes and simple repeating patterns, and explore strong contrast.",
+  whyNow:"Badger faces; links to light and dark later in the month.",
+  implementation:"Black and white paint with rollers and card strips, and a badger picture to look at. Talk about stripes going down and across.",
+  adaptBaby:"High-contrast black and white cards and books.", adaptToddler:"Roll black and white paint; name black and white.",
+  adaptOlder:"Make a repeating pattern and say what comes next.",
+  resources:"Black and white paint, rollers, card strips, badger picture.", keyLanguage:"stripe, black, white, pattern, next, again",
+  impact:"Children make or continue a simple pattern and say what comes next.",
+  next:"Patterns with natural objects outside; mixing grey in Darkness week." },
+{ id:"seed-ravis-roar", title:"Big roar, small roar", kind:"activity", place:"indoors", lowPrep:true,
+  tags:["Feelings","Calm","Badgers"], books:["Ravi's Roar"], eyfs:["PSED","CL"],
+  intent:"Children recognise that big feelings can feel like a roar inside, and practise a way to calm their body.",
+  whyNow:"Weekly story Ravi's Roar.",
+  implementation:"After the story: roar big like Ravi, then tiny, then a whisper. Then \"smell the flower, blow the dandelion\" breaths together. Use the same breaths in the day when someone is cross.",
+  adaptBaby:"The adult models slow breaths and a quiet voice during cuddles.", adaptToddler:"Loud and quiet roars; copy slow breaths with a feather.",
+  adaptOlder:"Talk about what makes them roar inside, and choose something that helps.",
+  resources:"The book, a feather.", keyLanguage:"cross, angry, roar, calm, breathe, slowly, gentle",
+  impact:"Children use the breathing, or say they feel cross, when upset, with or without a reminder.",
+  next:"The calm basket in Darkness week; When Cucumber Lost His Cool in December." },
+{ id:"seed-where-badger", title:"Where is Badger hiding?", kind:"activity", place:"either", lowPrep:true,
+  tags:["Badgers","Night animals"], books:[], eyfs:["CL","M"],
+  intent:"Children understand and use position words: in, on, under, behind, next to.",
+  whyNow:"Badger week; a quick game that repeats well.",
+  implementation:"Hide a toy badger while children close their eyes. They find it and say where it was. Then a child hides it and gives clues.",
+  adaptBaby:"Peekaboo badger under a cloth.", adaptToddler:"Find the badger; the adult models \"under the chair\".",
+  adaptOlder:"Give clues to others without pointing.",
+  resources:"Toy badger or soft toy.", keyLanguage:"in, on, under, behind, next to, between",
+  impact:"Children use two or more position words correctly in the game and in their own play.",
+  next:"Position words on the obstacle course in December." },
+{ id:"seed-web-weaving", title:"Weaving webs", kind:"provision", provType:"invitation", place:"either", lowPrep:false,
+  tags:["Spiders","Minibeasts"], books:[], eyfs:["PD","EAD"],
+  intent:"Children strengthen hand control by weaving, and see that a web is made of crossing lines.",
+  whyNow:"Spider week; webs are easy to spot in November.",
+  implementation:"Card plates with notches round the edge and chunky wool. Outside, a big string web tied between two posts for threading ribbons through.",
+  adaptBaby:"Pull scarves through a hole or out of a tissue box.", adaptToddler:"Thread ribbons through the big string web outside.",
+  adaptOlder:"Wrap wool across the notches to make a web; add a spider.",
+  resources:"Card plates with notches, chunky wool, string, ribbons.", keyLanguage:"web, across, round, over, under, tight, sticky",
+  impact:"Children keep going with wrapping or threading and talk about over and under.",
+  next:"Look for real webs; threading for older children." },
+{ id:"seed-web-hunt", title:"Misty web hunt", kind:"activity", place:"outdoors", lowPrep:true,
+  tags:["Spiders","Minibeasts","Autumn","Winter"], books:[], eyfs:["UTW","CL"],
+  intent:"Children look closely at the natural world, notice detail, and learn that spiders are helpful and best left alone.",
+  whyNow:"Spider week; webs show up on damp, frosty mornings.",
+  implementation:"Early in the day, walk the garden or footpath looking for webs. A light mist from a spray bottle makes them show. Look, don't touch, and talk about what we see.",
+  adaptBaby:"Carried to look closely; name web and spider.", adaptToddler:"Point to webs; spray with help.",
+  adaptOlder:"Count webs, compare shapes and sizes, draw one back inside.",
+  resources:"Spray bottle of water, magnifiers, clipboard.", keyLanguage:"web, spider, look closely, gently, dew, frost",
+  impact:"Children spot webs themselves and talk about leaving spiders alone.",
+  next:"Paint webs; Incy Wincy down the drainpipe." },
+{ id:"seed-eight-legs", title:"Eight legs: dough spiders", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Spiders","Counting"], books:[], eyfs:["M","PD"],
+  intent:"Children count to eight touching each one, and strengthen their fingers through dough play.",
+  whyNow:"Spider week.",
+  implementation:"Playdough with lolly sticks or pipe cleaner pieces for legs. Count the legs as they go in; how many on each side?",
+  adaptBaby:"Squish dough with an adult; small pieces kept out of reach.", adaptToddler:"Push in legs and count with an adult.",
+  adaptOlder:"Count to eight, then four on each side; compare with a beetle's six.",
+  resources:"Playdough, lolly sticks or pipe cleaner pieces (older children).", keyLanguage:"eight, count, legs, each side, how many, more",
+  impact:"Children count eight objects accurately and talk about the same on each side.",
+  next:"Counting legs on other minibeasts." },
+{ id:"seed-incy-wincy", title:"Incy Wincy down the drainpipe", kind:"activity", place:"outdoors", lowPrep:true,
+  tags:["Spiders","Water","Weather"], books:[], eyfs:["CL","UTW","PD"],
+  intent:"Children explore water flowing down slopes and join in a familiar rhyme, using up and down.",
+  whyNow:"Spider week; wet November weather.",
+  implementation:"Guttering propped at different heights, jugs of water and a toy spider. Sing the rhyme while pouring; try steep and gentle slopes.",
+  adaptBaby:"Rhyme and actions on a lap; splash in a tray.", adaptToddler:"Pour water down and watch the spider go.",
+  adaptOlder:"Change the slope and predict which is fastest.",
+  resources:"Guttering or tubes, jugs, toy spider, crates to prop.", keyLanguage:"up, down, fast, slow, slope, pour, wash",
+  impact:"Children join in the rhyme and talk about fast and slow water.",
+  next:"Puddle walk in wellies." },
+{ id:"seed-bucket", title:"Filling our bucket", kind:"provision", provType:"continuous", place:"indoors", lowPrep:true,
+  tags:["Kindness","Feelings","Spiders"], books:["Have you filled a bucket today?"], eyfs:["PSED","M"],
+  intent:"Children notice kind actions, in themselves and in others, and feel proud to help.",
+  whyNow:"Weekly story Have You Filled a Bucket Today?",
+  implementation:"A small bucket on a high shelf. When an adult notices a kind act, they say what it was and hand the child a pompom to add. Count the bucket together at the end of the day.",
+  adaptBaby:"The adult names kindness out loud: \"you passed it, that was kind.\"", adaptToddler:"Add a pompom with an adult when kindness is named.",
+  adaptOlder:"Notice and tell an adult about a friend's kindness.",
+  resources:"Small bucket, pompoms kept out of reach of under threes.", keyLanguage:"kind, share, help, gentle, thank you, proud",
+  impact:"Children start to notice a friend's kindness and tell an adult, not only their own.",
+  next:"Keep the bucket going; cards for someone special in December." },
+{ id:"seed-dark-den", title:"Dark den with torches", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Darkness","Night","Light"], books:["Can't you sleep little bear"], eyfs:["UTW","PSED"],
+  intent:"Children explore light and dark safely and grow confident in the dark, knowing a torch makes light.",
+  whyNow:"Darkness week; Can't You Sleep, Little Bear?",
+  implementation:"Blanket den with torches, light-up toys and shiny things. The adult joins in to talk about what happens when the torch goes on and off.",
+  adaptBaby:"Sensory lights inside the den with an adult.", adaptToddler:"Switch torches on and off; find shiny things.",
+  adaptOlder:"Find what shines, what glows and what stays dark.",
+  resources:"Blankets, clothes horse or table, torches, foil, reflective and light-up toys.", keyLanguage:"dark, light, bright, shine, glow, torch, on, off",
+  impact:"Children choose to go into the den and talk about what makes light.",
+  next:"Shiny, glowing or dark sorting; shadow play." },
+{ id:"seed-shadows", title:"Shadow play", kind:"activity", place:"indoors", lowPrep:true,
+  tags:["Darkness","Light","Shadows"], books:["My shadow is pink"], eyfs:["UTW","EAD","PSED"],
+  intent:"Children notice a shadow appears when something blocks the light, and change its size and shape. Through the book: being yourself is fine.",
+  whyNow:"My Shadow Is Pink on Thursday.",
+  implementation:"A torch on a white wall or sheet. Make shadows with hands, toys and bodies; move closer and further away. On a sunny day, find shadows outside.",
+  adaptBaby:"Watch shadows move on the wall with an adult.", adaptToddler:"Make shadows with toys; chase shadows.",
+  adaptOlder:"Make a shadow bigger and smaller and say how; talk about the book's message.",
+  resources:"Torch, white sheet or wall, card shapes, toys.", keyLanguage:"shadow, light, block, big, small, closer, further",
+  impact:"Children change their shadow on purpose and explain how.",
+  next:"Shadow puppets to retell a story." },
+{ id:"seed-dusk-listening", title:"Dusk listening in the garden", kind:"activity", place:"outdoors", lowPrep:true,
+  tags:["Darkness","Night","Night animals","Owls"], books:[], eyfs:["CL","UTW"],
+  intent:"Children listen carefully, tell sounds apart and notice changes as day turns to night.",
+  whyNow:"Darkness week; it gets dark before home time, and the owl story on Monday.",
+  implementation:"Late afternoon, step outside in coats. Stand still and listen: birds, cars, wind, maybe an owl. Notice the sky and the lights coming on.",
+  adaptBaby:"Carried outside; the adult names the sounds.", adaptToddler:"Cup ears and point to sounds.",
+  adaptOlder:"Say what they heard and whether it was near or far.",
+  resources:"Coats, torch.", keyLanguage:"listen, quiet, loud, near, far, dusk, owl, hoot",
+  impact:"Children stop and listen and name two or more sounds.",
+  next:"Sound lotto indoors; night animals small world." },
+{ id:"seed-grumpy-basket", title:"What helps when I feel grumpy?", kind:"activity", place:"indoors", lowPrep:true,
+  tags:["Feelings","Calm","Darkness"], books:["Grumpy Monkey"], eyfs:["PSED","CL"],
+  intent:"Children understand it is fine to feel grumpy, and begin to know what helps them feel better.",
+  whyNow:"Weekly story Grumpy Monkey.",
+  implementation:"Make a calm basket together: children choose things that help them (a soft toy, squeeze ball, book, blanket). Offer it when someone is grumpy, without pushing them to cheer up.",
+  adaptBaby:"Comfort items close by; the adult names \"you feel grumpy\".", adaptToddler:"Choose one thing for the basket.",
+  adaptOlder:"Say what helps them and why.",
+  resources:"Basket, soft toys, squeeze balls, books, small blanket.", keyLanguage:"grumpy, cross, fed up, help, calm, better",
+  impact:"Children use the basket, or ask for something from it, when upset.",
+  next:"Calm-down bottles for the basket in December." },
+{ id:"seed-shine-sort", title:"Shiny, glowing or dark?", kind:"provision", provType:"provocation", place:"indoors", lowPrep:true,
+  tags:["Darkness","Light","Stars"], books:[], eyfs:["UTW","M"],
+  intent:"Children sort objects by how they look in the dark, and begin to say why.",
+  whyNow:"Darkness week, leading into Stars.",
+  implementation:"In the den or with curtains drawn: a basket of foil, safety mirrors, glow sticks, wooden blocks and fabric. Test each with a torch and sort into shiny, glowing and stays dark.",
+  adaptBaby:"Look at reflections in a safety mirror with a torch.", adaptToddler:"Shine the torch on things and find the shiny ones.",
+  adaptOlder:"Sort into three groups and explain their choices.",
+  resources:"Torch, foil, safety mirrors, glow sticks, wooden and fabric items, hoops.", keyLanguage:"shiny, glow, reflect, dark, same, different, sort",
+  impact:"Children sort with a reason and use shiny or reflect.",
+  next:"Star jars next week." },
+{ id:"seed-mixing-grey", title:"Mixing grey", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Darkness","Colour"], books:["Grey"], eyfs:["EAD","M"],
+  intent:"Children see that black and white make grey, and that more of one changes the shade.",
+  whyNow:"Friday's book Grey.",
+  implementation:"Black and white paint with spoons and palettes. Mix a little black into white, then more. Paint a strip of greys from light to dark.",
+  adaptBaby:"Squish black and white paint in a sealed bag.", adaptToddler:"Mix and paint; name black, white, grey.",
+  adaptOlder:"Make a light grey and a dark grey and line them up.",
+  resources:"Black and white paint, palettes, spoons, paper.", keyLanguage:"grey, mix, light, dark, more, less",
+  impact:"Children explain how they made grey lighter or darker.",
+  next:"Mixing other colours." },
+{ id:"seed-star-jar", title:"Star in a jar", kind:"activity", place:"indoors", lowPrep:false,
+  tags:["Stars","Light","Darkness"], books:["Star in a Jar"], eyfs:["EAD","UTW"],
+  intent:"Children make something to keep and learn that some lights need batteries, not flames.",
+  whyNow:"Thursday's book Star in a Jar.",
+  implementation:"Plastic jars, star stickers and tissue to decorate. The adult adds a battery tea light inside. Try them in the dark den.",
+  adaptBaby:"Watch the lit jars in the den.", adaptToddler:"Stick stars on the jar.",
+  adaptOlder:"Decorate and talk about where their star will go at home.",
+  resources:"Plastic jars, star stickers, tissue, glue, battery tea lights (adult only).", keyLanguage:"star, shine, glow, jar, light, battery",
+  impact:"Children talk about their jar at home time and use glow and shine.",
+  next:"Five-point stars; catch a falling star." },
+{ id:"seed-five-points", title:"Five-point stars", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Stars","Shapes","Counting"], books:[], eyfs:["M","PD"],
+  intent:"Children recognise a star shape, count its points and order stars by size.",
+  whyNow:"Stars week.",
+  implementation:"Playdough with star cutters, and card stars in three sizes. Count the points together and line them up small to big.",
+  adaptBaby:"A big soft star to hold and mouth.", adaptToddler:"Cut dough stars and count points with help.",
+  adaptOlder:"Order stars small to big, count points, look for stars around the room.",
+  resources:"Playdough, star cutters, card stars in three sizes.", keyLanguage:"star, points, five, big, bigger, biggest",
+  impact:"Children count five points and order stars by size.",
+  next:"A shape hunt; Christmas stars." },
+{ id:"seed-lost-found", title:"Lost and Found ice world", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Friendship","Feelings","Stars","Winter"], books:["Lost and Found"], eyfs:["PSED","CL","UTW"],
+  intent:"Children retell parts of the story and talk about feeling lonely and what friends do.",
+  whyNow:"Weekly story Lost and Found.",
+  implementation:"A tray of ice blocks and water with toy penguins and a boat. Retell the story in the small world; ask how the penguin felt.",
+  adaptBaby:"Touch ice and watch the penguins slide.", adaptToddler:"Slide penguins and give rides in the boat.",
+  adaptOlder:"Retell the story and say what a good friend does.",
+  resources:"Tray, ice blocks, toy penguins, boat, umbrella.", keyLanguage:"lonely, friend, help, lost, found, cold, ice",
+  impact:"Children retell part of the story and name something a friend does.",
+  next:"Ice rescue in December." },
+{ id:"seed-catch-star", title:"Catch a falling star", kind:"activity", place:"outdoors", lowPrep:true,
+  tags:["Stars","Movement"], books:["How to Catch a falling star"], eyfs:["PD"],
+  intent:"Children practise throwing and catching, following a moving object with their eyes.",
+  whyNow:"Tuesday's lunchtime story in Stars week.",
+  implementation:"Soft beanbag stars or scrunched foil balls. Throw to an adult, catch, and aim into a basket. Move the target further away when ready.",
+  adaptBaby:"Roll a soft star back and forth.", adaptToddler:"Throw into a big basket close by.",
+  adaptOlder:"Catch with two hands and move the target back.",
+  resources:"Soft stars or beanbags, baskets, hoops.", keyLanguage:"throw, catch, aim, near, far, high",
+  impact:"Children catch with two hands more often and choose to move the target further.",
+  next:"The try again obstacle course in December." },
+{ id:"seed-calm-bottles", title:"Calm-down bottles", kind:"activity", place:"indoors", lowPrep:false,
+  tags:["Calm","Feelings","Winter"], books:["When Cucumber lost his cool"], eyfs:["PSED","UTW"],
+  intent:"Children learn that watching something settle can help their body calm down, and have a tool to reach for.",
+  whyNow:"Weekly story When Cucumber Lost His Cool.",
+  implementation:"Make sensory bottles with water, a little oil, food colouring and sequins; the adult glues the lids shut. Shake and watch it settle while breathing slowly. Keep them in the calm basket.",
+  adaptBaby:"Watch a bottle settle with an adult.", adaptToddler:"Choose colours and sequins; shake and watch.",
+  adaptOlder:"Talk about when to use it, and breathe until it settles.",
+  resources:"Plastic bottles, water, oil, food colouring, sequins, strong glue (adult only).", keyLanguage:"calm, cool, settle, slow, breathe, wait",
+  impact:"Children choose the bottle or the breathing when upset, sometimes without a prompt.",
+  next:"Keep them in the calm basket and revisit in January." },
+{ id:"seed-ice-rescue", title:"Ice rescue", kind:"provision", provType:"provocation", place:"either", lowPrep:true,
+  tags:["Winter","Ice","Calm"], books:[], eyfs:["UTW","PD","CL"],
+  intent:"Children test ways to melt ice, use tools with control and talk about what works.",
+  whyNow:"December cold.",
+  implementation:"Small toys frozen in ice overnight. Offer pipettes, warm water (checked), salt and spoons. Ask which way is working best.",
+  adaptBaby:"Hold and touch ice; watch it drip.", adaptToddler:"Pour warm water and watch.",
+  adaptOlder:"Compare salt and warm water and say which was quickest.",
+  resources:"Toys frozen in tubs, pipettes, jugs, warm water, salt, trays, towels.", keyLanguage:"freeze, melt, ice, warm, cold, quicker, slower",
+  impact:"Children try more than one way and explain what happened.",
+  next:"Ice painting; a frosty walk." },
+{ id:"seed-try-again", title:"Try again obstacle course", kind:"activity", place:"either", lowPrep:true,
+  tags:["Resilience","Feelings","Movement"], books:["Tilda Tries Again"], eyfs:["PSED","PD"],
+  intent:"Children keep trying when something is tricky and feel proud of the effort, not only the success.",
+  whyNow:"Weekly story Tilda Tries Again.",
+  implementation:"A course with one challenge just beyond each child's reach (balance beam, tunnel, stepping stones). Praise the trying: \"you kept going.\"",
+  adaptBaby:"A cushion mountain to crawl over with support.", adaptToddler:"Tunnel and stepping stones with a hand to hold.",
+  adaptOlder:"Try the tricky part again and say what helped.",
+  resources:"Balance beam, tunnel, stepping stones, cushions, hoops.", keyLanguage:"try again, tricky, keep going, nearly, proud, practise",
+  impact:"Children have another go after a wobble and use try again language.",
+  next:"Set the same course up in January and notice what has changed." },
+{ id:"seed-winter-walk", title:"What has changed? Winter walk", kind:"activity", place:"outdoors", lowPrep:true,
+  tags:["Winter","Seasons","Christmas"], books:[], eyfs:["UTW","CL"],
+  intent:"Children notice seasonal changes and compare them with what they saw in autumn.",
+  whyNow:"December, revisiting the autumn walks.",
+  implementation:"Walk the usual footpath or woods. Look for bare trees, evergreens, frost, puddles and berries (look, never eat). Take photos and compare with autumn ones back at the setting.",
+  adaptBaby:"Carried or in the buggy; feel bark and the cold air.", adaptToddler:"Collect pine cones and fallen leaves.",
+  adaptOlder:"Say what is the same and what is different from autumn.",
+  resources:"Collecting bags, tablet or camera, autumn photos.", keyLanguage:"winter, bare, evergreen, frost, cold, change, same, different",
+  impact:"Children point out a change and use season words.",
+  next:"A winter display from the finds." },
+{ id:"seed-wrapping", title:"Wrapping parcels", kind:"provision", provType:"invitation", place:"indoors", lowPrep:true,
+  tags:["Christmas","Shapes","Winter"], books:[], eyfs:["M","PD"],
+  intent:"Children judge size and fit, and use tape and paper with growing control.",
+  whyNow:"The build-up to Christmas.",
+  implementation:"Boxes of different sizes, wrapping paper, tape and ribbon. Will the paper cover the box? Too big, too small?",
+  adaptBaby:"Unwrap toys from tissue paper.", adaptToddler:"Tear tape and stick paper on.",
+  adaptOlder:"Choose paper the right size and fold the edges.",
+  resources:"Boxes, wrapping paper, tape, ribbon, scissors.", keyLanguage:"big, small, fit, cover, enough, fold, corner",
+  impact:"Children choose a size that fits and talk about too big or too small.",
+  next:"Post office role play." },
+{ id:"seed-cards", title:"Cards for someone special", kind:"activity", place:"indoors", lowPrep:true,
+  tags:["Christmas","Kindness","Mark making"], books:[], eyfs:["L","EAD","PSED"],
+  intent:"Children make marks with meaning for someone they care about, and older children write part of their name.",
+  whyNow:"Christmas, following on from the kindness bucket.",
+  implementation:"Folded card, crayons, paint and stickers. Talk about who the card is for and what to say. Write the words they dictate; older children try their name.",
+  adaptBaby:"Handprints or finger painting on card.", adaptToddler:"Make marks, choose stickers and say who it is for.",
+  adaptOlder:"Write some letters of their name and say a message.",
+  resources:"Card, crayons, paint, stickers, pens.", keyLanguage:"card, for, love from, name, letter, special",
+  impact:"Children say who the card is for, and older children attempt letters from their name.",
+  next:"Post them in a role play post box." }
+];
+
+/* ===================== Activity bank =====================
+   Reusable ideas, each written once with its intent, implementation and
+   impact, then put onto any week as often as it is useful. Every use is
+   logged with what happened, so each idea builds its own trail of evidence.
+   The coverage view reads across every activity plan on a week sheet. */
+let bankFocusWeek = false;
+let bankView = "list";
+let openBankId = null;
+let covRange = "term";
+const BANK_PLACES = [["either","Indoors or out"],["indoors","Indoors"],["outdoors","Outdoors"]];
+const BANK_PROV = [["continuous","Continuous provision"],["invitation","Invitation"],["provocation","Provocation"]];
+const BANK_ADAPT = [["adaptBaby","Babies"],["adaptToddler","Toddlers"],["adaptOlder","Older children"]];
+
+function bankLive(){ return (state.activityBank || []).filter(b => !b.deleted); }
+function bankFind(id){ return (state.activityBank || []).find(b => b.id === id && !b.deleted) || null; }
+function bankIsDraft(b){ return !(b.intent || "").trim(); }
+function bankUses(b){ return (b.history || []).filter(h => !h.deleted); }
+function weeksApart(a, b){ return Math.round((new Date(b + "T00:00:00") - new Date(a + "T00:00:00")) / (7 * 86400000)); }
+function bankLastUsed(b){ const u = bankUses(b).map(h => h.weekKey).sort(); return u.length ? u[u.length - 1] : null; }
+function bankRevisitDue(b){
+  const tw = mondayOf(new Date());
+  const uses = bankUses(b).map(h => h.weekKey).sort();
+  if (!uses.length || uses.some(k => k >= tw)) return false;
+  const gap = weeksApart(uses[uses.length - 1], tw);
+  return gap >= 1 && gap <= 3;
+}
+function bankKindLabel(b){
+  if (b.kind !== "provision") return "Adult-led";
+  return (BANK_PROV.find(p => p[0] === (b.provType || "invitation")) || ["", "Provision"])[1];
+}
+function strandName(key){
+  const parts = String(key).split(":");
+  const d = state.gcc.find(x => x.id === parts[0] && !x.deleted);
+  return d ? ((d.strands || [])[+parts[1]] || "") : "";
+}
+function newBankEntry(f){
+  if (!state.activityBank) state.activityBank = [];
+  const b = Object.assign({ id: uid(), title: "", kind: "activity", provType: "invitation", place: "either", lowPrep: false,
+    tags: [], books: [], intent: "", whyNow: "", implementation: "", adaptBaby: "", adaptToddler: "", adaptOlder: "",
+    resources: "", keyLanguage: "", impact: "", next: "", strands: [], eyfs: [], domainsHint: "",
+    history: [], deleted: false, createdAt: now(), updatedAt: now() }, f || {});
+  state.activityBank.push(b);
+  markDirty();
+  return b;
+}
+function touchBank(b){ b.updatedAt = now(); markDirty(); }
+function splitList(s){ return String(s || "").split(",").map(x => x.trim()).filter(Boolean); }
+
+/* Which ideas fit a week: its topic against the idea's tags, or any of its books */
+function weekWords(weekKey){
+  const w = getWeek(weekKey) || {};
+  return {
+    topic: (w.topic || "").trim().toLowerCase(),
+    books: liveItems(weekKey).filter(i => i.section === "books" && (i.text || "").trim()).map(i => bookKey(i.text))
+  };
+}
+function bankMatchesWeek(b, ww){
+  if (ww.topic){
+    const t = ww.topic.replace(/s$/, "");
+    const hit = (b.tags || []).some(tag => {
+      const g = tag.toLowerCase().trim().replace(/s$/, "");
+      return g.length > 2 && (g.includes(t) || t.includes(g));
+    });
+    if (hit) return true;
+  }
+  return !!(ww.books.length && (b.books || []).some(x => ww.books.includes(bookKey(x))));
+}
+
+/* ---- Putting an idea onto a week: sheet entry plus a filled activity plan ---- */
+function bankImplementationText(b){
+  const parts = [];
+  if ((b.implementation || "").trim()) parts.push(b.implementation.trim());
+  BANK_ADAPT.forEach(([k, l]) => { if ((b[k] || "").trim()) parts.push(l + ": " + b[k].trim()); });
+  return parts.join("\n");
+}
+function scheduleBankIdea(b, target, day, slot){
+  const wk = ensureWeek(target);
+  const isProv = b.kind === "provision";
+  const p = createPlan(b.title || "Activity", target, null);
+  p.interests = b.whyNow || "";
+  p.goals = b.intent || "";
+  p.approach = bankImplementationText(b);
+  p.whyImpact = [b.impact || "", (b.next || "").trim() ? "Next: " + b.next.trim() : ""].filter(Boolean).join("\n");
+  p.resources = b.resources || "";
+  p.keyLanguage = b.keyLanguage || "";
+  p.strands = (b.strands || []).slice();
+  p.eyfs = (b.eyfs || []).slice();
+  p.domainsHint = p.strands.length ? "" : (b.domainsHint || "");
+  p.bankId = b.id;
+  const dayIdx = isProv ? 0 : Math.max(0, DAYS.findIndex(x => x[0] === day));
+  const dt = new Date(target + "T00:00:00"); dt.setDate(dt.getDate() + dayIdx);
+  p.date = isoDate(dt);
+  let item;
+  if (isProv){
+    item = { id: uid(), section: "provision", day: null, slot: null, text: b.title, provType: b.provType || "invitation",
+      link: "", notes: b.resources || "", assignedTo: null, done: false, deleted: false, carriedFrom: null,
+      planId: p.id, bankId: b.id, createdAt: now(), updatedAt: now() };
+  } else {
+    item = { id: uid(), section: "goals", day: day, slot: slot, text: b.title, link: "",
+      notes: [b.resources ? "Resources: " + b.resources : "", bankImplementationText(b)].filter(Boolean).join("\n"),
+      assignedTo: null, done: false, deleted: false, carriedFrom: null, planId: p.id, bankId: b.id,
+      whyIntent: b.intent || "", whyImpact: b.impact || "", createdAt: now(), updatedAt: now() };
+  }
+  wk.items.push(item);
+  p.itemId = item.id; p.updatedAt = now();
+  if (!b.history) b.history = [];
+  b.history.push({ id: uid(), weekKey: target, day: isProv ? null : day, slot: isProv ? null : slot,
+    itemId: item.id, planId: p.id, happened: "", deleted: false, updatedAt: now() });
+  touchBank(b);
+  status("Added to " + fmtWeek(target).replace("w/c Monday", "w/c") + " with its activity plan");
+}
+
+/* ---- Saving into the bank from elsewhere ---- */
+function bankFromPlan(p){
+  let item = null;
+  Object.values(state.weeks).some(wk => (wk.items || []).some(i => { if (i.id === p.itemId && !i.deleted){ item = i; return true; } return false; }));
+  const isProv = item && item.section === "provision";
+  const b = newBankEntry({ title: p.title || "Activity", kind: isProv ? "provision" : "activity",
+    provType: isProv ? (item.provType || "invitation") : "invitation",
+    intent: p.goals || "", whyNow: p.interests || "", implementation: p.approach || "",
+    impact: p.whyImpact || "", resources: p.resources || "", keyLanguage: p.keyLanguage || "",
+    strands: (p.strands || []).slice(), eyfs: (p.eyfs || []).slice(), domainsHint: p.domainsHint || "" });
+  if (item){
+    b.history.push({ id: uid(), weekKey: p.weekKey, day: item.day || null, slot: item.slot || null,
+      itemId: item.id, planId: p.id, happened: "", deleted: false, updatedAt: now() });
+    item.bankId = b.id; item.updatedAt = now();
+  }
+  p.bankId = b.id; p.updatedAt = now();
+  markDirty();
+  return b;
+}
+function bankHasTitle(t){
+  const k = String(t || "").trim().toLowerCase();
+  return bankLive().some(b => (b.title || "").trim().toLowerCase() === k);
+}
+
+/* ---- The week sheet's way in ---- */
+function bankSheetButton(kind){
+  const ww = weekWords(currentWeek);
+  const n = bankLive().filter(b => bankMatchesWeek(b, ww) && (kind === "provision" ? b.kind === "provision" : b.kind !== "provision")).length;
+  const btn = document.createElement("button"); btn.className = "addbtn";
+  btn.textContent = "+ From the activity bank" + (n ? " (" + n + " fit this week)" : "");
+  btn.onclick = () => {
+    bankFocusWeek = n > 0; bankView = "list";
+    document.getElementById("bankKind").value = kind === "provision" ? "provision" : "activity";
+    switchTab("bank");
+  };
+  return btn;
+}
+function bankChip(item){
+  if (!item.bankId || !bankFind(item.bankId)) return null;
+  const c = document.createElement("span"); c.className = "planchip"; c.textContent = "Bank idea";
+  c.title = "Open this idea in the activity bank";
+  c.onclick = () => openBankIdea(item.bankId);
+  return c;
+}
+
+/* ---- Bank tab ---- */
+function fillBankFilters(){
+  const area = document.getElementById("bankArea");
+  if (!area.options.length){
+    area.innerHTML = '<option value="">All EYFS areas</option>' + EYFS_AREAS.map(a => '<option value="' + a[0] + '">' + esc(a[1]) + '</option>').join("");
+  }
+  const dom = document.getElementById("bankDomain");
+  const keep = dom.value;
+  const doms = state.gcc.filter(d => !d.deleted && (d.name || "").trim());
+  dom.innerHTML = '<option value="">All GCC domains</option>' + doms.map(d => '<option value="' + d.id + '">' + esc(d.name) + '</option>').join("");
+  dom.value = keep;
+  dom.classList.toggle("hidden", !doms.length);
+}
+function seedsRemaining(){
+  const have = new Set((state.activityBank || []).map(b => b.id));
+  return SEED_IDEAS.filter(s => !have.has(s.id)).length;
+}
+function renderBank(){
+  const list = document.getElementById("bankList");
+  const isList = bankView === "list";
+  ["bankList", "bankFilters", "bankFocus"].forEach(id => document.getElementById(id).classList.toggle("hidden", !isList));
+  document.getElementById("bankCoverage").classList.toggle("hidden", isList);
+  document.getElementById("btnBankCoverage").textContent = isList ? "Coverage" : "Back to the ideas";
+  const seedBtn = document.getElementById("btnBankSeed");
+  const left = seedsRemaining();
+  seedBtn.classList.toggle("hidden", !((role === "manager" || role === "local") && left));
+  seedBtn.textContent = "Load starter ideas (" + left + ")";
+  fillBankFilters();
+  if (!isList){ renderCoverage(); return; }
+
+  const ww = weekWords(currentWeek);
+  const all = bankLive();
+  const matches = all.filter(b => bankMatchesWeek(b, ww));
+  const fb = document.getElementById("bankFocus");
+  fb.innerHTML = "";
+  const fbox = document.createElement("div"); fbox.className = "bankfocus";
+  const prev = document.createElement("button"); prev.className = "navbtn"; prev.innerHTML = "&#8249;";
+  prev.onclick = () => { currentWeek = addWeeks(currentWeek, -1); renderBank(); };
+  const next = document.createElement("button"); next.className = "navbtn"; next.innerHTML = "&#8250;";
+  next.onclick = () => { currentWeek = addWeeks(currentWeek, 1); renderBank(); };
+  const wkTopic = ((getWeek(currentWeek) || {}).topic || "").trim();
+  const label = document.createElement("span");
+  label.innerHTML = "Planning <b>" + esc(fmtWeek(currentWeek).replace("w/c Monday", "w/c")) + "</b>" +
+    (wkTopic ? " &middot; topic <b>" + esc(wkTopic) + "</b>" : "") +
+    " &middot; " + matches.length + " idea" + (matches.length === 1 ? " fits" : "s fit");
+  fbox.appendChild(prev); fbox.appendChild(label); fbox.appendChild(next);
+  const sp = document.createElement("span"); sp.style.flex = "1"; fbox.appendChild(sp);
+  const tog = document.createElement("button"); tog.className = "btn secondary small";
+  tog.textContent = bankFocusWeek ? "Show every idea" : "Show only these";
+  tog.onclick = () => { bankFocusWeek = !bankFocusWeek; renderBank(); };
+  fbox.appendChild(tog);
+  fb.appendChild(fbox);
+
+  const q = document.getElementById("bankSearch").value.trim().toLowerCase();
+  const kind = document.getElementById("bankKind").value;
+  const area = document.getElementById("bankArea").value;
+  const dom = document.getElementById("bankDomain").value;
+  const show = document.getElementById("bankShow").value;
+  const tw = mondayOf(new Date());
+  let rows = bankFocusWeek ? matches : all;
+  if (q) rows = rows.filter(b => [b.title, b.intent, b.whyNow, b.implementation, b.impact, b.resources, b.keyLanguage,
+    (b.tags || []).join(" "), (b.books || []).join(" ")].join(" ").toLowerCase().includes(q));
+  if (kind !== "all") rows = rows.filter(b => (b.kind === "provision" ? "provision" : "activity") === kind);
+  if (area) rows = rows.filter(b => (b.eyfs || []).includes(area));
+  if (dom) rows = rows.filter(b => (b.strands || []).some(k => k.split(":")[0] === dom));
+  if (show === "due") rows = rows.filter(bankRevisitDue);
+  if (show === "unused") rows = rows.filter(b => !bankUses(b).length);
+  if (show === "rested") rows = rows.filter(b => { const l = bankLastUsed(b); return l && l < tw && weeksApart(l, tw) >= 6; });
+  if (show === "drafts") rows = rows.filter(bankIsDraft);
+  if (show === "nostrand") rows = rows.filter(b => !(b.strands || []).length);
+  const rank = b => (bankMatchesWeek(b, ww) ? 0 : 2) + (bankRevisitDue(b) ? 0 : 1);
+  rows.sort((a, b) => rank(a) - rank(b) || (a.title || "").localeCompare(b.title || ""));
+
+  list.innerHTML = "";
+  if (!rows.length){
+    const e = document.createElement("div"); e.className = "empty";
+    e.textContent = all.length ? "No ideas match these filters." :
+      ((role === "manager" || role === "local") ? "The bank is empty. Load the starter ideas above, add your own, or save an activity plan into the bank from its plan." : "No ideas in the bank yet.");
+    list.appendChild(e); return;
+  }
+  rows.forEach(b => list.appendChild(bankCard(b, ww)));
+}
+function bankCard(b, ww){
+  const c = document.createElement("div"); c.className = "bankcard";
+  c.onclick = () => openBankIdea(b.id);
+  const t = document.createElement("div"); t.className = "bt"; t.textContent = b.title || "Untitled idea";
+  c.appendChild(t);
+  const meta = document.createElement("div"); meta.className = "bm";
+  meta.textContent = [bankKindLabel(b), (BANK_PLACES.find(p => p[0] === (b.place || "either")) || [])[1],
+    b.lowPrep ? "Low prep" : "", (b.eyfs || []).map(eyfsName).join(", ")].filter(Boolean).join(" · ");
+  c.appendChild(meta);
+  const sn = (b.strands || []).map(strandName).filter(Boolean);
+  if (sn.length){
+    const s = document.createElement("div"); s.className = "bm"; s.style.color = "var(--green)"; s.style.fontWeight = "bold";
+    s.textContent = sn.join(" · ");
+    c.appendChild(s);
+  }
+  const ii = document.createElement("div"); ii.className = "ii";
+  [["", "Intent", b.intent], ["imp", "Implementation", b.implementation], ["impa", "Impact", b.impact]].forEach(([cls, lab, val]) => {
+    const box = document.createElement("div"); box.className = "ibox " + cls;
+    const l = document.createElement("div"); l.className = "il"; l.textContent = lab; box.appendChild(l);
+    const v = document.createElement("div"); v.className = "iv" + ((val || "").trim() ? "" : " empty");
+    v.textContent = (val || "").trim() || "Still to write";
+    box.appendChild(v);
+    ii.appendChild(box);
+  });
+  c.appendChild(ii);
+  const chips = document.createElement("div");
+  const chip = (cls, txt) => { const s = document.createElement("span"); s.className = "bchip " + cls; s.textContent = txt; chips.appendChild(s); };
+  if (bankMatchesWeek(b, ww)) chip("used", "Fits this week");
+  if (bankIsDraft(b)) chip("draft", "Intent still to write");
+  if (bankRevisitDue(b)) chip("due", "Revisit due");
+  const uses = bankUses(b);
+  if (uses.length){
+    const l = bankLastUsed(b);
+    chip("tagc", "Used " + uses.length + (uses.length === 1 ? " time" : " times") + " · last " + fmtShort(l));
+  }
+  if (!(b.strands || []).length && state.gcc.some(d => !d.deleted)) chip("draft", "GCC strand to tick");
+  (b.tags || []).slice(0, 4).forEach(tg => chip("tagc", tg));
+  c.appendChild(chips);
+  return c;
+}
+
+/* ---- Bank idea editor ---- */
+function closeBank(){
+  openBankId = null;
+  document.getElementById("bankOverlay").classList.add("hidden");
+  renderTab();
+}
+function openBankIdea(id){
+  const b = bankFind(id); if (!b) return;
+  openBankId = id;
+  if (!b.history) b.history = [];
+  const body = document.getElementById("bankBody");
+  body.innerHTML = "";
+  const edit = canEdit();
+
+  const bar = document.createElement("div"); bar.className = "barrow";
+  const back = document.createElement("button"); back.className = "btn secondary small"; back.textContent = "Close"; back.onclick = closeBank;
+  bar.appendChild(back);
+  const sp = document.createElement("div"); sp.style.flex = "1"; bar.appendChild(sp);
+  if (edit){
+    const dup = document.createElement("button"); dup.className = "btn secondary small"; dup.textContent = "Copy as a new idea";
+    dup.onclick = () => {
+      const copy = JSON.parse(JSON.stringify(b));
+      delete copy.id; copy.title = (b.title || "Idea") + " (copy)"; copy.history = [];
+      const nb = newBankEntry(copy); openBankIdea(nb.id);
+    };
+    bar.appendChild(dup);
+    const del = document.createElement("button"); del.className = "btn secondary small"; del.textContent = "Delete";
+    del.onclick = () => {
+      if (!confirm("Delete \"" + (b.title || "this idea") + "\" from the bank? Plans already on week sheets stay.")) return;
+      b.deleted = true; touchBank(b); closeBank();
+    };
+    bar.appendChild(del);
+  }
+  body.appendChild(bar);
+  const h = document.createElement("h2"); h.textContent = "Activity bank idea"; body.appendChild(h);
+
+  const sched = document.createElement("div"); sched.className = "gccnote";
+  const drawSched = () => {
+    sched.innerHTML = "";
+    if (!edit){ sched.textContent = "Ask Sussie or a planner to put this onto a week."; return; }
+    if (bankIsDraft(b)){ sched.textContent = "Write the intent first, so this goes onto a week with its purpose already there."; return; }
+    const row = document.createElement("div"); row.style.cssText = "display:flex;gap:6px;align-items:center;flex-wrap:wrap;";
+    const lab = document.createElement("strong"); lab.textContent = "Put it on a week:"; lab.style.cssText = "font-size:.82rem;color:var(--green);";
+    row.appendChild(lab);
+    const wsel = document.createElement("input"); wsel.type = "date"; wsel.value = currentWeek; wsel.title = "Pick any day in that week";
+    let dsel = null, ssel = null;
+    const controls = [wsel];
+    if (b.kind !== "provision"){
+      dsel = document.createElement("select");
+      dsel.innerHTML = DAYS.map(([k, l]) => '<option value="' + k + '">' + l + '</option>').join("");
+      ssel = document.createElement("select");
+      ssel.innerHTML = '<option value="am">AM</option><option value="pm">PM</option>';
+      controls.push(dsel, ssel);
+    }
+    controls.forEach(x => { x.style.cssText = "border:1px solid var(--line);border-radius:5px;font-size:.8rem;padding:3px;font-family:Arial,sans-serif;"; row.appendChild(x); });
+    const go = document.createElement("button"); go.className = "btn small";
+    const target = () => wsel.value ? mondayOf(new Date(wsel.value + "T00:00:00")) : currentWeek;
+    const labelGo = () => { go.textContent = "Add to " + fmtWeek(target()).replace("w/c Monday", "w/c"); };
+    wsel.onchange = labelGo; labelGo();
+    go.onclick = () => {
+      scheduleBankIdea(b, target(), dsel ? dsel.value : null, ssel ? ssel.value : null);
+      openBankIdea(b.id);
+    };
+    row.appendChild(go);
+    sched.appendChild(row);
+  };
+  drawSched();
+  body.appendChild(sched);
+
+  const field = (parent, key, label, hint, isInput) => {
+    const l = document.createElement("label"); l.textContent = label; parent.appendChild(l);
+    const el = document.createElement(isInput ? "input" : "textarea");
+    if (isInput) el.type = "text";
+    el.value = b[key] || ""; el.placeholder = hint || ""; el.readOnly = !edit;
+    el.oninput = () => {
+      b[key] = el.value; touchBank(b);
+      if (!isInput) autoGrow(el);
+      if (key === "intent") drawSched();
+    };
+    parent.appendChild(el);
+    if (!isInput) requestAnimationFrame(() => autoGrow(el));
+    return el;
+  };
+  field(body, "title", "Idea", "e.g. Dusk listening in the garden", true);
+
+  const half = document.createElement("div"); half.className = "half";
+  const k1 = document.createElement("div");
+  const kl = document.createElement("label"); kl.textContent = "Kind"; k1.appendChild(kl);
+  const ksel = document.createElement("select"); ksel.disabled = !edit;
+  ksel.innerHTML = '<option value="activity">Adult-led activity</option>' + BANK_PROV.map(p => '<option value="' + p[0] + '">' + p[1] + '</option>').join("");
+  ksel.value = b.kind === "provision" ? (b.provType || "invitation") : "activity";
+  ksel.onchange = () => {
+    if (ksel.value === "activity") b.kind = "activity"; else { b.kind = "provision"; b.provType = ksel.value; }
+    touchBank(b); drawSched();
+  };
+  k1.appendChild(ksel); half.appendChild(k1);
+  const k2 = document.createElement("div");
+  const pl = document.createElement("label"); pl.textContent = "Where"; k2.appendChild(pl);
+  const psel = document.createElement("select"); psel.disabled = !edit;
+  psel.innerHTML = BANK_PLACES.map(p => '<option value="' + p[0] + '">' + p[1] + '</option>').join("");
+  psel.value = b.place || "either";
+  psel.onchange = () => { b.place = psel.value; touchBank(b); };
+  k2.appendChild(psel); half.appendChild(k2);
+  [ksel, psel].forEach(x => { x.style.cssText = "width:100%;border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:.9rem;font-family:Arial,sans-serif;background:#fff;"; });
+  body.appendChild(half);
+  const lp = document.createElement("label"); lp.className = "ck"; lp.style.cssText = "display:flex;align-items:center;gap:6px;font-weight:normal;color:var(--ink);";
+  const lpc = document.createElement("input"); lpc.type = "checkbox"; lpc.checked = !!b.lowPrep; lpc.disabled = !edit;
+  lpc.style.cssText = "width:16px;height:16px;accent-color:var(--green);";
+  lpc.onchange = () => { b.lowPrep = lpc.checked; touchBank(b); };
+  lp.appendChild(lpc); lp.appendChild(document.createTextNode("Low prep: everyday resources, quick to set up"));
+  body.appendChild(lp);
+
+  const listField = (key, label, hint) => {
+    const l = document.createElement("label"); l.textContent = label; body.appendChild(l);
+    const el = document.createElement("input"); el.type = "text"; el.readOnly = !edit;
+    el.value = (b[key] || []).join(", "); el.placeholder = hint;
+    el.oninput = () => { b[key] = splitList(el.value); touchBank(b); };
+    body.appendChild(el);
+  };
+  listField("tags", "Topics and themes (comma between each)", "e.g. Darkness, Night animals, Winter");
+  listField("books", "Books it goes with (comma between each)", "Titles as they appear on the sheet");
+
+  const section = (cls, title, hint) => {
+    const s = document.createElement("div"); s.className = "isec " + cls;
+    const sh = document.createElement("h3"); sh.textContent = title; s.appendChild(sh);
+    if (hint){ const hi = document.createElement("div"); hi.className = "ihint"; hi.textContent = hint; s.appendChild(hi); }
+    body.appendChild(s);
+    return s;
+  };
+  const sI = section("", "Intent", "What we want children to know and be able to do, and why now. Without this, the idea stays a draft.");
+  field(sI, "intent", "What we want children to know and be able to do", "In everyday words, so anyone on the team could say it");
+  field(sI, "whyNow", "Why now", "The interest, book, season or noticing it builds on");
+  const sM = section("imp", "Implementation", "How we offer it, and what the adult does.");
+  field(sM, "implementation", "How we'll offer it", "What we put out or do, the adult's role, what comes next if they take it up");
+  const ad = document.createElement("div"); ad.className = "adapt";
+  BANK_ADAPT.forEach(([key, lab]) => {
+    const al = document.createElement("div"); al.className = "al"; al.textContent = lab; ad.appendChild(al);
+    const ta = document.createElement("textarea"); ta.value = b[key] || ""; ta.readOnly = !edit;
+    ta.placeholder = "How it looks for " + lab.toLowerCase();
+    ta.oninput = () => { b[key] = ta.value; touchBank(b); autoGrow(ta); };
+    ad.appendChild(ta);
+    requestAnimationFrame(() => autoGrow(ta));
+  });
+  sM.appendChild(ad);
+  field(sM, "resources", "Resources", "What we need ready");
+  field(sM, "keyLanguage", "Key language", "Words and phrases to weave in naturally");
+  const sP = section("impa", "Impact", "How we'll know it landed. What actually happened is added each time it is used, below.");
+  field(sP, "impact", "What we'll notice if it landed", "What children will say or do");
+  field(sP, "next", "What could come next", "How to extend it or what to revisit");
+
+  const gl = document.createElement("label"); gl.textContent = "Growing Curious Children: strands"; body.appendChild(gl);
+  if (b.domainsHint){
+    const dh = document.createElement("div"); dh.style.cssText = "font-size:.8rem;color:var(--gold);font-style:italic;margin:2px 0 6px;";
+    dh.textContent = "The setting plan pointed at: " + b.domainsHint + ". Tick the strand that fits.";
+    body.appendChild(dh);
+  }
+  const doms = state.gcc.filter(d => !d.deleted);
+  if (!doms.length){
+    const n = document.createElement("div"); n.className = "gccnote";
+    n.textContent = "Enter the GCC domains and strands in Settings and they appear here as tick boxes.";
+    body.appendChild(n);
+  } else {
+    const grid = document.createElement("div"); grid.className = "gccgrid";
+    doms.forEach(dom => {
+      const dv = document.createElement("div"); dv.className = "domain";
+      const dn = document.createElement("div"); dn.className = "dname"; dn.textContent = dom.name; dv.appendChild(dn);
+      (dom.strands || []).forEach((s, idx) => {
+        if (!s || !s.trim()) return;
+        const key = dom.id + ":" + idx;
+        const lab = document.createElement("label"); lab.className = "ck";
+        const ck = document.createElement("input"); ck.type = "checkbox"; ck.checked = (b.strands || []).includes(key); ck.disabled = !edit;
+        ck.onchange = () => {
+          if (!b.strands) b.strands = [];
+          if (ck.checked){ if (!b.strands.includes(key)) b.strands.push(key); }
+          else b.strands = b.strands.filter(x => x !== key);
+          touchBank(b);
+        };
+        lab.appendChild(ck); lab.appendChild(document.createTextNode(s));
+        dv.appendChild(lab);
+      });
+      grid.appendChild(dv);
+    });
+    body.appendChild(grid);
+  }
+  const el = document.createElement("label"); el.textContent = "EYFS areas"; body.appendChild(el);
+  body.appendChild(eyfsTickGrid(b, edit, () => touchBank(b)));
+
+  // History: each time it was used, and what happened
+  const hl = document.createElement("label"); hl.textContent = "Each time it was used"; body.appendChild(hl);
+  const uses = bankUses(b).slice().sort((x, y) => (y.weekKey || "").localeCompare(x.weekKey || ""));
+  if (!uses.length){
+    const e = document.createElement("div"); e.className = "empty"; e.textContent = "Not used yet.";
+    body.appendChild(e);
+  }
+  uses.forEach(hh => {
+    const row = document.createElement("div"); row.className = "histrow";
+    const top = document.createElement("div"); top.style.cssText = "display:flex;gap:8px;align-items:center;flex-wrap:wrap;";
+    const live = Object.values(state.weeks).some(wk => (wk.items || []).some(i => i.id === hh.itemId && !i.deleted));
+    const when = document.createElement("strong");
+    when.textContent = fmtWeek(hh.weekKey).replace("w/c Monday", "w/c") +
+      (hh.day ? " · " + dayName(hh.day) + (hh.slot ? " " + hh.slot.toUpperCase() : "") : "") +
+      (live ? "" : " (taken off the sheet)");
+    top.appendChild(when);
+    const plan = state.plans.find(p => p.id === hh.planId && !p.deleted);
+    if (plan){
+      const ob = document.createElement("button"); ob.className = "btn secondary small"; ob.textContent = "Open plan";
+      ob.onclick = () => openPlan(plan.id);
+      top.appendChild(ob);
+    }
+    if (edit){
+      const x = document.createElement("button"); x.className = "iconbtn"; x.innerHTML = "&#10005;"; x.title = "Remove from this history";
+      x.onclick = () => {
+        if (!confirm("Remove this use from the idea's history? The week sheet is not changed.")) return;
+        hh.deleted = true; hh.updatedAt = now(); touchBank(b); openBankIdea(b.id);
+      };
+      top.appendChild(x);
+    }
+    row.appendChild(top);
+    if (plan && ((plan.evaluation || "").trim() || (plan.individualEval || "").trim())){
+      const pe = document.createElement("div"); pe.style.cssText = "font-size:.8rem;color:var(--grey);white-space:pre-wrap;margin-top:3px;";
+      pe.textContent = "From the plan's evaluation: " + [plan.evaluation, plan.individualEval].filter(x => (x || "").trim()).join("\n");
+      row.appendChild(pe);
+    }
+    const ta = document.createElement("textarea"); ta.value = hh.happened || ""; ta.readOnly = !edit;
+    ta.placeholder = "What happened: who it reached, what we noticed, revisit or move on";
+    ta.style.cssText = "width:100%;margin-top:4px;";
+    ta.oninput = () => { hh.happened = ta.value; hh.updatedAt = now(); touchBank(b); autoGrow(ta); };
+    row.appendChild(ta);
+    requestAnimationFrame(() => autoGrow(ta));
+    body.appendChild(row);
+  });
+
+  document.getElementById("bankOverlay").classList.remove("hidden");
+}
+function eyfsTickGrid(obj, edit, onChange){
+  const g = document.createElement("div"); g.className = "eyfsgrid";
+  if (!obj.eyfs) obj.eyfs = [];
+  EYFS_AREAS.forEach(([code, name]) => {
+    const lab = document.createElement("label"); lab.className = "ck";
+    const ck = document.createElement("input"); ck.type = "checkbox"; ck.checked = obj.eyfs.includes(code); ck.disabled = !edit;
+    ck.onchange = () => {
+      if (ck.checked){ if (!obj.eyfs.includes(code)) obj.eyfs.push(code); }
+      else obj.eyfs = obj.eyfs.filter(c => c !== code);
+      onChange();
+    };
+    lab.appendChild(ck); lab.appendChild(document.createTextNode(name));
+    g.appendChild(lab);
+  });
+  return g;
+}
+
+/* ---- Coverage: what has been planned across the strands, and where impact was noted ---- */
+function covStartKey(){
+  const today = new Date(), tw = mondayOf(today);
+  if (covRange === "6") return addWeeks(tw, -5);
+  if (covRange === "12") return addWeeks(tw, -11);
+  if (covRange === "all") return "";
+  const y = today.getFullYear(), m = today.getMonth();
+  return mondayOf(m >= 8 ? new Date(y, 8, 1) : (m <= 2 ? new Date(y, 0, 1) : new Date(y, 3, 1)));
+}
+function covRangeLabel(){ return { term: "this term", "6": "the last 6 weeks", "12": "the last 12 weeks", all: "all planning" }[covRange]; }
+function coverageData(){
+  const start = covStartKey();
+  const plans = state.plans.filter(p => !p.deleted && planScheduled(p) && (p.weekKey || "") >= start);
+  const noted = new Set();
+  bankLive().forEach(b => bankUses(b).forEach(hh => { if ((hh.happened || "").trim()) noted.add(hh.planId); }));
+  const seen = p => planStatus(p) === "evaluated" || noted.has(p.id);
+  const strand = {}, eyfs = {};
+  let untagged = 0, seenCount = 0;
+  plans.forEach(p => {
+    const s0 = seen(p); if (s0) seenCount++;
+    if (!(p.strands || []).length) untagged++;
+    (p.strands || []).forEach(k => { const c = strand[k] = strand[k] || { planned: 0, seen: 0 }; c.planned++; if (s0) c.seen++; });
+    (p.eyfs || []).forEach(k => { const c = eyfs[k] = eyfs[k] || { planned: 0, seen: 0 }; c.planned++; if (s0) c.seen++; });
+  });
+  return { plans: plans, strand: strand, eyfs: eyfs, untagged: untagged, seenCount: seenCount, start: start };
+}
+function coverageTables(d){
+  let h = "";
+  const row = (name, c) => '<tr><td' + (c.planned ? '' : ' class="gap"') + '>' + esc(name) +
+    (c.planned ? '' : ' <span class="gapnote">nothing planned yet</span>') + '</td><td class="num">' + c.planned + '</td><td class="num">' + c.seen + '</td></tr>';
+  const doms = state.gcc.filter(x => !x.deleted && (x.name || "").trim());
+  if (!doms.length) h += '<p class="empty">Enter the GCC domains and strands in Settings to see strand coverage.</p>';
+  else {
+    h += '<table class="covtable"><thead><tr><th>GCC strand</th><th class="num">Planned</th><th class="num">Impact noted</th></tr></thead><tbody>';
+    doms.forEach(dm => {
+      h += '<tr><td colspan="3" class="covdom">' + esc(dm.name) + '</td></tr>';
+      (dm.strands || []).forEach((s, i) => { if (s && s.trim()) h += row(s, d.strand[dm.id + ":" + i] || { planned: 0, seen: 0 }); });
+    });
+    h += '</tbody></table>';
+  }
+  h += '<table class="covtable"><thead><tr><th>EYFS area</th><th class="num">Planned</th><th class="num">Impact noted</th></tr></thead><tbody>';
+  EYFS_AREAS.forEach(a => { h += row(a[1], d.eyfs[a[0]] || { planned: 0, seen: 0 }); });
+  h += '</tbody></table>';
+  if (d.untagged) h += '<p class="covnote">' + d.untagged + ' planned activit' + (d.untagged === 1 ? 'y has' : 'ies have') + ' no GCC strand ticked, so ' + (d.untagged === 1 ? 'it is' : 'they are') + ' not counted above.</p>';
+  return h;
+}
+function renderCoverage(){
+  const box = document.getElementById("bankCoverage");
+  const d = coverageData();
+  box.innerHTML = '<div class="card"><div class="weekbar"><h3 style="margin:0;">Coverage across ' + covRangeLabel() + '</h3><div class="spacer"></div>' +
+    '<select id="covRange" style="border:1.5px solid var(--green);border-radius:6px;padding:5px 7px;font-size:.82rem;color:var(--green);background:#fff;">' +
+    '<option value="term">This term</option><option value="6">Last 6 weeks</option><option value="12">Last 12 weeks</option><option value="all">All planning</option></select>' +
+    '<button class="btn small" id="covPrint">Print coverage (A4)</button></div>' +
+    '<p class="covnote">' + d.plans.length + ' planned activit' + (d.plans.length === 1 ? 'y' : 'ies') + ' on week sheets' + (d.start ? ' from ' + esc(fmtWeek(d.start).replace("w/c Monday", "w/c")) : '') +
+    ', ' + d.seenCount + ' with impact noted. Counted from every activity plan on a sheet, whether or not it came from the bank. Impact noted means the plan has an evaluation, or its bank idea has a What happened note. Cream rows have nothing planned: a prompt, not a target.</p>' +
+    coverageTables(d) + '</div>';
+  const sel = document.getElementById("covRange"); sel.value = covRange;
+  sel.onchange = () => { covRange = sel.value; renderCoverage(); };
+  document.getElementById("covPrint").onclick = printCoverage;
+}
+function printCoverage(){
+  const d = coverageData();
+  const logo = (document.querySelector(".printwatermark") || {}).src || "";
+  const html = '<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"><title>Planning coverage</title><style>' +
+    ':root{--green:#1A7A4A;--gold:#D4A017;--grey:#6B6460;--pale:#E8F1EC;--cream:#FBF3DC;--line:#CCCCCC;--ink:#2B2B2B;}' +
+    '@page{size:A4 portrait;margin:14mm;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}body{font-family:Arial,sans-serif;color:#2B2B2B;font-size:9.5pt;margin:0;}' +
+    'h1{font-family:Georgia,serif;color:#1A7A4A;font-size:19pt;margin:0;}.head{display:flex;align-items:center;gap:12px;border-bottom:2px solid #D4A017;padding-bottom:6px;margin-bottom:8px;}.head img{height:46px;}.sub{color:#6B6460;}' +
+    'table{border-collapse:collapse;width:100%;margin:8px 0 12px;}th,td{border-bottom:1px solid #CCCCCC;padding:4px 6px;text-align:left;}th{color:#6B6460;font-size:8pt;text-transform:uppercase;}' +
+    'td.num,th.num{text-align:center;width:80px;}td.gap{background:#FBF3DC;}td.covdom{font-family:Georgia,serif;color:#1A7A4A;font-weight:bold;background:#E8F1EC;}.gapnote{color:#D4A017;font-size:8pt;}.covnote,.empty{color:#6B6460;}' +
+    '.foot{margin-top:10px;font-size:7.5pt;color:#999;text-align:center;}</style></head><body>' +
+    '<div class="head">' + (logo ? '<img src="' + logo + '" alt="">' : '') + '<div><h1>Planning coverage</h1><div class="sub">' + esc(covRangeLabel()) +
+    (d.start ? ' (from ' + esc(fmtWeek(d.start).replace("w/c Monday", "w/c")) + ')' : '') + ' &middot; printed ' + esc(fmtShort(isoDate(new Date()))) + '</div></div></div>' +
+    '<p class="covnote">' + d.plans.length + ' planned activities on week sheets, ' + d.seenCount + ' with impact noted (an evaluation on the plan, or a What happened note in the activity bank). Cream rows have nothing planned yet.</p>' +
+    coverageTables(d) +
+    '<div class="foot">Little Puddings &middot; staff planning record &middot; planning build ' + esc(BUILD) + '</div>' +
+    '<script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script></body></html>';
+  const w = window.open("", "_blank");
+  if (!w){ alert("Your browser blocked the new window. Allow pop-ups for this page and try again."); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+}
+
+document.getElementById("bankOverlay").onclick = (e) => { if (e.target === document.getElementById("bankOverlay")) closeBank(); };
+["bankSearch"].forEach(id => document.getElementById(id).oninput = renderBank);
+["bankKind", "bankArea", "bankDomain", "bankShow"].forEach(id => document.getElementById(id).onchange = renderBank);
+document.getElementById("btnBankCoverage").onclick = () => { bankView = bankView === "list" ? "coverage" : "list"; renderBank(); };
+document.getElementById("btnBankNew").onclick = () => { const b = newBankEntry({}); renderBank(); openBankIdea(b.id); };
+document.getElementById("btnBankSeed").onclick = () => {
+  const have = new Set((state.activityBank || []).map(b => b.id));
+  const todo = SEED_IDEAS.filter(s => !have.has(s.id));
+  if (!todo.length) return;
+  if (!confirm("Add " + todo.length + " starter ideas for the topics and weekly stories up to Christmas? Each has its intent, implementation and impact written. Tick the GCC strands that fit and change anything you like.")) return;
+  todo.forEach(s => newBankEntry(JSON.parse(JSON.stringify(Object.assign({ seed: true }, s)))));
+  status(todo.length + " starter ideas added to the activity bank");
+  renderBank();
+};
+
 /* ===================== Tabs & chrome ===================== */
-const TABS = ["week","mytasks","plans","ideas","settings"];
+const TABS = ["week","mytasks","plans","bank","ideas","settings"];
 function switchTab(tab){
   activeTab = tab;
   document.querySelectorAll("nav button").forEach(x => x.classList.toggle("active", x.dataset.tab === tab));
@@ -2087,6 +3182,7 @@ function renderTab(){
   if (activeTab === "week") renderSheet();
   else if (activeTab === "mytasks") renderMyTasks();
   else if (activeTab === "plans") renderPlans();
+  else if (activeTab === "bank") renderBank();
   else if (activeTab === "ideas") renderIdeas();
   else { renderSettings(); renderStorySettings(); renderFramework(); }
 }
@@ -2217,20 +3313,12 @@ async function savePdf(){
   document.body.classList.remove("viewmode");
   document.body.classList.add("printlike");
   try{
-    // Lay the sheet out wider when there is more on it, so page one keeps the
-    // paper's shape and fills the full width instead of shrinking to fit the height.
-    const pmFit = PAPER_MM[size];
-    const ratio = (pmFit.h - 26) / (pmFit.w - 26);
-    let W = dims.w;
-    for (let i = 0; i < 6; i++){
-      tab.style.width = W + "px"; sheet.style.width = W + "px"; sheet.style.height = "";
-      const H = tab.scrollHeight;
-      if (H <= W * ratio * 1.01) break;
-      W = Math.round(W * Math.sqrt(H / (W * ratio)));
-    }
-    const headH = tab.scrollHeight - sheet.scrollHeight;
-    sheet.style.height = Math.max(sheet.scrollHeight, Math.floor(W * ratio - headH - 4)) + "px";
-    rwrap.style.width = W + "px";
+    tab.style.width = dims.w + "px";
+    sheet.style.width = dims.w + "px";
+    sheet.style.height = "";
+    const headH = 90; // w/c line and topic
+    const availPx = dims.h - headH;
+    sheet.style.height = Math.max(sheet.scrollHeight, availPx) + "px";
     rwrap.style.display = "none";
     const c1 = await snapForPdf(tab);
     rwrap.style.display = "";
@@ -2578,6 +3666,23 @@ function renderStoryExtensions(){
       card.appendChild(ea);
     }
     const bb = blurbBox(); if (bb) card.appendChild(bb);
+    if (edit && (e.activity || "").trim()){
+      const bt = item.text.trim() + ": afternoon activity";
+      const sb = document.createElement("button"); sb.className = "iconbtn sxregen";
+      sb.innerHTML = bankHasTitle(bt) ? "In the bank ✓" : "&#43; Activity bank";
+      sb.title = "Keep this afternoon activity as a reusable idea";
+      sb.onclick = () => {
+        if (bankHasTitle(bt)){ status("Already in the activity bank"); return; }
+        const topic = ((getWeek(currentWeek) || {}).topic || "").trim();
+        newBankEntry({ title: bt, implementation: e.activity, books: [item.text.trim()], tags: topic ? [topic] : [],
+          eyfs: e.eyfsActivity ? [e.eyfsActivity] : [],
+          whyNow: "Extends the lunchtime story " + item.text.trim() + (e.message ? ": " + e.message : ""),
+          strands: (e.gccDomain && e.gccStrand) ? matchFramework([e.gccDomain + " · " + e.gccStrand]).ticked : [] });
+        sb.innerHTML = "In the bank ✓";
+        status("Saved to the activity bank. Add its intent there before it goes on a week.");
+      };
+      card.appendChild(sb);
+    }
     if (edit && aiKey()){
       const rg = document.createElement("button"); rg.className = "iconbtn sxregen"; rg.title = "Write new ideas for this book";
       rg.innerHTML = "&#8635; New ideas"; rg.disabled = aiBusy;

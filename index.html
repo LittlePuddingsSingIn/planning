@@ -122,7 +122,7 @@
   body.printlike .topiclabel{display:none;}
   body.printlike #weekTopic{border:none; border-bottom:3px solid var(--gold); border-radius:0; background:none;
     text-align:center; font-family:Georgia, 'Times New Roman', serif; font-weight:bold; color:var(--green);
-    font-size:2.3rem; line-height:1.25; flex:0 1 70%; max-width:70%; padding:2px 6px 6px;}
+    font-size:3rem; line-height:1.2; flex:0 1 75%; max-width:75%; padding:2px 6px 6px;}
   body.printlike .sheet, body.printlike #tab-week .section, body.printlike #reflectionWrap .card{background:transparent; border:none; box-shadow:none;}
   body.printlike .sheet{padding:0; gap:14px 24px; grid-template-rows:1fr;}
   body.printlike .col{gap:14px; height:100%;}
@@ -244,6 +244,9 @@
   body.printlike:not(.viewmode) #tab-week .item.songcard .notesrow{display:block !important;}
 
   .printframe, .printwatermark{display:none;}
+  body.printlike:not(.viewmode) .carriedtag{display:none !important;}
+  .item.songcard .notesrow textarea{width:100%; box-sizing:border-box;}
+  @media print{ .carriedtag{display:none !important;} }
 
   /* ---------- Story extensions ---------- */
   .sheet.hasext{grid-template-rows:auto auto;}
@@ -252,7 +255,9 @@
   .storyexthead{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;}
   .storyexthead h3{flex:1; margin:0;}
   .sxnote{font-size:.78rem; color:var(--grey); font-style:italic;}
-  .sxgrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px;}
+  .sxgrid{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px;}
+  .col .storyext{grid-column:auto;}
+  body.printlike .col .sxgrid{grid-template-columns:repeat(3, 1fr); gap:8px 10px;}
   .sxcard{border:1px solid var(--line); border-radius:8px; padding:7px 9px; background:#fff; font-size:.8rem;}
   .sxtitle{font-family:Georgia, serif; font-weight:bold; color:var(--green); font-size:.92rem; margin-bottom:3px; line-height:1.25;}
   .sxday{display:block; font-family:Arial, sans-serif; font-size:.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:.04em;}
@@ -561,7 +566,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-11-02a";
+const BUILD = "2026-11-02b";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -1170,6 +1175,7 @@ function itemCard(item, weekKey, simple){
 
   if (item.carriedFrom){
     const tag = document.createElement("span"); tag.className = "tag";
+    tag.classList.add("carriedtag");
     tag.textContent = "Carried over from w/c " + fmtShort(item.carriedFrom);
     div.appendChild(tag);
   }
@@ -3385,12 +3391,16 @@ async function savePdf(){
     const pmFit = PAPER_MM[size];
     const ratio = (pmFit.h - 26) / (pmFit.w - 26);
     let W = dims.w;
-    for (let i = 0; i < 6; i++){
+    rwrap.style.display = "none"; // the reflection is page two, so it must not count towards page one
+    const regrow = () => tab.querySelectorAll("textarea").forEach(t => { if (t.offsetParent) autoGrow(t); });
+    for (let i = 0; i < 8; i++){
       tab.style.width = W + "px"; sheet.style.width = W + "px"; sheet.style.height = "";
+      regrow();
       const H = tab.scrollHeight;
       if (H <= W * ratio * 1.01) break;
       W = Math.round(W * Math.sqrt(H / (W * ratio)));
     }
+    regrow();
     const headH = tab.scrollHeight - sheet.scrollHeight;
     sheet.style.height = Math.max(sheet.scrollHeight, Math.floor(W * ratio - headH - 4)) + "px";
     rwrap.style.width = W + "px";
@@ -3424,6 +3434,7 @@ async function savePdf(){
     } else {
       document.body.classList.remove("printlike");
     }
+    requestAnimationFrame(() => document.querySelectorAll("#tab-week textarea").forEach(t => { if (t.offsetParent) autoGrow(t); }));
   }
 }
 
@@ -3467,11 +3478,14 @@ function fitSheetForPrint(){
   const avail = dims.h - (size === "A3" ? 160 : 130); // room for the w/c heading and topic line
   let s = 1;
   sheet.style.transform = ""; sheet.style.height = ""; sheet.style.width = dims.w + "px";
+  const regrowP = () => sheet.querySelectorAll("textarea").forEach(t => { if (t.offsetParent) autoGrow(t); });
+  regrowP();
   for (let i = 0; i < 4; i++){
     const h = sheet.scrollHeight;
     if (!h || h * s <= avail) break;
     s = Math.max(0.35, avail / h);
     sheet.style.width = (dims.w / s) + "px";
+    regrowP();
   }
   const h = sheet.scrollHeight;
   sheet.style.transformOrigin = "top left";
@@ -3487,6 +3501,7 @@ function unfitSheet(){
     document.body.classList.remove("printlike");
   }
   sheet.style.transform = ""; sheet.style.width = ""; sheet.style.height = ""; sheet.style.transformOrigin = "";
+  requestAnimationFrame(() => sheet.querySelectorAll("textarea").forEach(t => { if (t.offsetParent) autoGrow(t); }));
 }
 window.addEventListener("beforeprint", fitSheetForPrint);
 window.addEventListener("afterprint", unfitSheet);
@@ -3655,8 +3670,11 @@ function renderStoryExtensions(){
   const books = storyBooks(currentWeek);
   if (!books.length){ if (box) box.remove(); sheet.classList.remove("hasext"); return; }
   if (!box){ box = document.createElement("div"); box.id = "storyExt"; box.className = "section storyext"; }
-  sheet.appendChild(box);
-  sheet.classList.add("hasext");
+  // Sits at the foot of the left column, using the space beside the goals column,
+  // so the printed page keeps a normal text size instead of growing taller.
+  const leftCol = sheet.querySelector(".col");
+  (leftCol || sheet).appendChild(box);
+  sheet.classList.remove("hasext");
   box.innerHTML = "";
   const edit = canEdit();
   const head = document.createElement("div"); head.className = "storyexthead";

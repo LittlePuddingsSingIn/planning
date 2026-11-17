@@ -227,7 +227,7 @@
   /* View mode: the printed look on screen; navigation stays, editing sleeps */
   @media screen{
     body.viewmode #tab-week .weekbar .navbtn,
-    body.viewmode #tab-week .weekbar #btnToday, body.viewmode #tab-week .weekbar #btnMode,
+    body.viewmode #tab-week .weekbar #btnToday, body.viewmode #tab-week .weekbar #btnMode, body.viewmode #tab-week .weekbar #btnWall,
     body.viewmode #tab-week .weekbar #jumpDate, body.viewmode #tab-week .weekbar #paperSize,
     body.viewmode #tab-week .weekbar #btnPdf, body.viewmode #tab-week .weekbar #btnPrint{display:inline-block !important;}
   }
@@ -330,11 +330,122 @@
   .gapnote{color:var(--gold); font-size:.74rem;}
   .covnote{font-size:.82rem; color:var(--grey);}
 
+  /* ---------- Small group programme ---------- */
+  .progtime{font-size:.78rem; font-weight:bold; color:var(--green); white-space:nowrap; flex-shrink:0;}
+  .proggroup{font-size:.7rem; color:var(--grey); white-space:nowrap; flex-shrink:0; font-style:italic;}
+  .cardchip{display:inline-block; background:var(--cream); color:var(--green); border:1px solid var(--gold); border-radius:10px; font-size:.68rem; padding:1px 8px; margin:4px 4px 0 5px; cursor:pointer; font-weight:bold;}
+  body.printlike #tab-week .cardchip{display:none !important;}
+  .progweek{border:1px solid var(--line); border-radius:10px; padding:10px 14px; margin-bottom:12px; background:#fff;}
+  .progweek .ph{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .progweek .pn{font-family:Georgia, serif; color:var(--gold); font-weight:bold; min-width:64px;}
+  .progweek .pc{display:flex; gap:8px; flex-wrap:wrap; flex:1;}
+  .progcardbtn{background:var(--pale); border:1px solid var(--green); color:var(--green); border-radius:8px; padding:5px 10px; font-family:Georgia, serif; font-size:.9rem; cursor:pointer;}
+  .progcardbtn:hover{background:#fff;}
+  .progon{font-size:.8rem; color:var(--grey); margin-top:8px; line-height:1.5;}
+  .progon b{color:var(--green);}
+  .progsched{background:var(--cream); border:1px solid var(--gold); border-radius:10px; padding:12px 14px; margin-top:12px;}
+  .progsched .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0;}
+  .progsched select, .progsched input{border:1px solid var(--line); border-radius:6px; padding:5px 7px; font-size:.84rem; font-family:Arial, sans-serif; background:#fff;}
+  .progsched .ct{font-family:Georgia, serif; color:var(--green); font-weight:bold; margin:14px 0 2px;}
+  .progsched .lab{font-size:.78rem; color:var(--grey); font-weight:bold;}
+  .progsched .warn{color:#A13A2A; font-size:.78rem;}
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;}
+  @media (max-width:700px){ .compare{grid-template-columns:1fr;} }
+  .compare .cb{border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:.82rem;}
+  .compare .cb h4{margin:0 0 4px; font-family:Georgia, serif; color:var(--green); font-size:.9rem;}
+  .compare .cl{font-size:.68rem; font-weight:bold; text-transform:uppercase; letter-spacing:.04em; color:var(--gold); margin-top:6px;}
+  .compare .cv{white-space:pre-wrap;}
+  .pcard .sum{font-style:italic; color:var(--grey); margin:-4px 0 10px;}
+  .pcard .sess{background:var(--pale); border-radius:8px; padding:7px 12px; font-size:.88rem; margin-bottom:12px;}
+  .pcard .cols{display:grid; grid-template-columns:1fr 1.6fr; gap:18px;}
+  @media (max-width:640px){ .pcard .cols{grid-template-columns:1fr;} }
+  .pcard h3{font-size:.95rem; margin:10px 0 4px;}
+  .pcard ul{margin:0; padding-left:18px; font-size:.88rem;}
+  .pcard li{margin-bottom:5px;}
+  .pcard li.say{list-style:none; margin-left:-4px; color:var(--green); font-style:italic;}
+  .adaptbox{background:var(--cream); border:1px solid var(--gold); border-radius:8px; padding:6px 12px; margin-top:12px; font-size:.84rem;}
+  .adaptbox p{margin:4px 0 8px;}
+  .progbox{border:1.5px solid var(--gold); border-radius:10px; padding:8px 14px 12px; margin-top:14px; background:#fffdf6;}
+  .progbox .pl{font-family:Georgia, serif; color:var(--green); font-weight:bold;}
+
+  /* ---------- Wall display (kitchen cupboard tablet) ---------- */
+  #wall{position:fixed; inset:0; z-index:40; background:#FBFBF8; overflow:auto; font-family:Arial, sans-serif; color:var(--ink, #2B2B2B); font-size:19px;}
+  #wall.hidden{display:none;}
+  body.wall-on{overflow:hidden;}
+  .wl{max-width:1500px; margin:0 auto; padding:22px 28px 30px; display:flex; flex-direction:column; gap:20px; min-height:100%; box-sizing:border-box;}
+  .wtop{display:flex; align-items:flex-start; gap:18px;}
+  .wtop .wd{flex:1;}
+  .wday{font-family:Georgia, serif; color:var(--green); font-size:2.6rem; line-height:1.1; font-weight:bold;}
+  .wdate{color:var(--grey); font-size:1.05rem; margin-top:4px;}
+  .wtopic{display:inline-block; margin-top:10px; background:var(--pale); color:var(--green); border-radius:20px; padding:5px 16px; font-size:1rem; font-weight:bold;}
+  .wclock{font-family:Georgia, serif; color:var(--gold); font-size:2.4rem; font-weight:bold;}
+  .wback{background:var(--gold); color:#fff; border:none; border-radius:22px; padding:10px 20px; font-size:1rem; font-weight:bold; cursor:pointer;}
+  .wgrid{display:grid; grid-template-columns:minmax(0, 1.8fr) minmax(0, 1fr); gap:22px; align-items:start;}
+  @media (orientation:portrait), (max-width:900px){ .wgrid{grid-template-columns:1fr;} }
+  .wcard{background:#fff; border:1px solid var(--line); border-radius:18px; padding:16px 20px;}
+  .wstory{display:flex; gap:22px; flex-wrap:wrap; background:var(--cream); border:1.5px solid var(--gold); border-radius:18px; padding:14px 20px;}
+  .wstory .sl{font-size:.75rem; font-weight:bold; letter-spacing:.06em; text-transform:uppercase; color:var(--gold);}
+  .wstory .st{font-family:Georgia, serif; color:var(--green); font-size:1.3rem; font-weight:bold; margin-top:2px;}
+  .wslot{margin-bottom:6px;}
+  .wslot h3{font-family:Georgia, serif; color:var(--green); font-size:1.15rem; margin:4px 0 10px; display:flex; align-items:center; gap:10px;}
+  .wslot h3::after{content:""; flex:1; height:1px; background:var(--line);}
+  .wact{display:flex; gap:14px; align-items:flex-start; padding:12px 14px; border-radius:14px; margin-bottom:10px; background:#fff; border:1px solid var(--line);}
+  .wact.next{border:2px solid var(--gold); background:#FFFDF4;}
+  .wact.done{opacity:.55;}
+  .wact.done .wt{text-decoration:line-through;}
+  .wtick{flex-shrink:0; width:38px; height:38px; border-radius:50%; border:2.5px solid var(--green); background:#fff; color:#fff; font-size:1.3rem; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;}
+  .wact.done .wtick{background:var(--green);}
+  .wbody{flex:1; min-width:0;}
+  .wline{display:flex; gap:10px; align-items:baseline; flex-wrap:wrap;}
+  .wtime{font-weight:bold; color:var(--green); font-size:1.1rem;}
+  .wt{font-size:1.25rem; font-weight:bold;}
+  .wgrp{color:var(--grey); font-style:italic; font-size:.95rem;}
+  .wwhy{color:var(--grey); font-size:.95rem; margin-top:4px;}
+  .wnext{display:inline-block; background:var(--gold); color:#fff; font-size:.72rem; font-weight:bold; border-radius:10px; padding:2px 9px; letter-spacing:.04em; text-transform:uppercase;}
+  .wwho{flex-shrink:0; min-width:44px; height:44px; border-radius:22px; background:var(--pale); color:var(--green); font-weight:bold; display:flex; align-items:center; justify-content:center; font-size:1rem; padding:0 8px;}
+  .wchips{margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;}
+  .wchip{background:var(--pale); color:var(--green); border:1px solid var(--green); border-radius:16px; font-size:.85rem; font-weight:bold; padding:6px 14px; cursor:pointer;}
+  .wchip.gold{background:var(--cream); border-color:var(--gold);}
+  .wempty{color:var(--grey); font-style:italic; padding:4px 2px 12px;}
+  .wdays{display:flex; gap:10px; flex-wrap:wrap;}
+  .wdbtn{flex:1; min-width:90px; background:#fff; border:1.5px solid var(--line); border-radius:14px; padding:10px 8px; cursor:pointer; text-align:center; font-family:Arial, sans-serif;}
+  .wdbtn b{display:block; font-family:Georgia, serif; color:var(--green); font-size:1.05rem;}
+  .wdbtn span{font-size:.8rem; color:var(--grey);}
+  .wdbtn.today{border-color:var(--gold);}
+  .wdbtn.on{background:var(--green); border-color:var(--green);}
+  .wdbtn.on b, .wdbtn.on span{color:#fff;}
+  .wsideh{font-size:.8rem; font-weight:bold; letter-spacing:.06em; text-transform:uppercase; color:var(--grey); margin:2px 0 10px;}
+  .wtiles{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .wtile{background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:14px; cursor:pointer; text-align:left; font-family:Arial, sans-serif;}
+  .wtile b{display:block; font-family:Georgia, serif; color:var(--green); font-size:1.02rem;}
+  .wtile span{font-size:.82rem; color:var(--grey);}
+  .wapps{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px;}
+  .wapp{background:var(--green); color:#fff; border:none; border-radius:16px; padding:16px 10px; font-size:1.05rem; font-weight:bold; cursor:pointer; font-family:Arial, sans-serif;}
+  .wapp.alt{background:#fff; color:var(--green); border:2px solid var(--green);}
+  .wfoot{display:flex; gap:14px; align-items:center; color:var(--grey); font-size:.8rem; margin-top:auto; flex-wrap:wrap;}
+  .wfoot button{background:none; border:1px solid var(--line); border-radius:14px; color:var(--grey); font-size:.8rem; padding:5px 12px; cursor:pointer;}
+  .wpanel{position:fixed; inset:0; z-index:45; background:rgba(43,43,43,.4); display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; overflow:auto;}
+  .wpanel .wpin{background:#fff; border-radius:20px; padding:20px 24px 24px; width:100%; max-width:760px; box-sizing:border-box;}
+  .wpanel h2{font-family:Georgia, serif; color:var(--green); margin:0 0 14px; font-size:1.5rem;}
+  .wpanel .wpclose{float:right; background:var(--green); color:#fff; border:none; border-radius:18px; padding:8px 18px; font-size:.95rem; font-weight:bold; cursor:pointer;}
+  .wpitem{border-bottom:1px solid var(--line); padding:10px 2px;}
+  .wpitem .pt{font-weight:bold; font-size:1.1rem;}
+  .wpitem .pk{font-size:.75rem; font-weight:bold; text-transform:uppercase; letter-spacing:.05em; color:var(--gold);}
+  .wpitem .pn{color:var(--grey); font-size:.95rem; white-space:pre-wrap; margin-top:3px;}
+  .wpitem a{color:var(--green); font-weight:bold;}
+  .wpanel label{display:block; font-weight:bold; color:var(--grey); font-size:.85rem; margin:12px 0 4px;}
+  .wpanel input[type=text]{width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:8px; padding:9px 10px; font-size:1rem;}
+  .wpanel .wsave{margin-top:16px; background:var(--green); color:#fff; border:none; border-radius:18px; padding:10px 22px; font-size:1rem; font-weight:bold; cursor:pointer;}
+  .wday2{margin-bottom:16px;}
+  .wday2 h3{font-family:Georgia, serif; color:var(--green); margin:0 0 6px; font-size:1.15rem;}
+  .wday2 div{font-size:.98rem; padding:3px 0;}
+  .wday2 .tm{color:var(--green); font-weight:bold; display:inline-block; min-width:60px;}
+
   /* ---------- Print media: page-level rules (visuals come from body.printlike, added on beforeprint) ---------- */
   @media print{
     @page{margin:12mm;}
     body{background:#fff; font-size:11pt;}
-    header, nav, .buildfoot, .banner, #saveStatus, #tab-mytasks, #tab-plans, #tab-ideas, #tab-bank, #tab-settings, #bankOverlay{display:none !important;}
+    header, nav, .buildfoot, .banner, #saveStatus, #tab-mytasks, #tab-plans, #tab-ideas, #tab-bank, #tab-programme, #tab-settings, #bankOverlay, #cardOverlay, #wall, .wpanel{display:none !important;}
     #tab-week ::placeholder, #reflectionWrap ::placeholder{color:transparent !important; opacity:0 !important;}
     #tab-week .item .notesrow{display:none !important;}
     #tab-week .item.songcard .notesrow{display:block !important;}
@@ -363,6 +474,8 @@
   <div class="spacer"></div>
   <span id="saveStatus"></span>
   <span id="whoami"></span>
+  <select id="whoSel" class="hidden" title="Who's using the tablet?" style="border:1.5px solid var(--green);border-radius:6px;padding:5px 7px;font-size:.85rem;color:var(--green);background:#fff;font-family:Arial,sans-serif;font-weight:bold;"></select>
+  <button class="btn small hidden" id="btnBackWall">Back to the wall</button>
   <button class="btn secondary small hidden" id="btnRefresh">Refresh</button>
   <button class="btn small" id="btnAuth">Sign in</button>
 </header>
@@ -372,6 +485,7 @@
   <button data-tab="mytasks">My tasks</button>
   <button data-tab="plans">Activity plans</button>
   <button data-tab="bank">Activity bank</button>
+  <button data-tab="programme">PSED programme</button>
   <button data-tab="ideas" id="navIdeas">Ideas</button>
   <button data-tab="settings" id="navSettings">Settings</button>
 </nav>
@@ -387,6 +501,7 @@
       <button class="navbtn" id="nextWeek">&#8250;</button>
       <button class="btn secondary small" id="btnMode">Edit</button>
       <button class="btn secondary small" id="btnToday">This week</button>
+      <button class="btn secondary small" id="btnWall" title="Full-screen wall display for the kitchen tablet: today first, the rest of the week a tap away">Wall display</button>
       <input type="date" id="jumpDate" title="Jump to any week, past or future" style="border:1.5px solid var(--green);border-radius:6px;padding:5px 7px;font-size:.82rem;color:var(--green);font-family:Arial,sans-serif;">
       <div class="spacer"></div>
       <button class="btn secondary small mgr" id="btnCarryAll">Move unfinished to next week</button>
@@ -460,7 +575,18 @@
     <div id="bankCoverage" class="hidden"></div>
   </section>
 
-  <!-- ================= SETTINGS ================= -->
+  <!-- ================= SMALL GROUP PROGRAMME ================= -->
+  <section id="tab-programme" class="hidden">
+    <div class="weekbar">
+      <h2>PSED programme</h2>
+      <div class="spacer"></div>
+      <button class="btn secondary small mgr" id="btnProgLoad">Load the programme pack</button>
+      <input type="file" id="progFile" accept=".json,application/json" style="display:none;">
+    </div>
+    <div id="progBody"></div>
+  </section>
+
+  <!-- ================= IDEAS ================= -->
   <section id="tab-ideas" class="hidden">
     <div class="card">
       <div class="weekbar">
@@ -475,9 +601,15 @@
 
   <section id="tab-settings" class="hidden">
     <div class="card">
+      <h3>Kitchen tablet</h3>
+      <p style="font-size:.85rem;color:var(--grey);margin:0 0 6px;">These two settings are for this device only. Turn them on on the wall tablet.</p>
+      <div id="tabletSettings"></div>
+    </div>
+    <div class="card">
       <h3>Practitioners</h3>
       <p style="font-size:.85rem;color:var(--grey);margin:0 0 10px;">Add each team member here so tasks can be assigned to them. The email must match the Microsoft account they sign in with.</p>
-      <table id="pracTable"><thead><tr><th>Name</th><th>Email</th><th>Initials</th><th>Can plan</th><th></th></tr></thead><tbody></tbody></table>
+      <table id="pracTable"><thead><tr><th>Name</th><th>Email</th><th>Initials</th><th>Can plan</th><th>Tablet PIN</th><th></th></tr></thead><tbody></tbody></table>
+      <p style="font-size:.78rem;color:var(--grey);margin:8px 0 0;">Tablet PIN: on the shared kitchen tablet, planners type this after choosing their name; without one they can only look and tick there. Everyone else just taps their name.</p>
       <p style="font-size:.78rem;color:var(--grey);margin:8px 0 0;">Can plan lets that person add, edit, assign and move things on the sheet and write activity plans, everything except Settings. Leave it unticked for view-tick-and-notes only.</p>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
         <input type="text" id="pracName" placeholder="Name">
@@ -539,6 +671,12 @@
   <div class="plan" id="planBody"></div>
 </div>
 
+<div id="wall" class="hidden"></div>
+
+<div class="overlay hidden" id="cardOverlay">
+  <div class="plan pcard" id="cardBody"></div>
+</div>
+
 <div class="overlay hidden" id="importOverlay">
   <div class="plan" style="max-width:660px;">
     <h2>Import next steps</h2>
@@ -566,7 +704,7 @@
 /* =====================================================
    CONFIG: copy clientId and tenantId from the OTJ tool
    ===================================================== */
-const BUILD = "2026-11-02b";
+const BUILD = "2026-11-10c";
 const CLIENT_ID   = "5a871fc6-d672-401e-a5a7-f9fb349ecc99";
 const TENANT_ID   = "a824d7c9-201d-4ae2-afea-e75389e576f0";
 const REDIRECT_URI = "https://littlepuddingssingin.github.io/planning/";
@@ -584,6 +722,8 @@ if (!state.gcc) state.gcc = [];
 if (!state.plans) state.plans = [];
 if (!state.storyBank) state.storyBank = [];
 if (!state.activityBank) state.activityBank = [];
+if (!state.programmes) state.programmes = [];
+if (!state.tabletPins) state.tabletPins = {};
 let currentWeek = mondayOf(new Date());
 let account = null;       // MSAL account
 let role = "local";       // local | manager | practitioner
@@ -628,7 +768,8 @@ function sectionLabel(item){
   const s = SECTIONS.find(x => x.id === item.section);
   let lab = s ? s.title : item.section;
   if (item.day){ const d = DAYS.find(x=>x[0]===item.day); lab += " · " + (d ? d[1] : "Weekly"); }
-  if (item.slot) lab += " " + item.slot.toUpperCase();
+  if (item.prog && item.prog.time) lab += " " + item.prog.time + " · " + groupName(item.prog.group);
+  else if (item.slot) lab += " " + item.slot.toUpperCase();
   return lab;
 }
 
@@ -653,11 +794,18 @@ function pracInitials(p){
   return (p.initials && p.initials.trim()) ? p.initials.trim().toUpperCase() : initialsFromName(p.name);
 }
 function canEdit(){
+  if (sharedOn()){
+    if (!actingAs) return false;
+    if (actingAs.id === MANAGER_KEY) return true;
+    const ap = actingPrac();
+    return !!(ap && ap.planner && !actingAs.limited);
+  }
   if (role !== "practitioner") return true;
   const me = myPractitioner();
   return !!(me && me.planner);
 }
 function myPractitioner(){
+  if (sharedOn()) return actingPrac();
   if (!account) return null;
   const em = (account.username || "").toLowerCase();
   return state.practitioners.find(p => p.active !== false && p.email.toLowerCase() === em) || null;
@@ -692,7 +840,7 @@ function mergeBank(a, b){
 }
 function mergeState(local, cloud){
   if (!cloud) return local;
-  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [], provisionBank: [], repeats: [], storyBank: [], activityBank: [] };
+  const out = { dataVersion: 1, practitioners: [], weeks: {}, gcc: [], plans: [], provisionBank: [], repeats: [], storyBank: [], activityBank: [], programmes: [] };
   const pm = {};
   (local.practitioners||[]).concat(cloud.practitioners||[]).forEach(p => {
     const k = p.id || p.email;
@@ -705,6 +853,9 @@ function mergeState(local, cloud){
   out.repeats = mergeById(local.repeats, cloud.repeats);
   out.storyBank = mergeById(local.storyBank, cloud.storyBank);
   out.activityBank = mergeBank(local.activityBank, cloud.activityBank);
+  out.programmes = mergeById(local.programmes, cloud.programmes);
+  out.tabletPins = Object.assign({}, local.tabletPins || {});
+  Object.entries(cloud.tabletPins || {}).forEach(([k, v]) => { if (!out.tabletPins[k] || (v.updatedAt || 0) > (out.tabletPins[k].updatedAt || 0)) out.tabletPins[k] = v; });
   const keys = new Set(Object.keys(local.weeks||{}).concat(Object.keys(cloud.weeks||{})));
   keys.forEach(k => {
     const a = (local.weeks||{})[k], b = (cloud.weeks||{})[k];
@@ -921,6 +1072,7 @@ function deleteItem(weekKey, id){
 function autoGrow(el){ el.style.height = "auto"; el.style.height = (el.scrollHeight + 2) + "px"; }
 
 function currentUserName(){
+  if (sharedOn()) return actingLabel();
   const me = myPractitioner();
   if (me) return me.name;
   if (account) return account.username.split("@")[0];
@@ -1069,11 +1221,21 @@ function itemCard(item, weekKey, simple){
   who.title = assignedName || "";
   top.appendChild(who);
 
+  let ptime = null, pgroup = null;
+  if (item.prog){ // programme session: its time sits before the title, its group after
+    ptime = document.createElement("span"); ptime.className = "progtime"; ptime.textContent = item.prog.time || "";
+    top.appendChild(ptime);
+  }
+
   const txt = document.createElement("input"); txt.className = "txt"; txt.value = item.text;
   txt.placeholder = item.section === "goals" ? "e.g. walk to the woods, litter picking, library visit, a visitor" : "Activity or task";
   txt.readOnly = !edit;
   txt.oninput = () => { item.text = txt.value; touch(item); };
   top.appendChild(txt);
+  if (item.prog){
+    pgroup = document.createElement("span"); pgroup.className = "proggroup"; pgroup.textContent = groupName(item.prog.group);
+    top.appendChild(pgroup);
+  }
 
   const sel = document.createElement("select");
   sel.disabled = !edit;
@@ -1128,11 +1290,29 @@ function itemCard(item, weekKey, simple){
     const applyMove = () => {
       item.day = mdsel.value; item.slot = mssel.value; touch(item);
       const dl = (DAYS.find(x => x[0] === item.day) || ["",""])[1];
+      if (item.prog) progSyncPlan(item, weekKey);
       status("Moved to " + dl + " " + item.slot.toUpperCase());
       renderSheet();
     };
     mdsel.onchange = applyMove; mssel.onchange = applyMove;
-    dayRow.appendChild(lbl); dayRow.appendChild(mdsel); dayRow.appendChild(mssel);
+    dayRow.appendChild(lbl); dayRow.appendChild(mdsel);
+    if (item.prog){ // sessions use a clock time; AM or PM follows from it
+      const tin = document.createElement("input"); tin.type = "time"; tin.value = item.prog.time || "";
+      tin.style.cssText = "border:1px solid var(--line);border-radius:5px;font-size:.78rem;padding:2px;font-family:Arial,sans-serif;";
+      const gsel = document.createElement("select");
+      gsel.innerHTML = PROG_GROUPS.map(([k, l]) => '<option value="' + k + '"' + (k === item.prog.group ? " selected" : "") + '>' + l + '</option>').join("");
+      gsel.style.cssText = mdsel.style.cssText;
+      tin.onchange = () => {
+        if (!tin.value) return;
+        if (item.prog.group === "whole" && tin.value < PROG_DEFAULT_TIME.whole) status("Whole group sessions are meant to be after 10.30");
+        item.prog.time = tin.value; item.slot = slotFromTime(tin.value); touch(item);
+        progSyncPlan(item, weekKey); renderSheet();
+      };
+      gsel.onchange = () => { item.prog.group = gsel.value; touch(item); progSyncPlan(item, weekKey); renderSheet(); };
+      dayRow.appendChild(tin); dayRow.appendChild(gsel);
+    } else {
+      dayRow.appendChild(mssel);
+    }
     div.appendChild(dayRow);
   }
 
@@ -1188,6 +1368,12 @@ function itemCard(item, weekKey, simple){
     chip.textContent = "Activity plan";
     chip.onclick = () => openPlan(item.planId);
     div.appendChild(chip);
+  }
+  if (item.prog){
+    const cc = document.createElement("span"); cc.className = "cardchip"; cc.textContent = "Activity card";
+    cc.title = "The full activity card for this session";
+    cc.onclick = () => openCard(item.prog.progId, item.prog.cardId, item, weekKey);
+    div.appendChild(cc);
   }
   const bk = bankChip(item); if (bk) div.appendChild(bk);
   return div;
@@ -1330,7 +1516,7 @@ function renderSheet(){
       if (edit) box.appendChild(addButton(sec.id, null, null, "+ Add provision"));
       if (edit) box.appendChild(bankSheetButton("provision"));
       const bankLive = (state.provisionBank || []).filter(b => !b.deleted && (b.kind || "provision") === "provision");
-      if (edit && (role === "manager" || role === "local") && bankLive.length){
+      if (edit && isMgr() && bankLive.length){
         const ib = document.createElement("button"); ib.className = "addbtn";
         ib.textContent = "+ From the ideas list (" + bankLive.length + ")";
         ib.onclick = () => switchTab("ideas");
@@ -1350,7 +1536,9 @@ function renderSheet(){
         ["am","pm"].forEach(slot => {
           const slotBlock = document.createElement("div"); slotBlock.className = "slotblock slot-" + slot;
           const sl = document.createElement("div"); sl.className = "slotlabel"; sl.textContent = slot.toUpperCase(); slotBlock.appendChild(sl);
-          items.filter(i => i.section===sec.id && i.day===k && i.slot===slot).forEach(i => slotBlock.appendChild(itemCard(i, currentWeek)));
+          items.filter(i => i.section===sec.id && i.day===k && i.slot===slot)
+            .map((i, n) => [i, n]).sort((a, b) => ((a[0].prog && a[0].prog.time) || "99").localeCompare((b[0].prog && b[0].prog.time) || "99") || a[1] - b[1])
+            .forEach(([i]) => slotBlock.appendChild(itemCard(i, currentWeek)));
           if (edit) slotBlock.appendChild(addButton(sec.id, k, slot));
           dayBlock.appendChild(slotBlock);
         });
@@ -1388,7 +1576,7 @@ function renderSheet(){
     ta.oninput = () => {
       const wk = ensureWeek(currentWeek);
       wk.reflection[key] = ta.value; wk.reflection.updatedAt = now();
-      if (account && ta.value.trim()){
+      if ((account || (sharedOn() && actingAs)) && ta.value.trim()){
         if (!wk.reflection.by) wk.reflection.by = {};
         const me = myPractitioner();
         const ini = me ? pracInitials(me) : initialsFromName(currentUserName());
@@ -1411,7 +1599,7 @@ function renderMyTasks(){
   const title = document.getElementById("mytasksTitle");
   body.innerHTML = "";
   const me = myPractitioner();
-  const managerView = role !== "practitioner";
+  const managerView = sharedOn() ? isMgr() : role !== "practitioner";
   title.textContent = managerView ? "Tasks by practitioner" : "My tasks";
 
   const start = mondayOf(new Date());
@@ -1478,6 +1666,11 @@ function taskRow(item, weekKey){
     pc.onclick = () => openPlan(item.planId);
     wrap.appendChild(pc);
   }
+  if (item.prog){
+    const cc = document.createElement("span"); cc.className = "cardchip"; cc.textContent = "Activity card";
+    cc.onclick = () => openCard(item.prog.progId, item.prog.cardId, item, weekKey);
+    wrap.appendChild(cc);
+  }
   if (item.section === "goals"){
     [["whyIntent","What we want them to get from this"],["whyImpact","How we'll know it landed / what next"]].forEach(([key,label]) => {
       const l = document.createElement("div"); l.className = "minilabel"; l.textContent = label; wrap.appendChild(l);
@@ -1501,6 +1694,7 @@ function taskRow(item, weekKey){
 /* ===================== Render: settings ===================== */
 function renderSettings(){
   renderRepeats();
+  renderTabletSettings();
   const tb = document.querySelector("#pracTable tbody");
   tb.innerHTML = "";
   state.practitioners.filter(p => p.active !== false).forEach(p => {
@@ -1523,6 +1717,12 @@ function renderSettings(){
     ck.style.cssText = "width:17px;height:17px;accent-color:var(--green);";
     ck.onchange = () => { p.planner = ck.checked; p.updatedAt = now(); markDirty(); };
     tp.appendChild(ck); tr.appendChild(tp);
+    const tpin = document.createElement("td");
+    const pb = document.createElement("button"); pb.className = "btn secondary small";
+    pb.textContent = pinSet(p.id) ? "Change" : "Set";
+    pb.title = "Planners need a PIN to plan on the shared kitchen tablet";
+    pb.onclick = () => setPinFor(p.id, p.name || "this person", renderSettings);
+    tpin.appendChild(pb); tr.appendChild(tpin);
     const td = document.createElement("td");
     const b = document.createElement("button"); b.className = "btn secondary small"; b.textContent = "Remove";
     b.onclick = () => {
@@ -1765,6 +1965,7 @@ function openPlan(id){
   ci.oninput = () => { p.completedBy = ci.value; touchPlan(p); };
   d2.appendChild(ci); half.appendChild(d2);
   body.appendChild(half);
+  if (p.prog) progPlanBox(p, body);
 
   // GCC domains & strands
   const gl = document.createElement("label"); gl.textContent = "Growing Curious Children: domains and strands"; body.appendChild(gl);
@@ -2797,7 +2998,7 @@ function renderBank(){
   document.getElementById("btnBankCoverage").textContent = isList ? "Coverage" : "Back to the ideas";
   const seedBtn = document.getElementById("btnBankSeed");
   const left = seedsRemaining();
-  seedBtn.classList.toggle("hidden", !((role === "manager" || role === "local") && left));
+  seedBtn.classList.toggle("hidden", !(isMgr() && left));
   seedBtn.textContent = "Load starter ideas (" + left + ")";
   fillBankFilters();
   if (!isList){ renderCoverage(); return; }
@@ -2849,7 +3050,7 @@ function renderBank(){
   if (!rows.length){
     const e = document.createElement("div"); e.className = "empty";
     e.textContent = all.length ? "No ideas match these filters." :
-      ((role === "manager" || role === "local") ? "The bank is empty. Load the starter ideas above, add your own, or save an activity plan into the bank from its plan." : "No ideas in the bank yet.");
+      (isMgr() ? "The bank is empty. Load the starter ideas above, add your own, or save an activity plan into the bank from its plan." : "No ideas in the bank yet.");
     list.appendChild(e); return;
   }
   rows.forEach(b => list.appendChild(bankCard(b, ww)));
@@ -3242,8 +3443,982 @@ document.getElementById("btnBankSeed").onclick = () => {
   renderBank();
 };
 
+/* ===================== Small group programme (Early Years PSED) =====================
+   The programme pack (cards, weeks, adaptive teaching ideas) is loaded once from a
+   file and kept only in planning.json on OneDrive, never in this public page, as
+   the cards are bought-in material. Each programme week is put on a week sheet as
+   sessions: one card, one group size, a day, a clock time and a lead. Each session
+   gets its own activity plan, where the lead writes how they will adapt it for
+   that group and, afterwards, what worked and what they would change. */
+const PROG_GROUPS = [["whole","Whole group"],["small","Small group"]];
+const PROG_DEFAULT_TIME = { whole: "10:30", small: "13:45" };
+const PROG_DEFAULT_DAYS = ["tue", "thu"];
+const progDrafts = {};
+let progOpenWeek = null;
+
+function groupName(g){ return (PROG_GROUPS.find(x => x[0] === g) || ["", ""])[1]; }
+function slotFromTime(t){ return (t && t < "12:00") ? "am" : "pm"; }
+function progLive(){ return (state.programmes || []).filter(p => !p.deleted); }
+function progFind(id){ return (state.programmes || []).find(p => p.id === id && !p.deleted) || null; }
+function progCard(prog, cardId){ return prog ? ((prog.cards || []).find(c => c.id === cardId) || null) : null; }
+function pracName(id){ const p = state.practitioners.find(x => x.id === id); return p ? (p.name || "") : ""; }
+function progPracs(){ return state.practitioners.filter(p => p.active !== false); }
+function progSessions(prog, n){
+  const out = [];
+  Object.keys(state.weeks).forEach(k => ((state.weeks[k] || {}).items || []).forEach(i => {
+    if (!i.deleted && i.prog && i.prog.progId === prog.id && i.prog.week === n) out.push({ weekKey: k, item: i });
+  }));
+  const order = DAYS.map(d => d[0]);
+  out.sort((a, b) => a.weekKey.localeCompare(b.weekKey) || order.indexOf(a.item.day) - order.indexOf(b.item.day) || (a.item.prog.time || "").localeCompare(b.item.prog.time || ""));
+  return out;
+}
+function progLastWeekKey(prog){
+  let last = "";
+  (prog.weeks || []).forEach(w => progSessions(prog, w.n).forEach(s => { if (s.weekKey > last) last = s.weekKey; }));
+  return last;
+}
+function dateForDay(weekKey, day){
+  const dt = new Date(weekKey + "T00:00:00");
+  dt.setDate(dt.getDate() + Math.max(0, DAYS.findIndex(x => x[0] === day)));
+  return isoDate(dt);
+}
+function progSessionLine(item){
+  const pr = item.prog || {};
+  return [groupName(pr.group), dayName(item.day) + (pr.time ? " " + pr.time : ""), item.assignedTo ? "led by " + pracName(item.assignedTo) : "no lead yet"].join(" · ");
+}
+/* Keep a session's plan in step when its day, time or group changes on the sheet */
+function progSyncPlan(item, weekKey){
+  const p = state.plans.find(x => x.id === item.planId && !x.deleted);
+  if (!p) return;
+  const oldGroup = p.prog ? p.prog.group : null;
+  p.prog = Object.assign({}, p.prog || {}, { group: item.prog.group, time: item.prog.time });
+  p.date = dateForDay(weekKey, item.day);
+  if (oldGroup && oldGroup !== item.prog.group){
+    const base = (item.text || "").trim();
+    if (base && (p.title || "").startsWith(base)) p.title = base + " (" + groupName(item.prog.group).toLowerCase() + ")";
+  }
+  touchPlan(p);
+}
+
+/* ---- Loading the pack ---- */
+function importProgramme(obj){
+  if (!obj || obj.kind !== "lp-programme" || !Array.isArray(obj.cards) || !Array.isArray(obj.weeks)) throw new Error("That file is not a programme pack for the planning tool.");
+  if (!state.programmes) state.programmes = [];
+  const existing = state.programmes.find(p => p.id === obj.id);
+  const fresh = { id: obj.id, name: obj.name || "Programme", source: obj.source || "",
+    weeks: obj.weeks, cards: obj.cards, adaptive: obj.adaptive || [], deleted: false, updatedAt: now() };
+  if (existing) Object.assign(existing, fresh);
+  else state.programmes.push(Object.assign({ cardsLink: "", lastPattern: null, createdAt: now() }, fresh));
+  markDirty();
+  return (existing ? "Programme updated: " : "Programme loaded: ") + obj.cards.length + " activity cards across " + obj.weeks.length + " weeks";
+}
+document.getElementById("btnProgLoad").onclick = () => document.getElementById("progFile").click();
+document.getElementById("progFile").onchange = (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{ const msg = importProgramme(JSON.parse(reader.result)); renderProgramme(); status(msg); }
+    catch(err){ alert(err.message.startsWith("That") ? err.message : "Could not read that file: " + err.message); }
+  };
+  reader.onerror = () => alert("Could not read that file.");
+  reader.readAsText(file);
+};
+
+/* ---- The programme tab ---- */
+function renderProgramme(){
+  const box = document.getElementById("progBody");
+  box.innerHTML = "";
+  const edit = canEdit();
+  const prog = progLive()[0];
+  document.getElementById("btnProgLoad").textContent = prog ? "Reload the pack" : "Load the programme pack";
+  if (!prog){
+    const c = document.createElement("div"); c.className = "card";
+    c.innerHTML = '<p style="margin:0;font-size:.9rem;">' + (edit
+      ? "Load the programme pack file once (Load the programme pack, above). The cards are then kept in the shared OneDrive planning file, not in this page, and every week of the programme can be put onto a week sheet with its sessions, times and leads."
+      : "The programme has not been loaded yet.") + '</p>';
+    box.appendChild(c); return;
+  }
+  const head = document.createElement("div"); head.className = "card";
+  const hh = document.createElement("h3"); hh.textContent = prog.name; head.appendChild(hh);
+  const intro = document.createElement("p"); intro.style.cssText = "font-size:.85rem;color:var(--grey);margin:0 0 8px;";
+  intro.textContent = (prog.weeks || []).length + " weeks, two activities a week. Each activity runs twice: once with the whole group and once with a small group, each led by a different person. Tap a card to read it in full.";
+  head.appendChild(intro);
+  const lr = document.createElement("div"); lr.style.cssText = "display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.85rem;";
+  lr.appendChild(document.createTextNode("Cards PDF in OneDrive:"));
+  if (edit){
+    const li = document.createElement("input"); li.type = "text"; li.value = prog.cardsLink || ""; li.placeholder = "Paste a sharing link (optional)";
+    li.style.cssText = "flex:1;min-width:200px;";
+    li.oninput = () => { prog.cardsLink = li.value.trim(); prog.updatedAt = now(); markDirty(); la.classList.toggle("hidden", !prog.cardsLink); la.href = safeHref(prog.cardsLink); };
+    lr.appendChild(li);
+  }
+  const la = document.createElement("a"); la.textContent = "Open"; la.target = "_blank"; la.rel = "noopener";
+  la.href = safeHref(prog.cardsLink); la.className = prog.cardsLink ? "" : "hidden";
+  la.style.cssText = "color:var(--green);font-weight:bold;text-decoration:none;";
+  lr.appendChild(la);
+  if (!edit && !prog.cardsLink) lr.appendChild(document.createTextNode(" not added"));
+  head.appendChild(lr);
+  head.appendChild(adaptiveBox(prog, false));
+  box.appendChild(head);
+  (prog.weeks || []).forEach(w => box.appendChild(progWeekRow(prog, w, edit)));
+  if (prog.source){
+    const src = document.createElement("p"); src.className = "covnote"; src.textContent = prog.source;
+    box.appendChild(src);
+  }
+}
+function adaptiveBox(prog, open){
+  const d = document.createElement("details"); d.className = "adaptbox"; d.open = !!open;
+  const s = document.createElement("summary"); s.textContent = "Adaptive teaching ideas"; d.appendChild(s);
+  (prog.adaptive || []).forEach(a => {
+    const b = document.createElement("strong"); b.textContent = a.heading; d.appendChild(b);
+    const p = document.createElement("p"); p.textContent = a.text; p.style.whiteSpace = "pre-wrap"; d.appendChild(p);
+  });
+  return d;
+}
+function progWeekRow(prog, w, edit){
+  const row = document.createElement("div"); row.className = "progweek";
+  const ph = document.createElement("div"); ph.className = "ph";
+  const pn = document.createElement("div"); pn.className = "pn"; pn.textContent = "Week " + w.n; ph.appendChild(pn);
+  const pc = document.createElement("div"); pc.className = "pc";
+  (w.cards || []).forEach(cid => {
+    const c = progCard(prog, cid); if (!c) return;
+    const b = document.createElement("button"); b.className = "progcardbtn"; b.textContent = c.title;
+    b.title = c.summary || "";
+    b.onclick = () => openCard(prog.id, cid, null, null);
+    pc.appendChild(b);
+  });
+  ph.appendChild(pc);
+  const sessions = progSessions(prog, w.n);
+  if (edit){
+    const pb = document.createElement("button"); pb.className = "btn small" + (sessions.length ? " secondary" : "");
+    const isOpen = progOpenWeek === w.n;
+    pb.textContent = isOpen ? "Close" : (sessions.length ? "Plan it again" : "Put on a week");
+    pb.onclick = () => { progOpenWeek = isOpen ? null : w.n; renderProgramme(); };
+    ph.appendChild(pb);
+  }
+  row.appendChild(ph);
+  if (sessions.length){
+    const on = document.createElement("div"); on.className = "progon";
+    const byWeek = {};
+    sessions.forEach(s => { (byWeek[s.weekKey] = byWeek[s.weekKey] || []).push(s); });
+    Object.keys(byWeek).forEach(k => {
+      const line = document.createElement("div");
+      line.innerHTML = "<b>" + esc(fmtWeek(k).replace("w/c Monday", "w/c")) + "</b>: " + byWeek[k].map(s =>
+        esc(s.item.text) + ", " + esc(progSessionLine(s.item)) + (s.item.done ? " ✓" : "")).join("; ");
+      on.appendChild(line);
+    });
+    if (edit){
+      const rm = document.createElement("button"); rm.className = "iconbtn"; rm.style.fontSize = ".78rem";
+      rm.innerHTML = "&#10005; Take these sessions off the sheet";
+      rm.onclick = () => progRemove(sessions);
+      on.appendChild(rm);
+    }
+    row.appendChild(on);
+    row.appendChild(progCompare(prog, w, sessions));
+  }
+  if (edit && progOpenWeek === w.n) row.appendChild(progScheduler(prog, w));
+  return row;
+}
+
+/* ---- Scheduling a programme week ---- */
+function progDefaultDraft(prog, w){
+  const last = progLastWeekKey(prog);
+  const target = last ? addWeeks(last, 1) : (currentWeek < mondayOf(new Date()) ? mondayOf(new Date()) : currentWeek);
+  const lp = prog.lastPattern;
+  if (lp && Array.isArray(lp.rows) && lp.rows.length){
+    // Same days, times and groups as last time, with the two leads swapped round
+    const swap = id => id === lp.a ? lp.b : (id === lp.b ? lp.a : id);
+    return { target: target, a: lp.b || "", b: lp.a || "",
+      rows: lp.rows.map(r => Object.assign({}, r, { lead: swap(r.lead || "") })) };
+  }
+  const rows = [];
+  (w.cards || []).forEach((cid, ci) => {
+    const day = PROG_DEFAULT_DAYS[ci] || "tue";
+    rows.push({ card: ci, group: "whole", day: day, time: PROG_DEFAULT_TIME.whole, lead: ci === 0 ? "A" : "B" });
+    rows.push({ card: ci, group: "small", day: day, time: PROG_DEFAULT_TIME.small, lead: ci === 0 ? "B" : "A" });
+  });
+  return { target: target, a: "", b: "", rows: rows };
+}
+function progResolveLead(d, lead){ return lead === "A" ? d.a : (lead === "B" ? d.b : lead); }
+function progScheduler(prog, w){
+  if (!progDrafts[w.n]) progDrafts[w.n] = progDefaultDraft(prog, w);
+  const d = progDrafts[w.n];
+  const pracs = progPracs();
+  const opts = (sel) => '<option value="">Choose</option>' + pracs.map(p => '<option value="' + p.id + '"' + (p.id === sel ? " selected" : "") + '>' + esc(p.name) + '</option>').join("");
+  const wrap = document.createElement("div"); wrap.className = "progsched";
+  const r1 = document.createElement("div"); r1.className = "row";
+  const wl = document.createElement("span"); wl.className = "lab"; wl.textContent = "Week:"; r1.appendChild(wl);
+  const wsel = document.createElement("input"); wsel.type = "date"; wsel.value = d.target; wsel.title = "Pick any day in the week";
+  r1.appendChild(wsel);
+  const wk = document.createElement("span"); wk.style.cssText = "font-size:.82rem;color:var(--green);font-weight:bold;";
+  const showWk = () => { wk.textContent = fmtWeek(d.target).replace("w/c Monday", "w/c"); };
+  wsel.onchange = () => { if (wsel.value){ d.target = mondayOf(new Date(wsel.value + "T00:00:00")); showWk(); } };
+  showWk(); r1.appendChild(wk);
+  wrap.appendChild(r1);
+
+  const r2 = document.createElement("div"); r2.className = "row";
+  const ll = document.createElement("span"); ll.className = "lab"; ll.textContent = "Leads this week:"; r2.appendChild(ll);
+  const aSel = document.createElement("select"); aSel.innerHTML = opts(d.a);
+  const bSel = document.createElement("select"); bSel.innerHTML = opts(d.b);
+  const swapBtn = document.createElement("button"); swapBtn.className = "btn secondary small"; swapBtn.innerHTML = "&#8644; Swap round";
+  swapBtn.title = "Swap which sessions each lead takes";
+  r2.appendChild(aSel); r2.appendChild(bSel); r2.appendChild(swapBtn);
+  wrap.appendChild(r2);
+  const note = document.createElement("div"); note.style.cssText = "font-size:.78rem;color:var(--grey);";
+  note.textContent = "Each lead takes one activity with the whole group and the other with a small group. Change any day, time, group or lead below; the next week starts from this pattern with the leads swapped round.";
+  wrap.appendChild(note);
+
+  const rowsBox = document.createElement("div");
+  const drawRows = () => {
+    rowsBox.innerHTML = "";
+    (w.cards || []).forEach((cid, ci) => {
+      const c = progCard(prog, cid);
+      const ct = document.createElement("div"); ct.className = "ct"; ct.textContent = (c ? c.title : "Activity " + (ci + 1)); rowsBox.appendChild(ct);
+      d.rows.filter(r => r.card === ci).forEach(r => {
+        const rr = document.createElement("div"); rr.className = "row";
+        const g = document.createElement("select");
+        g.innerHTML = PROG_GROUPS.map(([k, l]) => '<option value="' + k + '"' + (k === r.group ? " selected" : "") + '>' + l + '</option>').join("");
+        const dy = document.createElement("select");
+        dy.innerHTML = DAYS.map(([k, l]) => '<option value="' + k + '"' + (k === r.day ? " selected" : "") + '>' + l + '</option>').join("");
+        const tm = document.createElement("input"); tm.type = "time"; tm.value = r.time || "";
+        const ld = document.createElement("select"); ld.innerHTML = opts(progResolveLead(d, r.lead));
+        const warn = document.createElement("span"); warn.className = "warn";
+        const check = () => { warn.textContent = (r.group === "whole" && r.time && r.time < PROG_DEFAULT_TIME.whole) ? "Whole group is after 10.30" : ""; };
+        g.onchange = () => {
+          const before = r.group; r.group = g.value;
+          if (r.time === PROG_DEFAULT_TIME[before]) { r.time = PROG_DEFAULT_TIME[r.group]; tm.value = r.time; }
+          check();
+        };
+        dy.onchange = () => { r.day = dy.value; };
+        tm.onchange = () => { r.time = tm.value; check(); };
+        ld.onchange = () => { r.lead = ld.value; };
+        [g, dy, tm, ld].forEach(x => rr.appendChild(x));
+        rr.appendChild(warn); check();
+        rowsBox.appendChild(rr);
+      });
+    });
+  };
+  aSel.onchange = () => { const old = d.a; d.a = aSel.value; d.rows.forEach(r => { if (r.lead === old && old) r.lead = d.a; }); drawRows(); };
+  bSel.onchange = () => { const old = d.b; d.b = bSel.value; d.rows.forEach(r => { if (r.lead === old && old) r.lead = d.b; }); drawRows(); };
+  swapBtn.onclick = () => {
+    // Rows that follow the two pickers swap by swapping the pickers; rows set to a named person swap too
+    const oa = d.a, ob = d.b;
+    d.rows.forEach(r => { if (oa && r.lead === oa) r.lead = ob; else if (ob && r.lead === ob) r.lead = oa; });
+    d.a = ob; d.b = oa;
+    aSel.innerHTML = opts(d.a); bSel.innerHTML = opts(d.b);
+    drawRows();
+  };
+  drawRows();
+  wrap.appendChild(rowsBox);
+
+  const r3 = document.createElement("div"); r3.className = "row"; r3.style.marginTop = "12px";
+  const go = document.createElement("button"); go.className = "btn small";
+  const label = () => { go.textContent = "Add the " + d.rows.length + " sessions to " + fmtWeek(d.target).replace("w/c Monday", "w/c"); };
+  label(); wsel.addEventListener("change", label);
+  go.onclick = () => progAdd(prog, w, d);
+  r3.appendChild(go);
+  const cancel = document.createElement("button"); cancel.className = "btn secondary small"; cancel.textContent = "Cancel";
+  cancel.onclick = () => { progOpenWeek = null; delete progDrafts[w.n]; renderProgramme(); };
+  r3.appendChild(cancel);
+  wrap.appendChild(r3);
+  return wrap;
+}
+function progAdd(prog, w, d){
+  const rows = d.rows.map(r => Object.assign({}, r, { lead: progResolveLead(d, r.lead) || "" }));
+  const problems = [];
+  if (rows.some(r => !r.time)) problems.push("a session has no time");
+  if (rows.some(r => r.group === "whole" && r.time && r.time < PROG_DEFAULT_TIME.whole)) problems.push("a whole group session is before 10.30");
+  if (rows.some(r => !r.lead)) problems.push("a session has no lead");
+  (w.cards || []).forEach((cid, ci) => {
+    const gs = rows.filter(r => r.card === ci).map(r => r.group);
+    if (!(gs.includes("whole") && gs.includes("small"))){ const c = progCard(prog, cid); problems.push((c ? c.title : "an activity") + " is not down for both a whole and a small group"); }
+  });
+  if (problems.length && !confirm("Before adding: " + problems.join("; ") + ". Add anyway?")) return;
+  const existing = progSessions(prog, w.n).filter(s => s.weekKey === d.target);
+  if (existing.length && !confirm("Week " + w.n + " is already on that week's sheet. Add these sessions as well?")) return;
+  const target = d.target;
+  const wk = ensureWeek(target);
+  rows.forEach(r => {
+    const c = progCard(prog, w.cards[r.card]); if (!c) return;
+    const itemId = uid();
+    const p = createPlan(c.title + " (" + groupName(r.group).toLowerCase() + ")", target, itemId);
+    p.prog = { progId: prog.id, week: w.n, cardId: c.id, group: r.group, time: r.time };
+    p.date = dateForDay(target, r.day);
+    p.completedBy = pracName(r.lead);
+    p.interests = prog.name + ", week " + w.n + ".";
+    p.goals = c.summary || "";
+    p.resources = (c.need || []).join("\n");
+    p.eyfs = ["PSED"];
+    p.updatedAt = now();
+    wk.items.push({ id: itemId, section: "goals", day: r.day, slot: slotFromTime(r.time),
+      text: c.title, link: prog.cardsLink || "", notes: "", assignedTo: r.lead || null,
+      done: false, deleted: false, carriedFrom: null, planId: p.id,
+      prog: { progId: prog.id, week: w.n, cardId: c.id, group: r.group, time: r.time },
+      whyIntent: c.summary || "", whyImpact: "", createdAt: now(), updatedAt: now() });
+  });
+  prog.lastPattern = { a: d.a, b: d.b, rows: d.rows.map(r => Object.assign({}, r)) };
+  prog.updatedAt = now();
+  markDirty();
+  delete progDrafts[w.n];
+  progOpenWeek = null;
+  renderProgramme();
+  status("Week " + w.n + " added to " + fmtWeek(target).replace("w/c Monday", "w/c") + ", each session with its activity plan");
+}
+function progRemove(sessions){
+  if (!confirm("Take these " + sessions.length + " sessions off the sheet? Plans that already have something written in them are kept in the plans list.")) return;
+  sessions.forEach(s => {
+    s.item.deleted = true; s.item.updatedAt = now();
+    const p = state.plans.find(x => x.id === s.item.planId && !x.deleted);
+    if (p && !["adapt","reflWorked","reflChange","evaluation","individualEval","approach"].some(k => (p[k] || "").trim())){ p.deleted = true; p.updatedAt = now(); }
+  });
+  markDirty(); renderProgramme();
+}
+
+/* ---- Side by side: the same activity with the whole group and with a small group ---- */
+function progCompare(prog, w, sessions){
+  const det = document.createElement("details"); det.style.marginTop = "8px";
+  const sm = document.createElement("summary"); sm.textContent = "How it went: whole group and small group side by side"; det.appendChild(sm);
+  (w.cards || []).forEach(cid => {
+    const c = progCard(prog, cid); if (!c) return;
+    const mine = sessions.filter(s => s.item.prog.cardId === cid);
+    if (!mine.length) return;
+    const t = document.createElement("div"); t.style.cssText = "font-family:Georgia,serif;color:var(--green);font-weight:bold;margin-top:10px;"; t.textContent = c.title;
+    det.appendChild(t);
+    const grid = document.createElement("div"); grid.className = "compare";
+    mine.forEach(s => {
+      const p = state.plans.find(x => x.id === s.item.planId && !x.deleted) || {};
+      const cb = document.createElement("div"); cb.className = "cb";
+      const h = document.createElement("h4"); h.textContent = groupName(s.item.prog.group) + " · " + (s.item.assignedTo ? pracName(s.item.assignedTo) : "no lead"); cb.appendChild(h);
+      [["adapt","How it was adapted"],["reflWorked","What worked"],["reflChange","What I'd change"]].forEach(([k, l]) => {
+        const cl = document.createElement("div"); cl.className = "cl"; cl.textContent = l; cb.appendChild(cl);
+        const cv = document.createElement("div"); cv.className = "cv" + ((p[k] || "").trim() ? "" : " empty");
+        cv.textContent = (p[k] || "").trim() || "Not written yet"; cb.appendChild(cv);
+      });
+      if (p.id){
+        const ob = document.createElement("button"); ob.className = "btn secondary small"; ob.style.marginTop = "6px"; ob.textContent = "Open plan";
+        ob.onclick = () => openPlan(p.id); cb.appendChild(ob);
+      }
+      grid.appendChild(cb);
+    });
+    det.appendChild(grid);
+  });
+  return det;
+}
+
+/* ---- The activity card, in full ---- */
+function cardListHtml(lines){
+  return "<ul>" + (lines || []).map(l => /^\s/.test(l)
+    ? '<li class="say">' + esc(l.trim()) + "</li>"
+    : "<li>" + esc(l) + "</li>").join("") + "</ul>";
+}
+let openCardArgs = null;
+function openCard(progId, cardId, item, weekKey){
+  const prog = progFind(progId), c = progCard(prog, cardId);
+  if (!c){ alert("This card is not in the loaded programme. Reload the programme pack from the PSED programme tab."); return; }
+  openCardArgs = [progId, cardId, item, weekKey];
+  const body = document.getElementById("cardBody");
+  body.innerHTML = "";
+  const bar = document.createElement("div"); bar.className = "barrow";
+  const close = document.createElement("button"); close.className = "btn secondary small"; close.textContent = "Close"; close.onclick = closeCard;
+  bar.appendChild(close);
+  if (item && item.planId && state.plans.some(p => p.id === item.planId && !p.deleted)){
+    const op = document.createElement("button"); op.className = "btn secondary small"; op.textContent = "Open my plan for this session";
+    op.onclick = () => { closeCard(); openPlan(item.planId); };
+    bar.appendChild(op);
+  }
+  if (prog.cardsLink){
+    const a = document.createElement("a"); a.className = "btn secondary small"; a.textContent = "Cards PDF"; a.href = safeHref(prog.cardsLink);
+    a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none"; bar.appendChild(a);
+  }
+  const sp = document.createElement("div"); sp.style.flex = "1"; bar.appendChild(sp);
+  const pr = document.createElement("button"); pr.className = "btn small"; pr.textContent = "Print card (A4)";
+  pr.onclick = () => printCard(prog, c, item, weekKey);
+  bar.appendChild(pr);
+  body.appendChild(bar);
+  const h = document.createElement("h2"); h.textContent = c.title; body.appendChild(h);
+  const sm = document.createElement("div"); sm.className = "sum"; sm.textContent = (c.summary || "") + " (week " + c.week + ")"; body.appendChild(sm);
+  if (item){
+    const ss = document.createElement("div"); ss.className = "sess";
+    ss.innerHTML = "<b>This session:</b> " + esc(progSessionLine(item)) + (weekKey ? ", " + esc(fmtShort(dateForDay(weekKey, item.day))) : "");
+    body.appendChild(ss);
+  }
+  const cols = document.createElement("div"); cols.className = "cols";
+  cols.innerHTML = '<div><h3>You need</h3>' + cardListHtml(c.need) + '<h3>Top tips</h3>' + cardListHtml(c.tips) + '</div>' +
+    '<div><h3>Instructions</h3>' + cardListHtml(c.instructions) + '</div>';
+  body.appendChild(cols);
+  body.appendChild(adaptiveBox(prog, false));
+  document.getElementById("cardOverlay").classList.remove("hidden");
+}
+function closeCard(){ openCardArgs = null; document.getElementById("cardOverlay").classList.add("hidden"); }
+document.getElementById("cardOverlay").onclick = (e) => { if (e.target === document.getElementById("cardOverlay")) closeCard(); };
+function printCard(prog, c, item, weekKey){
+  const logo = (document.querySelector(".printwatermark") || {}).src || "";
+  const list = cardListHtml;
+  const html = '<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"><title>' + esc(c.title) + '</title><style>' +
+    '@page{size:A4 portrait;margin:14mm;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}body{font-family:Arial,sans-serif;color:#2B2B2B;font-size:10.5pt;margin:0;}' +
+    'h1{font-family:Georgia,serif;color:#1A7A4A;font-size:21pt;margin:0;}.head{display:flex;align-items:center;gap:12px;border-bottom:2px solid #D4A017;padding-bottom:6px;margin-bottom:10px;}.head img{height:48px;}' +
+    '.sub{color:#6B6460;font-style:italic;}.sess{background:#E8F1EC;border-radius:8px;padding:7px 12px;margin:0 0 12px;}' +
+    '.cols{display:grid;grid-template-columns:1fr 1.6fr;gap:20px;}h3{font-family:Georgia,serif;color:#1A7A4A;font-size:12pt;margin:10px 0 4px;}' +
+    'ul{margin:0;padding-left:18px;}li{margin-bottom:5px;}li.say{list-style:none;margin-left:-4px;color:#1A7A4A;font-style:italic;}' +
+    '.ad{background:#FBF3DC;border-radius:8px;padding:8px 12px;margin-top:16px;font-size:9pt;}.ad b{color:#1A7A4A;}.ad p{margin:2px 0 6px;}' +
+    '.lines{margin-top:14px;}.lines div{border-bottom:1px solid #CCCCCC;height:22px;}.lt{font-family:Georgia,serif;color:#1A7A4A;font-weight:bold;margin-top:12px;}' +
+    '.foot{margin-top:14px;font-size:7.5pt;color:#999;text-align:center;}</style></head><body>' +
+    '<div class="head">' + (logo ? '<img src="' + logo + '" alt="">' : '') + '<div><h1>' + esc(c.title) + '</h1><div class="sub">' + esc(c.summary || "") +
+    ' &middot; ' + esc(prog.name) + ', week ' + c.week + '</div></div></div>' +
+    (item ? '<div class="sess"><b>This session:</b> ' + esc(progSessionLine(item)) + (weekKey ? ', ' + esc(fmtShort(dateForDay(weekKey, item.day))) : '') + '</div>' : '') +
+    '<div class="cols"><div><h3>You need</h3>' + list(c.need) + '<h3>Top tips</h3>' + list(c.tips) + '</div><div><h3>Instructions</h3>' + list(c.instructions) + '</div></div>' +
+    (item ? '<div class="lt">How I will adapt it for ' + (item.prog.group === "whole" ? "the whole group" : "a small group") + '</div><div class="lines"><div></div><div></div><div></div></div>' : '') +
+    '<div class="ad"><b>Adaptive teaching ideas</b>' + (prog.adaptive || []).map(a => '<p><b>' + esc(a.heading) + ':</b> ' + esc(a.text) + '</p>').join("") + '</div>' +
+    '<div class="foot">' + esc(prog.source || "") + ' &middot; planning build ' + esc(BUILD) + '</div>' +
+    '<script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script></body></html>';
+  const w = window.open("", "_blank");
+  if (!w){ alert("Your browser blocked the new window. Allow pop-ups for this page and try again."); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+}
+
+/* ---- Inside a session's activity plan: the card, the adaptation and the lead's reflection ---- */
+function progPlanBox(p, body){
+  const prog = progFind(p.prog.progId), c = progCard(prog, p.prog.cardId);
+  const box = document.createElement("div"); box.className = "progbox";
+  const t = document.createElement("div"); t.className = "pl";
+  t.textContent = (prog ? prog.name + ", week " + p.prog.week : "Programme session") + " · " + groupName(p.prog.group) + (p.prog.time ? " at " + p.prog.time : "");
+  box.appendChild(t);
+  if (c){
+    const cb = document.createElement("button"); cb.className = "btn secondary small"; cb.style.marginTop = "6px"; cb.textContent = "Read the activity card";
+    let item = null, wkKey = null;
+    Object.keys(state.weeks).some(k => ((state.weeks[k] || {}).items || []).some(i => { if (i.id === p.itemId && !i.deleted){ item = i; wkKey = k; return true; } return false; }));
+    cb.onclick = () => openCard(prog.id, c.id, item, wkKey);
+    box.appendChild(cb);
+  }
+  const whole = p.prog.group === "whole";
+  const field = (key, label, hint, stamp) => {
+    const l = document.createElement("label"); l.textContent = label; box.appendChild(l);
+    const ta = document.createElement("textarea"); ta.value = p[key] || ""; ta.placeholder = hint;
+    const by = document.createElement("div"); by.className = "bywho";
+    const drawBy = () => { const list = (p.by && p.by[key]) || []; by.textContent = list.length ? "Added by " + list.join(", ") : ""; };
+    ta.oninput = () => {
+      p[key] = ta.value;
+      if (stamp && (account || (sharedOn() && actingAs)) && ta.value.trim()){
+        const me = myPractitioner();
+        const ini = me ? pracInitials(me) : initialsFromName(currentUserName());
+        if (!p.by) p.by = {};
+        const list = p.by[key] = p.by[key] || [];
+        if (ini && !list.includes(ini)) list.push(ini);
+      }
+      touchPlan(p); autoGrow(ta); drawBy();
+    };
+    box.appendChild(ta); box.appendChild(by); drawBy();
+    requestAnimationFrame(() => autoGrow(ta));
+  };
+  field("adapt", whole ? "Before: how will I adapt it for the whole group?" : "Before: what will I do differently with a small group?",
+    whole ? "More children: how will everyone get a turn, see and hear? Shorter turns, a partner job, extra visuals, a bigger space..."
+          : "Fewer children: more talk and thinking time, who needs pre-teaching, which questions will I ask, how far can we take it...", true);
+  if (prog) box.appendChild(adaptiveBox(prog, false));
+  field("reflWorked", "After: what worked?", "What the children did and said, and what helped", true);
+  field("reflChange", "After: what would I change next time?", "For this group size, and for the other one", true);
+  body.appendChild(box);
+}
+
+/* ===================== Shared kitchen tablet =====================
+   On the shared tablet the device stays connected to OneDrive in the background,
+   but no person is signed in. "Who's using it?" sets the level: no one = look only;
+   anyone without planning rights taps their name (tick, notes, their own tasks and
+   plans); planners and the manager also need their tablet PIN. PINs are stored only
+   as hashes in planning.json. After a few minutes untouched it drops back to no one. */
+const MANAGER_KEY = "__manager";
+const SHARED_IDLE_MS = 4 * 60 * 1000;
+const WALL_DAY_IDLE_MS = 90 * 1000;
+let actingAs = null;              // null | { id, limited }
+let lastActivity = Date.now();
+function sharedOn(){ try{ return localStorage.getItem("lp-shared") === "1"; }catch(e){ return false; } }
+function wallPinned(){ try{ return localStorage.getItem("lp-wall") === "1"; }catch(e){ return false; } }
+function isMgr(){
+  if (sharedOn()) return !!(actingAs && actingAs.id === MANAGER_KEY);
+  return role === "manager" || role === "local";
+}
+function actingPrac(){
+  if (!actingAs || actingAs.id === MANAGER_KEY) return null;
+  return state.practitioners.find(p => p.id === actingAs.id && p.active !== false) || null;
+}
+function actingLabel(){
+  if (!actingAs) return "";
+  if (actingAs.id === MANAGER_KEY) return "Manager";
+  const p = actingPrac(); return p ? p.name : "";
+}
+async function pinHash(id, pin){
+  const data = new TextEncoder().encode("lp-planning|" + id + "|" + pin);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+function pinSet(id){ return !!(state.tabletPins && state.tabletPins[id] && state.tabletPins[id].hash); }
+async function storePin(id, pin){
+  if (!state.tabletPins) state.tabletPins = {};
+  state.tabletPins[id] = { hash: await pinHash(id, pin), updatedAt: now() };
+  markDirty();
+}
+
+/* A big on-screen keypad, so it works with fingers on the wall */
+function askPin(title, sub){
+  return new Promise(resolve => {
+    const ov = document.createElement("div"); ov.className = "wpanel wpinpad"; ov.style.zIndex = "70";
+    const box = document.createElement("div"); box.className = "wpin"; box.style.maxWidth = "380px"; box.style.textAlign = "center";
+    box.innerHTML = '<h2 style="margin-bottom:4px;">' + esc(title) + '</h2><div style="color:var(--grey);font-size:.95rem;min-height:1.2em;">' + esc(sub || "") + '</div>';
+    const dots = document.createElement("div"); dots.style.cssText = "font-size:2rem;letter-spacing:.4em;color:var(--green);margin:14px 0;min-height:2.4rem;";
+    box.appendChild(dots);
+    const pad = document.createElement("div"); pad.style.cssText = "display:grid;grid-template-columns:repeat(3,1fr);gap:10px;";
+    let val = "";
+    const draw = () => { dots.textContent = "●".repeat(val.length) || " "; };
+    const done = (v) => { ov.remove(); resolve(v); };
+    ["1","2","3","4","5","6","7","8","9","Cancel","0","⌫"].forEach(k => {
+      const b = document.createElement("button"); b.textContent = k;
+      b.style.cssText = "font-size:" + (k.length > 1 ? "1rem" : "1.6rem") + ";padding:14px 0;border-radius:14px;border:1.5px solid var(--line);background:" + (k === "Cancel" ? "#fff" : "var(--pale)") + ";color:var(--green);font-weight:bold;cursor:pointer;";
+      b.onclick = () => {
+        if (k === "Cancel") return done(null);
+        if (k === "⌫"){ val = val.slice(0, -1); draw(); return; }
+        if (val.length < 6){ val += k; draw(); }
+        if (val.length === 4) setTimeout(() => done(val), 120);
+      };
+      pad.appendChild(b);
+    });
+    box.appendChild(pad);
+    ov.appendChild(box);
+    ov.onclick = (e) => { if (e.target === ov) done(null); };
+    document.body.appendChild(ov);
+    draw();
+  });
+}
+
+async function setActing(id){
+  if (!id){ actingAs = null; afterActingChange(); return true; }
+  let needsPin = false, limited = false, label = "";
+  if (id === MANAGER_KEY){ needsPin = true; label = "Manager"; }
+  else {
+    const p = state.practitioners.find(x => x.id === id);
+    if (!p) return false;
+    label = p.name;
+    if (p.planner){
+      if (pinSet(id)) needsPin = true;
+      else { limited = true; status("No tablet PIN set for " + p.name + " yet, so planning is look-and-tick only"); }
+    }
+  }
+  if (needsPin){
+    if (!pinSet(id)){ alert("No manager PIN has been set yet. Set it in Settings on a signed-in device."); return false; }
+    const pin = await askPin(label, "Enter your 4-digit tablet PIN");
+    if (pin === null) return false;
+    if (await pinHash(id, pin) !== state.tabletPins[id].hash){ alert("That PIN doesn't match."); return false; }
+  }
+  actingAs = { id: id, limited: limited };
+  lastActivity = Date.now();
+  afterActingChange();
+  return true;
+}
+function afterActingChange(){
+  updateAuthUI();
+  if (activeTab === "settings" && !isMgr()) switchTab("week");
+  if (activeTab === "ideas" && !isMgr()) switchTab("week");
+  renderTab();
+  renderWall();
+}
+function whoOptions(sel){
+  const opts = ['<option value="">No one (look only)</option>'];
+  state.practitioners.filter(p => p.active !== false).forEach(p => {
+    opts.push('<option value="' + p.id + '"' + (sel === p.id ? " selected" : "") + '>' + esc(p.name) + '</option>');
+  });
+  opts.push('<option value="' + MANAGER_KEY + '"' + (sel === MANAGER_KEY ? " selected" : "") + '>Manager</option>');
+  return opts.join("");
+}
+function wireWhoSelect(selEl){
+  selEl.innerHTML = whoOptions(actingAs ? actingAs.id : "");
+  selEl.onchange = async () => {
+    const ok = await setActing(selEl.value);
+    if (!ok) selEl.innerHTML = whoOptions(actingAs ? actingAs.id : "");
+  };
+}
+
+/* Activity and idle: drop back to no one, and the wall back to today */
+["pointerdown", "keydown", "touchstart"].forEach(ev => document.addEventListener(ev, () => { lastActivity = Date.now(); }, { passive: true, capture: true }));
+setInterval(() => {
+  const idle = Date.now() - lastActivity;
+  if (sharedOn() && actingAs && idle > SHARED_IDLE_MS){
+    if (document.body.classList.contains("plan-open")) closePlan();
+    closeCard();
+    document.querySelectorAll(".wpanel").forEach(x => x.remove());
+    actingAs = null;
+    if (wallPinned()) enterWall(false);
+    afterActingChange();
+    status("Back to no one after a few quiet minutes");
+  }
+  if (wallState.on && idle > WALL_DAY_IDLE_MS){
+    document.querySelectorAll("body > .wpanel:not(.wpinpad)").forEach(x => x.remove());
+    if (wallState.day !== null){ wallState.day = null; renderWall(); }
+  }
+  if (wallState.on) wallTick();
+}, 15000);
+
+/* ===================== Wall display ===================== */
+const wallState = { on: false, day: null, wakeLock: null, lastSync: 0 };
+function wallToday(){
+  const d = new Date(); const dow = (d.getDay() + 6) % 7;
+  if (dow > 4) return { week: addWeeks(mondayOf(d), 1), day: "mon", weekend: true };
+  return { week: mondayOf(d), day: DAYS[dow][0], weekend: false };
+}
+function hhmm(d){ return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
+function enterWall(persist){
+  if (persist){ try{ localStorage.setItem("lp-wall", "1"); }catch(e){} }
+  wallState.on = true; wallState.day = null;
+  document.getElementById("wall").classList.remove("hidden");
+  document.body.classList.add("wall-on");
+  wallKeepAwake();
+  renderWall();
+  updateAuthUI();
+}
+function exitWall(persist){
+  if (persist){ try{ localStorage.removeItem("lp-wall"); }catch(e){} }
+  wallState.on = false;
+  document.getElementById("wall").classList.add("hidden");
+  document.body.classList.remove("wall-on");
+  if (wallState.wakeLock){ try{ wallState.wakeLock.release(); }catch(e){} wallState.wakeLock = null; }
+  currentWeek = mondayOf(new Date());
+  updateAuthUI();
+  renderTab();
+}
+async function wallKeepAwake(){
+  try{ if (navigator.wakeLock && !wallState.wakeLock){ wallState.wakeLock = await navigator.wakeLock.request("screen"); wallState.wakeLock.addEventListener("release", () => { wallState.wakeLock = null; }); } }catch(e){}
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible" || !wallState.on) return;
+  wallState.day = null;
+  wallKeepAwake();
+  renderWall();
+  if (account) syncFromCloud(false);
+});
+function wallTick(){
+  const c = document.getElementById("wallClock");
+  if (c) c.textContent = hhmm(new Date());
+  // a new day (or the morning after) redraws; quiet re-sync every 3 minutes so phone edits appear
+  const t = wallToday();
+  if (wallState.renderedFor !== t.week + t.day) renderWall();
+  else if (account && Date.now() - wallState.lastSync > 180000){
+    const ae = document.activeElement;
+    const busy = (ae && /INPUT|TEXTAREA|SELECT/.test(ae.tagName)) || document.body.classList.contains("plan-open") || document.querySelector("body > .wpanel");
+    if (!busy){ wallState.lastSync = Date.now(); syncFromCloud(false); }
+  }
+}
+function wallItemsFor(weekKey, day){
+  return liveItems(weekKey).filter(i => i.section === "goals" && i.day === day && (i.text || "").trim())
+    .map((i, n) => [i, n]).sort((a, b) =>
+      (a[0].slot === "pm") - (b[0].slot === "pm") ||
+      ((a[0].prog && a[0].prog.time) || "99").localeCompare((b[0].prog && b[0].prog.time) || "99") || a[1] - b[1])
+    .map(x => x[0]);
+}
+function whoShort(id){ const p = state.practitioners.find(x => x.id === id); return p ? pracInitials(p) : ""; }
+function wallActRow(i, weekKey, isNext){
+  const row = document.createElement("div"); row.className = "wact" + (i.done ? " done" : "") + (isNext ? " next" : "");
+  const tk = document.createElement("button"); tk.className = "wtick"; tk.innerHTML = i.done ? "&#10003;" : "";
+  tk.title = i.done ? "Done (tap to undo)" : "Tap when done";
+  tk.onclick = () => { stampDone(i, !i.done); renderWall(); };
+  row.appendChild(tk);
+  const body = document.createElement("div"); body.className = "wbody";
+  const line = document.createElement("div"); line.className = "wline";
+  if (i.prog && i.prog.time){ const tm = document.createElement("span"); tm.className = "wtime"; tm.textContent = i.prog.time; line.appendChild(tm); }
+  const t = document.createElement("span"); t.className = "wt"; t.textContent = i.text; line.appendChild(t);
+  if (i.prog){ const g = document.createElement("span"); g.className = "wgrp"; g.textContent = groupName(i.prog.group); line.appendChild(g); }
+  if (isNext){ const nx = document.createElement("span"); nx.className = "wnext"; nx.textContent = "Up next"; line.appendChild(nx); }
+  body.appendChild(line);
+  if ((i.whyIntent || "").trim()){ const w = document.createElement("div"); w.className = "wwhy"; w.textContent = i.whyIntent; body.appendChild(w); }
+  const chips = document.createElement("div"); chips.className = "wchips";
+  if (i.planId && state.plans.some(p => p.id === i.planId && !p.deleted)){
+    const c = document.createElement("button"); c.className = "wchip"; c.textContent = "Activity plan"; c.onclick = () => openPlan(i.planId); chips.appendChild(c);
+  }
+  if (i.prog){
+    const c = document.createElement("button"); c.className = "wchip gold"; c.textContent = "Activity card";
+    c.onclick = () => openCard(i.prog.progId, i.prog.cardId, i, weekKey); chips.appendChild(c);
+  }
+  if (chips.children.length) body.appendChild(chips);
+  row.appendChild(body);
+  if (i.assignedTo){ const w = document.createElement("div"); w.className = "wwho"; w.textContent = whoShort(i.assignedTo) || "?"; w.title = pracName(i.assignedTo); row.appendChild(w); }
+  return row;
+}
+function wallPanel(title, fill){
+  document.querySelectorAll("body > .wpanel").forEach(x => x.remove());
+  const ov = document.createElement("div"); ov.className = "wpanel";
+  const box = document.createElement("div"); box.className = "wpin";
+  const cl = document.createElement("button"); cl.className = "wpclose"; cl.textContent = "Close"; cl.onclick = () => ov.remove();
+  box.appendChild(cl);
+  const h = document.createElement("h2"); h.textContent = title; box.appendChild(h);
+  fill(box);
+  ov.appendChild(box);
+  ov.onclick = (e) => { if (e.target === ov) ov.remove(); };
+  document.body.appendChild(ov);
+}
+function wallListPanel(title, items, kindFn){
+  wallPanel(title, box => {
+    if (!items.length){ const e = document.createElement("div"); e.className = "wempty"; e.textContent = "Nothing added this week."; box.appendChild(e); return; }
+    items.forEach(i => {
+      const d = document.createElement("div"); d.className = "wpitem";
+      const k = kindFn ? kindFn(i) : "";
+      if (k){ const kk = document.createElement("div"); kk.className = "pk"; kk.textContent = k; d.appendChild(kk); }
+      const t = document.createElement("div"); t.className = "pt"; t.textContent = i.text + (i.done ? "  ✓" : ""); d.appendChild(t);
+      if ((i.notes || "").trim()){ const n = document.createElement("div"); n.className = "pn"; n.textContent = i.notes; d.appendChild(n); }
+      if ((i.link || "").trim()){ const a = document.createElement("a"); a.href = safeHref(i.link); a.target = "_blank"; a.rel = "noopener"; a.textContent = "Open link"; d.appendChild(a); }
+      if (i.assignedTo){ const w = document.createElement("div"); w.className = "pn"; w.textContent = "With " + pracName(i.assignedTo); d.appendChild(w); }
+      box.appendChild(d);
+    });
+  });
+}
+function wallWeekPanel(weekKey){
+  wallPanel("The whole week", box => {
+    DAYS.forEach(([k, l]) => {
+      const sec = document.createElement("div"); sec.className = "wday2";
+      const h = document.createElement("h3");
+      const book = liveItems(weekKey).find(i => i.section === "books" && i.day === k && (i.text || "").trim());
+      h.textContent = l + (book ? "  ·  " + book.text : ""); sec.appendChild(h);
+      const acts = wallItemsFor(weekKey, k);
+      if (!acts.length){ const e = document.createElement("div"); e.style.color = "var(--grey)"; e.textContent = "Nothing planned"; sec.appendChild(e); }
+      acts.forEach(i => {
+        const r = document.createElement("div");
+        r.innerHTML = '<span class="tm">' + esc((i.prog && i.prog.time) || i.slot.toUpperCase()) + '</span>' + esc(i.text) +
+          (i.assignedTo ? ' <span style="color:var(--grey);">(' + esc(whoShort(i.assignedTo)) + ')</span>' : '') + (i.done ? " ✓" : "");
+        sec.appendChild(r);
+      });
+      box.appendChild(sec);
+    });
+  });
+}
+function wallMyTasks(box, weekKey, todayKey){
+  const p = actingPrac();
+  const card = document.createElement("div"); card.className = "wcard";
+  const h = document.createElement("div"); h.className = "wsideh"; h.textContent = actingAs.id === MANAGER_KEY ? "Manager" : "Your tasks, " + (p ? p.name : "");
+  card.appendChild(h);
+  if (p){
+    const mine = liveItems(weekKey).filter(i => i.assignedTo === p.id && (i.text || "").trim());
+    const order = DAYS.map(d => d[0]);
+    mine.sort((a, b) => order.indexOf(a.day) - order.indexOf(b.day) || (a.slot === "pm") - (b.slot === "pm") ||
+      ((a.prog && a.prog.time) || "99").localeCompare((b.prog && b.prog.time) || "99"));
+    const today = mine.filter(i => i.day === todayKey), later = mine.filter(i => i.day !== todayKey && (!i.day || order.indexOf(i.day) > order.indexOf(todayKey))),
+          earlier = mine.filter(i => i.day && order.indexOf(i.day) < order.indexOf(todayKey) && !i.done);
+    const group = (label, list) => {
+      if (!list.length) return;
+      const l = document.createElement("div"); l.style.cssText = "font-weight:bold;color:var(--green);margin:8px 0 6px;"; l.textContent = label; card.appendChild(l);
+      list.forEach(i => {
+        const r = wallActRow(i, weekKey, false);
+        const meta = document.createElement("div"); meta.className = "wwhy";
+        const sec = SECTIONS.find(x => x.id === i.section);
+        meta.textContent = i.section === "goals"
+          ? dayName(i.day) + (i.prog && i.prog.time ? "" : " " + (i.slot || "").toUpperCase())
+          : (sec ? sec.title : "") + (i.day && i.day !== "weekly" ? " · " + dayName(i.day) : "");
+        r.querySelector(".wbody").insertBefore(meta, r.querySelector(".wbody").children[1] || null);
+        const w = r.querySelector(".wwho"); if (w) w.remove();
+        card.appendChild(r);
+      });
+    };
+    group("Today", today); group("Still to do from earlier", earlier); group("Later this week", later);
+    if (!mine.length){ const e = document.createElement("div"); e.className = "wempty"; e.textContent = "Nothing assigned to you this week."; card.appendChild(e); }
+    if (actingAs.limited){ const n = document.createElement("div"); n.className = "wwhy"; n.textContent = "No tablet PIN set for you yet, so planning is look-and-tick only here."; card.appendChild(n); }
+  }
+  const open = document.createElement("button"); open.className = "wapp"; open.style.cssText = "width:100%;margin-top:12px;";
+  open.textContent = canEdit() ? "Open the full planning" : "Open my tasks and plans";
+  open.onclick = () => { exitWall(false); switchTab(canEdit() ? "week" : "mytasks"); };
+  card.appendChild(open);
+  box.appendChild(card);
+}
+function renderWall(){
+  if (!wallState.on) return;
+  const root = document.getElementById("wall");
+  const t = wallToday();
+  wallState.renderedFor = t.week + t.day;
+  const weekKey = t.week;
+  const day = wallState.day || t.day;
+  const isToday = !wallState.day || wallState.day === t.day;
+  const wk = getWeek(weekKey) || {};
+  root.innerHTML = "";
+  const wl = document.createElement("div"); wl.className = "wl";
+
+  // Top: the day, the date, the topic, the clock and who is using it
+  const top = document.createElement("div"); top.className = "wtop";
+  const wd = document.createElement("div"); wd.className = "wd";
+  const dayDate = new Date(dateForDay(weekKey, day) + "T00:00:00");
+  const dn = document.createElement("div"); dn.className = "wday";
+  dn.textContent = (t.weekend && isToday ? "Coming up: " : (isToday ? "" : "")) + dayName(day);
+  wd.appendChild(dn);
+  const dt = document.createElement("div"); dt.className = "wdate";
+  dt.textContent = dayDate.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) + (isToday ? (t.weekend ? "" : "  ·  today") : "");
+  wd.appendChild(dt);
+  if ((wk.topic || "").trim()){ const tp = document.createElement("div"); tp.className = "wtopic"; tp.textContent = "This week: " + wk.topic; wd.appendChild(tp); }
+  top.appendChild(wd);
+  if (!isToday){ const bk = document.createElement("button"); bk.className = "wback"; bk.textContent = "Back to today"; bk.onclick = () => { wallState.day = null; renderWall(); }; top.appendChild(bk); }
+  const right = document.createElement("div"); right.style.cssText = "display:flex;flex-direction:column;align-items:flex-end;gap:8px;";
+  const clock = document.createElement("div"); clock.className = "wclock"; clock.id = "wallClock"; clock.textContent = hhmm(new Date()); right.appendChild(clock);
+  if (sharedOn()){
+    const ws = document.createElement("select");
+    ws.style.cssText = "font-size:1rem;padding:9px 12px;border-radius:12px;border:2px solid var(--green);color:var(--green);background:#fff;font-weight:bold;max-width:260px;";
+    ws.title = "Who's using the tablet?";
+    wireWhoSelect(ws);
+    right.appendChild(ws);
+  }
+  top.appendChild(right);
+  wl.appendChild(top);
+
+  // The day's books
+  const books = liveItems(weekKey).filter(i => i.section === "books" && (i.text || "").trim());
+  const story = books.find(i => i.day === "weekly"), book = books.find(i => i.day === day);
+  if (story || book){
+    const sb = document.createElement("div"); sb.className = "wstory";
+    if (story) sb.innerHTML += '<div><div class="sl">Story of the week</div><div class="st">' + esc(story.text) + '</div></div>';
+    if (book) sb.innerHTML += '<div><div class="sl">Lunchtime book</div><div class="st">' + esc(book.text) + '</div></div>';
+    wl.appendChild(sb);
+  }
+
+  // Upright tablet: a chosen person's own tasks come first, above the day
+  const upright = window.matchMedia("(orientation: portrait), (max-width: 900px)").matches;
+  if (sharedOn() && actingAs && upright) wallMyTasks(wl, weekKey, t.weekend ? "mon" : t.day);
+
+  const grid = document.createElement("div"); grid.className = "wgrid";
+  // Main column: the day's activities, morning then afternoon
+  const main = document.createElement("div"); main.className = "wcard";
+  const acts = wallItemsFor(weekKey, day);
+  let nextId = null;
+  if (isToday && !t.weekend){
+    const nowT = hhmm(new Date(Date.now() - 20 * 60000));
+    const nx = acts.find(i => !i.done && i.prog && i.prog.time && i.prog.time >= nowT);
+    if (nx) nextId = nx.id;
+  }
+  [["am", "Morning"], ["pm", "Afternoon"]].forEach(([slot, label]) => {
+    const s = document.createElement("div"); s.className = "wslot";
+    const h = document.createElement("h3"); h.textContent = label; s.appendChild(h);
+    const list = acts.filter(i => (i.slot || "am") === slot);
+    if (!list.length){ const e = document.createElement("div"); e.className = "wempty"; e.textContent = "Nothing planned"; s.appendChild(e); }
+    list.forEach(i => s.appendChild(wallActRow(i, weekKey, i.id === nextId)));
+    main.appendChild(s);
+  });
+  grid.appendChild(main);
+
+  // Side column: the person's own tasks, then the rest of the week a tap away
+  const side = document.createElement("div");
+  side.style.cssText = "display:flex;flex-direction:column;gap:18px;";
+  if (sharedOn() && actingAs && !upright) wallMyTasks(side, weekKey, t.weekend ? "mon" : t.day);
+
+  const dcard = document.createElement("div"); dcard.className = "wcard";
+  const dh = document.createElement("div"); dh.className = "wsideh"; dh.textContent = "The rest of the week"; dcard.appendChild(dh);
+  const days = document.createElement("div"); days.className = "wdays";
+  DAYS.forEach(([k, l]) => {
+    const b = document.createElement("button"); b.className = "wdbtn" + (k === day ? " on" : "") + (k === t.day && !t.weekend ? " today" : "");
+    const n = wallItemsFor(weekKey, k).length;
+    b.innerHTML = "<b>" + l.slice(0, 3) + "</b><span>" + (n ? n + (n === 1 ? " activity" : " activities") : "nothing yet") + "</span>";
+    b.onclick = () => { wallState.day = (k === t.day && !t.weekend) ? null : k; renderWall(); };
+    days.appendChild(b);
+  });
+  dcard.appendChild(days);
+  const wb = document.createElement("button"); wb.className = "wapp alt"; wb.style.cssText = "width:100%;margin-top:12px;"; wb.textContent = "See the whole week";
+  wb.onclick = () => wallWeekPanel(weekKey);
+  dcard.appendChild(wb);
+  side.appendChild(dcard);
+
+  const tcard = document.createElement("div"); tcard.className = "wcard";
+  const th = document.createElement("div"); th.className = "wsideh"; th.textContent = "This week's"; tcard.appendChild(th);
+  const tiles = document.createElement("div"); tiles.className = "wtiles";
+  const all = liveItems(weekKey).filter(i => (i.text || "").trim());
+  const PK = { continuous: "Continuous provision", invitation: "Invitation", provocation: "Provocation" };
+  const tile = (title, list, fn, kindFn) => {
+    const b = document.createElement("button"); b.className = "wtile";
+    b.innerHTML = "<b>" + esc(title) + "</b><span>" + (list.length ? list.length + " this week" : "none yet") + "</span>";
+    b.onclick = fn || (() => wallListPanel(title, list, kindFn));
+    tiles.appendChild(b);
+  };
+  tile("Provision", all.filter(i => i.section === "provision"), null, i => PK[i.provType || "continuous"]);
+  tile("Songs & rhymes", all.filter(i => i.section === "songs"));
+  tile("Cooking & self-care", all.filter(i => i.section === "cooking"));
+  tile("Garden & nature", all.filter(i => i.section === "garden"));
+  const lo = wk.littleOnes || {};
+  const loFilled = LO_FIELDS.filter(([k]) => (lo[k] || "").trim());
+  const lb = document.createElement("button"); lb.className = "wtile"; lb.style.gridColumn = "1 / -1";
+  lb.innerHTML = "<b>Little ones (under 2s)</b><span>" + (loFilled.length ? esc((lo.focus || "").trim() || "See this week's notes") : "nothing yet") + "</span>";
+  lb.onclick = () => wallPanel("Little ones (under 2s)", box => {
+    if (!loFilled.length){ const e = document.createElement("div"); e.className = "wempty"; e.textContent = "Nothing added this week."; box.appendChild(e); }
+    loFilled.forEach(([k, label]) => {
+      const d = document.createElement("div"); d.className = "wpitem";
+      d.innerHTML = '<div class="pk">' + esc(label) + '</div><div class="pn" style="color:var(--ink,#2B2B2B);font-size:1.05rem;">' + esc(lo[k]) + '</div>';
+      box.appendChild(d);
+    });
+  });
+  tiles.appendChild(lb);
+  tcard.appendChild(tiles);
+  side.appendChild(tcard);
+  grid.appendChild(side);
+  wl.appendChild(grid);
+
+  const foot = document.createElement("div"); foot.className = "wfoot";
+  const st = document.createElement("span"); st.textContent = account ? (document.getElementById("saveStatus").textContent || "Connected") : "Not connected to OneDrive: showing this tablet's own copy only";
+  foot.appendChild(st);
+  const sp = document.createElement("span"); sp.style.flex = "1"; foot.appendChild(sp);
+  if (!sharedOn()){
+    const ex = document.createElement("button"); ex.textContent = "Leave wall display"; ex.onclick = () => exitWall(true); foot.appendChild(ex);
+  } else if (!actingAs){
+    const ex = document.createElement("button"); ex.textContent = "Open the planning (look only)"; ex.onclick = () => exitWall(false); foot.appendChild(ex);
+  }
+  const bs = document.createElement("span"); bs.textContent = "version " + BUILD; foot.appendChild(bs);
+  wl.appendChild(foot);
+  root.appendChild(wl);
+}
+document.getElementById("btnWall").onclick = () => enterWall(true);
+let wallResizeTimer = null;
+window.addEventListener("resize", () => { clearTimeout(wallResizeTimer); wallResizeTimer = setTimeout(() => { if (wallState.on) renderWall(); }, 250); });
+document.getElementById("btnBackWall").onclick = () => enterWall(false);
+
+/* Settings: this device, and tablet PINs */
+function renderTabletSettings(){
+  const box = document.getElementById("tabletSettings");
+  if (!box) return;
+  box.innerHTML = "";
+  const row = (label, checked, onChange, hint) => {
+    const l = document.createElement("label"); l.style.cssText = "display:flex;gap:8px;align-items:flex-start;font-size:.9rem;margin:6px 0;cursor:pointer;";
+    const c = document.createElement("input"); c.type = "checkbox"; c.checked = checked; c.style.cssText = "width:17px;height:17px;accent-color:var(--green);margin-top:2px;";
+    c.onchange = () => onChange(c);
+    l.appendChild(c);
+    const t = document.createElement("span"); t.innerHTML = "<b>" + esc(label) + "</b>" + (hint ? '<br><span style="color:var(--grey);font-size:.8rem;">' + esc(hint) + "</span>" : "");
+    l.appendChild(t); box.appendChild(l);
+  };
+  row("This device is the shared kitchen tablet", sharedOn(), async (c) => {
+    if (c.checked){
+      if (!pinSet(MANAGER_KEY)){
+        const a = await askPin("Set your manager PIN", "Choose 4 digits for the tablet");
+        if (a === null){ c.checked = false; return; }
+        const b = await askPin("Set your manager PIN", "Type it again to check");
+        if (a !== b){ alert("Those didn't match, so nothing was changed."); c.checked = false; return; }
+        await storePin(MANAGER_KEY, a);
+      }
+      try{ localStorage.setItem("lp-shared", "1"); }catch(e){}
+      actingAs = { id: MANAGER_KEY, limited: false }; // you stay in as manager until it goes quiet or you choose No one
+    } else {
+      try{ localStorage.removeItem("lp-shared"); }catch(e){}
+      actingAs = null;
+    }
+    updateAuthUI(); renderTabletSettings();
+  }, "No one is signed in: people choose their name from 'Who's using it?'. Stay signed in to OneDrive here so the planning loads.");
+  row("Open in wall display on this device", wallPinned(), (c) => {
+    if (c.checked){ try{ localStorage.setItem("lp-wall", "1"); }catch(e){} }
+    else { try{ localStorage.removeItem("lp-wall"); }catch(e){} }
+  }, "Today first, the rest of the week a tap away. Comes back to it after a few quiet minutes.");
+  const pinRow = document.createElement("div"); pinRow.style.cssText = "display:flex;gap:10px;align-items:center;margin-top:12px;font-size:.88rem;flex-wrap:wrap;";
+  pinRow.innerHTML = "<b>Manager PIN:</b> " + (pinSet(MANAGER_KEY) ? "set" : "not set");
+  const pb = document.createElement("button"); pb.className = "btn secondary small"; pb.textContent = pinSet(MANAGER_KEY) ? "Change" : "Set";
+  pb.onclick = () => setPinFor(MANAGER_KEY, "Manager", renderTabletSettings);
+  pinRow.appendChild(pb);
+  box.appendChild(pinRow);
+}
+async function setPinFor(id, label, after){
+  const a = await askPin("Tablet PIN for " + label, "Choose 4 digits");
+  if (a === null) return;
+  const b = await askPin("Tablet PIN for " + label, "Type it again to check");
+  if (a !== b){ alert("Those didn't match, so nothing was changed."); return; }
+  await storePin(id, a);
+  status("Tablet PIN saved for " + label);
+  if (after) after();
+}
+
 /* ===================== Tabs & chrome ===================== */
-const TABS = ["week","mytasks","plans","bank","ideas","settings"];
+const TABS = ["week","mytasks","plans","bank","programme","ideas","settings"];
 function switchTab(tab){
   activeTab = tab;
   document.querySelectorAll("nav button").forEach(x => x.classList.toggle("active", x.dataset.tab === tab));
@@ -3257,9 +4432,12 @@ function renderTab(){
   else if (activeTab === "plans") renderPlans();
   else if (activeTab === "bank") renderBank();
   else if (activeTab === "ideas") renderIdeas();
+  else if (activeTab === "programme") renderProgramme();
   else { renderSettings(); renderStorySettings(); renderFramework(); }
 }
 function renderAll(){ updateAuthUI(); renderTab(); }
+const _renderTabBase = renderTab;
+renderTab = function(){ _renderTabBase(); if (typeof wallState !== "undefined" && wallState.on) renderWall(); };
 
 function updateAuthUI(){
   const btn = document.getElementById("btnAuth");
@@ -3277,9 +4455,19 @@ function updateAuthUI(){
     refresh.classList.add("hidden");
     banner.classList.remove("hidden");
   }
-  document.getElementById("navSettings").classList.toggle("hidden", !(role === "manager" || role === "local"));
-  document.getElementById("navIdeas").classList.toggle("hidden", !(role === "manager" || role === "local"));
+  document.getElementById("navSettings").classList.toggle("hidden", !isMgr());
+  document.getElementById("navIdeas").classList.toggle("hidden", !isMgr());
   document.querySelectorAll(".mgr").forEach(el => el.classList.toggle("hidden", !canEdit()));
+  const shared = sharedOn();
+  const whoSel = document.getElementById("whoSel");
+  whoSel.classList.toggle("hidden", !shared);
+  if (shared){
+    wireWhoSelect(whoSel);
+    if (account) who.textContent = "";
+    // On the shared tablet only the manager can sign the device out of OneDrive
+    btn.classList.toggle("hidden", !!account && !isMgr());
+  } else btn.classList.remove("hidden");
+  document.getElementById("btnBackWall").classList.toggle("hidden", !(wallPinned() && !wallState.on));
 }
 
 document.getElementById("prevWeek").onclick = () => { currentWeek = addWeeks(currentWeek, -1); renderSheet(); };
@@ -3688,7 +4876,7 @@ function renderStoryExtensions(){
       g.onclick = () => generateStoryIdeas(missing.map(b => b.text.trim()));
       head.appendChild(g);
     }
-  } else if (edit && (role === "manager" || role === "local") && missing.length){
+  } else if (edit && isMgr() && missing.length){
     const n = document.createElement("span"); n.className = "sxnote";
     n.textContent = "Add your Claude API key in Settings to generate ideas";
     head.appendChild(n);
@@ -3907,6 +5095,8 @@ document.getElementById("buildStamp").textContent = BUILD;
 })();
 renderAll();
 initAuth();
+// Wall display: on this device's setting, or from a ?wall=1 home-screen shortcut
+if (wallPinned() || new URLSearchParams(location.search).get("wall") === "1") enterWall(true);
 </script>
 </body>
 </html>
